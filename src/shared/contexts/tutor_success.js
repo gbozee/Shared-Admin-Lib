@@ -311,10 +311,10 @@ function approveTutorEmail(email, { getAdapter, state, updateState }) {
 }
 function firebaseAction(key, args) {
   return FireBase2[key](...args)
-  return import("../adapters/backupFirebase.js").then(module => {
-    let func = module.default[key];
-    return func(...args);
-  });
+  // return import("../adapters/backupFirebase.js").then(module => {
+  //   let func = module.default[key];
+  //   return func(...args);
+  // });
 }
 const dispatch = (action, existingOptions = {}) => {
   // firebaseAction("getAnalytics", ["Abiola"]).then(data => {
