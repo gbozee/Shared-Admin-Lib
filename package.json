@@ -8,7 +8,7 @@
   "private": false,
   "scripts": {
     "build": "babel src --out-dir lib --copy-files",
-    "postinstall": "rm -rf lib && yarn build"
+    "postinstall": "rm -rf lib && npm run build"
   },
   "dependencies": {
     "@emotion/core": "10.0.5",
