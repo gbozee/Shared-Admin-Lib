@@ -6,12 +6,19 @@ import DataProvider from "./DataProvider";
 import Spinner from "./primitives/Spinner";
 import { DataContext } from "./ProtectedRoute";
 import LoginPage from "./LoginPage";
-export const WithRouter = ({ heading, children,adapter, test=true }) => {
+export const WithRouter = ({
+  heading,
+  children,
+  adapter,
+  context,
+  test = true
+}) => {
   return (
     <DataProvider
       test={test}
       // adapter={testServerAdapter}
       adapter={adapter}
+      context={context}
       authenticateUser={token => new Promise(resolve => resolve(true))}
     >
       <React.Suspense fallback={<Spinner />}>
