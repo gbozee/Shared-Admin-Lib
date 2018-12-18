@@ -1,26 +1,29 @@
 import React from "react";
 import { loadState, saveState } from "./localStorage";
 import { DataContext } from "./ProtectedRoute";
-import PaymentContext from "./contexts/payment_verification";
-import TutorContext from "./contexts/tutor_success";
+import appFirebase from "./adapters/backupFirebase";
 export { DataContext };
 export { ProtectedRoute } from "./ProtectedRoute";
 
 const actions = {
   AUTHENTICATE: "AUTHENTICATE",
   TOKEN_EXIST: "TOKEN_EXIST",
-  LOGIN_USER: "LOGIN_USER",
-  ...PaymentContext.actions,
-  ...TutorContext.actions
+  LOGIN_USER: "LOGIN_USER"
 };
 export class DataProvider extends React.Component {
   dispatch = action => {
-    let options = PaymentContext.dispatch(action, {
-      [actions.TOKEN_EXIST]: this.tokenExist,
-      [actions.AUTHENTICATE]: this.authenticateUser,
-      [actions.LOGIN_USER]: this.loginUser
-    });
-    options = TutorContext.dispatch(action, options);
+    let { context } = this.props;
+    let firebaseFunc = appFirebase(context.keys);
+    let options = context.dispatch(
+      action,
+      {
+        [actions.TOKEN_EXIST]: this.tokenExist,
+        [actions.AUTHENTICATE]: this.authenticateUser,
+        [actions.LOGIN_USER]: this.loginUser
+      },
+      firebaseFunc
+    );
+    options = context.dispatch(action, options, firebaseFunc);
 
     if (this.props.test) {
       console.log(action);
@@ -33,18 +36,19 @@ export class DataProvider extends React.Component {
         auth: false,
         withdrawals: [],
         hired_transactions: [],
-        verified_transactions: {},
-        pending_verifications: []
+        ...this.props.context.state
       },
       dispatch: this.dispatch,
-      actions
+      actions: { ...actions, ...this.props.context.actions }
     }
   };
   getAdapter = () => {
     return this.props.adapter;
   };
   componentDidMount() {
-    TutorContext.componentDidMount(this);
+    let { context } = this.props;
+    let firebaseFunc = appFirebase(context.keys);
+    this.props.context.componentDidMount(this, firebaseFunc);
     // this.updateState({
     //   verified_transactions: this.getAdapter().loadVerifications()
     // });

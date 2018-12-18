@@ -18,25 +18,30 @@ db = firebase.firestore();
 // if (!db) {
 //   db = firebase.firestore();
 // }
-
-function saveAnalytics(agent, data) {
-  // Add a new document in collection "cities"
-  return db
-    .collection("tutor_analytics")
-    .doc(agent)
-    .set(data);
-}
-
-function getAnalytics(agent) {
-  let ref = db.collection("tutor_analytics").doc(agent);
-  return genericGet(ref);
-}
-
-function saveWorkingData(agent, data) {
-  return db
-    .collection("tutor_working_data")
-    .doc(agent)
-    .set({ record: data });
+function appFireBase(keys) {
+  let { analytics, storage } = keys;
+  return {
+    saveAnalytics: (agent, data) => {
+      return db
+        .collection(analytics)
+        .doc(agent)
+        .set(data);
+    },
+    getAnalytics: agent => {
+      let ref = db.collection(analytics).doc(agent);
+      return genericGet(ref);
+    },
+    saveWorkingData: (agent, data) => {
+      return db
+        .collection(storage)
+        .doc(agent)
+        .set({ record: data });
+    },
+    getWorkingData: (agent, defaultParam = []) => {
+      var docRef = db.collection(storage).doc("agent");
+      return genericGet(docRef, { record: defaultParam }).then(d => d.record);
+    }
+  };
 }
 function genericGet(ref, defaultParam = {}) {
   return ref
@@ -52,14 +57,5 @@ function genericGet(ref, defaultParam = {}) {
       throw error;
     });
 }
-function getWorkingData(agent, defaultParam = []) {
-  var docRef = db.collection("tutor_working_data").doc("agent");
-  return genericGet(docRef, { record: defaultParam }).then(d => d.record);
-}
 
-export default {
-  saveAnalytics,
-  getAnalytics,
-  getWorkingData,
-  saveWorkingData
-};
+export default appFireBase
