@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "babel src --out-dir lib"
+    "build": "babel src --out-dir lib --copy-files"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
