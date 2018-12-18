@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "babel src --out-dir lib --copy-files"
+    "build": "rm -rf lib && babel src --out-dir lib --copy-files"
   },
   "dependencies": {
     "@emotion/core": "10.0.5",

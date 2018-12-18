@@ -4,15 +4,14 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DataProvider from "./DataProvider";
 import Spinner from "./primitives/Spinner";
-import { devAdapter } from "./adapters";
 import { DataContext } from "./ProtectedRoute";
 import LoginPage from "./LoginPage";
-export const WithRouter = ({ heading, children, test=true }) => {
+export const WithRouter = ({ heading, children,adapter, test=true }) => {
   return (
     <DataProvider
       test={test}
       // adapter={testServerAdapter}
-      adapter={devAdapter}
+      adapter={adapter}
       authenticateUser={token => new Promise(resolve => resolve(true))}
     >
       <React.Suspense fallback={<Spinner />}>
