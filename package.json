@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "babel src --out-dir lib --copy-files",
+    "build": "./node_modules/.bin/babel src --out-dir lib --copy-files",
     "postinstall": "rm -rf lib && npm run build"
   },
   "dependencies": {
