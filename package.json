@@ -22,5 +22,13 @@
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.2.1",
     "@babel/preset-react": "^7.0.0"
-  }
+  },
+  "bundledDependencies": [
+    "@emotion/core",
+    "@emotion/styled",
+    "@rebass/emotion",
+    "date-fns",
+    "react-modal",
+    "react-router-dom"
+  ]
 }
