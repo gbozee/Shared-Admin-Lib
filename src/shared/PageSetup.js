@@ -6,7 +6,7 @@ import DataProvider from "./DataProvider";
 import Spinner from "./primitives/Spinner";
 import { DataContext } from "./ProtectedRoute";
 import LoginPage from "./LoginPage";
-export const WithRouter = ({ heading, children,adapter, test=true }) => {
+export const WithRouter = ({ heading, children, adapter, test = true }) => {
   return (
     <DataProvider
       test={test}
