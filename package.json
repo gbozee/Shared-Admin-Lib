@@ -9,6 +9,14 @@
   "scripts": {
     "build": "babel src --out-dir lib --copy-files"
   },
+  "dependencies": {
+    "@emotion/core": "10.0.5",
+    "@emotion/styled": "10.0.5",
+    "@rebass/emotion": "3.0.0",
+    "date-fns": "1.30.1",
+    "react-modal": "3.7.1",
+    "react-router-dom": "4.3.1"
+  },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
     "@babel/core": "^7.2.2",
