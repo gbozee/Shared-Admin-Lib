@@ -10,6 +10,7 @@
     "build": "./node_modules/.bin/babel src --out-dir lib --copy-files"
   },
   "dependencies": {
+    "firebase": "5.7.0",
     "@emotion/core": "10.0.5",
     "@emotion/styled": "10.0.5",
     "@rebass/emotion": "3.0.0",
