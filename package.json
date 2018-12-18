@@ -7,7 +7,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "postinstall": "rm -rf lib && babel src --out-dir lib --copy-files"
+    "build": "babel src --out-dir lib --copy-files",
+    "postinstall": "rm -rf lib && yarn build"
   },
   "dependencies": {
     "@emotion/core": "10.0.5",
