@@ -2,10 +2,10 @@
 import { css, jsx } from "@emotion/core";
 import { Box, Flex, Button, Text } from "@rebass/emotion";
 import React from "react";
-import { Input } from "./LoginPage";
+import { Input } from "tuteria-shared/lib/shared/LoginPage";
 
 class FromTo extends React.Component {
-  state = {
+  state = this.props.dateValue || {
     from: "",
     to: ""
   };
@@ -39,7 +39,26 @@ class FromTo extends React.Component {
     );
   }
 }
-
+export const Select = ({ options, value, onChange }) => {
+  return (
+    <select
+      css={css`
+        height: 36px;
+        align-self: flex-end;
+        margin-bottom: 16px;
+        margin-left: 20px;
+      `}
+      value={value}
+      onChange={onChange}
+    >
+      {options.map(option => (
+        <option key={option.label} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  );
+};
 export const DateFilter = ({
   onChange,
   onSearchChange,
@@ -47,8 +66,13 @@ export const DateFilter = ({
   onKeyDown = () => {},
   onFilterChange = () => {},
   filterOptions = [],
+  dateValue = {
+    from: "",
+    to: ""
+  },
   selection,
-  placeholder = "Search either email or order"
+  placeholder = "Search either email or order",
+  searchButton = {}
 }) => {
   return (
     <Flex justifyContent="space-between">
@@ -71,7 +95,7 @@ export const DateFilter = ({
       ) : null}
       {onChange ? (
         <Flex flexDirection="column">
-          <FromTo onChange={onChange} />
+          <FromTo value={dateValue} onChange={onChange} />
         </Flex>
       ) : null}
       {filterOptions.length > 0 ? (
@@ -91,6 +115,19 @@ export const DateFilter = ({
             </option>
           ))}
         </select>
+      ) : null}
+      {searchButton.display ? (
+        <Button
+          css={css`
+            height: 40px;
+            align-self: center;
+            margin-top: 24px;
+            margin-left: 10px;
+          `}
+          onClick={searchButton.onClick}
+        >
+          Search
+        </Button>
       ) : null}
     </Flex>
   );
