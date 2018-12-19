@@ -5,10 +5,17 @@ import React from "react";
 import { Input } from "tuteria-shared/lib/shared/LoginPage";
 
 class FromTo extends React.Component {
-  state = this.props.dateValue || {
+  state = this.props.value || {
     from: "",
     to: ""
   };
+  //   static getDerivedStateFromProps(props, state) {
+  //     let { value = { from: "", to: "" } } = props;
+  //     if (value.from !== state.from || value.to !== state.to) {
+  //       return value;
+  //     }
+  //     return null;
+  //   }
   onChange = key => {
     return e => {
       this.setState({ [key]: e.target.value }, () => {
@@ -35,6 +42,22 @@ class FromTo extends React.Component {
           isValid
           onChange={this.onChange("to")}
         />
+        <Button
+          py="4px"
+          onClick={() => {
+            this.setState({ from: "", to: "" }, () => {
+              this.props.onChange(this.state);
+            });
+          }}
+          css={css`
+            height: 36px;
+            align-self: center;
+            margin-top: 26px;
+            border-radius: 0;
+          `}
+        >
+          Reset
+        </Button>
       </Flex>
     );
   }
@@ -63,8 +86,9 @@ export const DateFilter = ({
   onChange,
   onSearchChange,
   displayDate = true,
-  onKeyDown = () => {},
-  onFilterChange = () => {},
+  searchValue,
+  onKeyDown = () => { },
+  onFilterChange = () => { },
   filterOptions = [],
   dateValue = {
     from: "",
@@ -75,7 +99,12 @@ export const DateFilter = ({
   searchButton = {}
 }) => {
   return (
-    <Flex justifyContent="space-between">
+    <Flex
+      css={css`
+        flex: 1;
+      `}
+      justifyContent="space-between"
+    >
       {onSearchChange ? (
         <Box
           w={1}
@@ -88,6 +117,7 @@ export const DateFilter = ({
           <Input
             onChange={onSearchChange}
             onKeyDown={onKeyDown}
+            value={searchValue}
             isValid
             placeholder={placeholder}
           />
@@ -123,10 +153,11 @@ export const DateFilter = ({
             align-self: center;
             margin-top: 24px;
             margin-left: 10px;
+            ${searchButton.styles || ""}
           `}
           onClick={searchButton.onClick}
         >
-          Search
+          {searchButton.text || "Search"}
         </Button>
       ) : null}
     </Flex>
