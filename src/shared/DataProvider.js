@@ -1,7 +1,6 @@
 import React from "react";
 import { loadState, saveState } from "./localStorage";
 import { DataContext } from "./ProtectedRoute";
-import appFirebase from "./adapters/backupFirebase";
 export { DataContext };
 export { ProtectedRoute } from "./ProtectedRoute";
 
@@ -13,7 +12,7 @@ const actions = {
 export class DataProvider extends React.Component {
   dispatch = action => {
     let { context } = this.props;
-    let firebaseFunc = appFirebase(context.keys);
+    let firebaseFunc = this.props.appFirebase(context.keys);
     let options = context.dispatch(
       action,
       {
@@ -47,7 +46,7 @@ export class DataProvider extends React.Component {
   };
   componentDidMount() {
     let { context } = this.props;
-    let firebaseFunc = appFirebase(context.keys);
+    let firebaseFunc = this.props.appFirebase(context.keys);
     this.props.context.componentDidMount(this, firebaseFunc);
     // this.updateState({
     //   verified_transactions: this.getAdapter().loadVerifications()

@@ -6,10 +6,12 @@ import DataProvider from "./DataProvider";
 import Spinner from "./primitives/Spinner";
 import { DataContext } from "./ProtectedRoute";
 import LoginPage from "./LoginPage";
+import appFireBase from "./adapters/backupFirebase";
 export const WithRouter = ({
   heading,
   children,
   adapter,
+  firebase,
   context,
   test = true
 }) => {
@@ -19,6 +21,7 @@ export const WithRouter = ({
       // adapter={testServerAdapter}
       adapter={adapter}
       context={context}
+      appFirebase={firebase || appFireBase}
       authenticateUser={token => new Promise(resolve => resolve(true))}
     >
       <React.Suspense fallback={<Spinner />}>
