@@ -1,6 +1,6 @@
 {
   "name": "tuteria-shared",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Shared Library for admin apps",
   "main": "index.js",
   "author": "Biola",
