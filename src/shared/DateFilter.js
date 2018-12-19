@@ -2,7 +2,7 @@
 import { css, jsx } from "@emotion/core";
 import { Box, Flex, Button } from "@rebass/emotion";
 import React from "react";
-import { Input } from "tuteria-shared/lib/shared/LoginPage";
+import { Input } from "./LoginPage";
 import format from "date-fns/format";
 
 function currentMonth() {
@@ -80,8 +80,8 @@ export const DateFilter = ({
   onSearchChange,
   displayDate = true,
   searchValue,
-  onKeyDown = () => { },
-  onFilterChange = () => { },
+  onKeyDown = () => {},
+  onFilterChange = () => {},
   filterOptions = [],
   dateValue = {
     from: "",

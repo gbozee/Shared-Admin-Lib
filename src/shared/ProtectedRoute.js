@@ -14,7 +14,6 @@ export class ProtectedRoute extends React.Component {
   isAuthenticated() {
     let { dispatch, actions } = this.context;
     let exists = dispatch({ type: actions.TOKEN_EXIST });
-    this.setState({ authenticated: exists });
     return dispatch({ type: actions.AUTHENTICATE })
       .then(data => {
         this.setState({ authenticated: data });

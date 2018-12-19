@@ -33,8 +33,7 @@ export class DataProvider extends React.Component {
     context: {
       state: {
         auth: false,
-        withdrawals: [],
-        hired_transactions: [],
+        agent: null,
         ...this.props.context.state
       },
       dispatch: this.dispatch,
@@ -47,10 +46,13 @@ export class DataProvider extends React.Component {
   componentDidMount() {
     let { context } = this.props;
     let firebaseFunc = this.props.appFirebase(context.keys);
-    this.props.context.componentDidMount(this, firebaseFunc);
-    // this.updateState({
-    //   verified_transactions: this.getAdapter().loadVerifications()
-    // });
+    this.authenticateUser(data => {
+      if (data) {
+        firebaseFunc.loadFireStore().then(db => {
+          this.props.context.componentDidMount(this, firebaseFunc, data);
+        });
+      }
+    });
   }
   updateState = obj => {
     let { context } = this.state;
@@ -69,24 +71,46 @@ export class DataProvider extends React.Component {
   tokenExist = () => {
     return Boolean(this.getToken());
   };
-  authenticateUser = () => {
+  authenticateUser = (callback = () => {}) => {
     let { auth } = this.state.context.state;
+    let firebaseFunc = this.props.appFirebase(this.props.context.keys);
+
     if (auth) {
       return new Promise(resolve => resolve(true));
     }
-    return this.props.authenticateUser(this.getToken()).then(data => {
-      this.updateState({ auth: data });
-      return true;
+    return firebaseFunc.getUserToken(this.getToken()).then(data => {
+      if (data) {
+        this.updateState({ auth: Boolean(data), agent: data }, () => {
+          callback(data);
+        });
+      }
+      return data;
     });
+    // return this.props.authenticateUser(this.getToken()).then(data => {
+    //   this.updateState({ auth: data });
+    //   return true;
+    // });
   };
 
   loginUser = ({ email, password }) => {
-    return this.getAdapter()
-      .login(email, password)
+    let firebaseFunc = this.props.appFirebase(this.props.context.keys);
+    return firebaseFunc
+      .loginUser(email, password)
       .then(data => {
-        saveState({ token: data });
-        this.updateState({ auth: true });
+        if (data) {
+          saveState({ token: data.token });
+          this.updateState({ auth: true, agent: data.uid });
+        } else {
+          throw "Not Logged In";
+        }
+      })
+      .catch(error => {
+        throw error;
       });
+    // return this.getAdapter()
+    //   .login(email, password)
+    //   .then(data => {
+    //   });
   };
 
   render() {

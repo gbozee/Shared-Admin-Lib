@@ -13,6 +13,7 @@ export const WithRouter = ({
   adapter,
   firebase,
   context,
+  toNextPage = () => {},
   test = true
 }) => {
   return (
@@ -45,7 +46,7 @@ export const WithRouter = ({
                               })
                             }
                             toNextPage={() => {
-                              props.history.push("/withdrawals");
+                              toNextPage(props);
                             }}
                           />
                         );

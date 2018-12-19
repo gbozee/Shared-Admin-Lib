@@ -46,6 +46,7 @@ export class LoginPage extends React.Component {
     toggleError: false,
     errors: {}
   };
+  static contextType = DataContext;
   onChange = field => {
     return e => {
       this.setState({
@@ -71,22 +72,16 @@ export class LoginPage extends React.Component {
   };
   onSubmit = e => {
     let { fields } = this.state;
+    let { dispatch, actions } = this.context;
     e.preventDefault();
     this.setState({ errors: {} });
     let isValid = Object.keys(fields).every(field => this.isValid(true, field));
     if (isValid) {
       this.setState({ loading: true });
-      this.props
-        .login(fields)
-        .then(
-          data => {
-            this.props.toNextPage();
-          },
-          errors => {
-            console.log(errors);
-            this.setState({ toggleError: true, loading: false, errors });
-          }
-        )
+      dispatch({ type: actions.LOGIN_USER, value: fields })
+        .then(data => {
+          this.props.toNextPage();
+        })
         .catch(errors => {
           console.log(errors);
           this.setState({ toggleError: true, loading: false, errors });
