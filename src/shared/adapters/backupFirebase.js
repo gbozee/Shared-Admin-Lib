@@ -40,7 +40,7 @@ function appFireBase(keys) {
         .set({ record: data });
     },
     getWorkingData: (agent, defaultParam = []) => {
-      var docRef = db.collection(storage).doc("agent");
+      var docRef = db.collection(storage).doc(agent);
       return genericGet(docRef, { record: defaultParam }).then(d => d.record);
     }
   };

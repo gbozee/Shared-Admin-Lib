@@ -203,7 +203,7 @@ class ImageModal extends React.Component {
               align-items: center;
             `}
           >
-            <Text pb={4} fontSize={4}>
+            <Text pb={4} fontSize={4} width={1}>
               {this.props.children}
             </Text>
           </Flex>
