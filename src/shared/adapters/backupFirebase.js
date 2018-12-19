@@ -8,16 +8,18 @@ var config = {
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID
 };
 let db;
-firebase.initializeApp(config);
-db = firebase.firestore();
-// if (!firebase.apps.length) {
-//   // Initialize Cloud Firestore through Firebase
-//   const settings = { /* your settings... */ timestampsInSnapshots: true };
-//   db.settings(settings);
-// }
-// if (!db) {
-//   db = firebase.firestore();
-// }
+if (!firebase.apps.length) {
+  firebase.initializeApp(config);
+  db = firebase.firestore();
+  // Initialize Cloud Firestore through Firebase
+  const settings = { /* your settings... */ timestampsInSnapshots: true };
+  db.settings(settings);
+}
+if (!db) {
+  db = firebase.firestore();
+  const settings = { /* your settings... */ timestampsInSnapshots: true };
+  db.settings(settings);
+}
 function appFireBase(keys) {
   let { analytics, storage } = keys;
   return {
@@ -58,4 +60,4 @@ function genericGet(ref, defaultParam = {}) {
     });
 }
 
-export default appFireBase
+export default appFireBase;
