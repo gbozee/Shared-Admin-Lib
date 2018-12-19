@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-lib/
+# lib/
 # production
 /build
 
