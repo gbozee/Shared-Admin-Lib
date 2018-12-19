@@ -1,9 +1,19 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { Box, Flex, Button, Text } from "@rebass/emotion";
+import { Box, Flex, Button } from "@rebass/emotion";
 import React from "react";
 import { Input } from "tuteria-shared/lib/shared/LoginPage";
+import format from "date-fns/format";
 
+function currentMonth() {
+  var date = new Date();
+  var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  return {
+    from: format(firstDay, "YYYY-MM-DD"),
+    to: format(lastDay, "YYYY-MM-DD")
+  };
+}
 class FromTo extends React.Component {
   state = this.props.value || {
     from: "",
@@ -45,7 +55,9 @@ class FromTo extends React.Component {
         <Button
           py="4px"
           onClick={() => {
-            this.setState({ from: "", to: "" }, () => {
+            let today = currentMonth();
+
+            this.setState(today, () => {
               this.props.onChange(this.state);
             });
           }}
@@ -56,32 +68,13 @@ class FromTo extends React.Component {
             border-radius: 0;
           `}
         >
-          Reset
+          {this.props.buttonText || "Reset"}
         </Button>
       </Flex>
     );
   }
 }
-export const Select = ({ options, value, onChange }) => {
-  return (
-    <select
-      css={css`
-        height: 36px;
-        align-self: flex-end;
-        margin-bottom: 16px;
-        margin-left: 20px;
-      `}
-      value={value}
-      onChange={onChange}
-    >
-      {options.map(option => (
-        <option key={option.label} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
-  );
-};
+
 export const DateFilter = ({
   onChange,
   onSearchChange,
@@ -96,6 +89,7 @@ export const DateFilter = ({
   },
   selection,
   placeholder = "Search either email or order",
+  buttonText,
   searchButton = {}
 }) => {
   return (
@@ -125,7 +119,11 @@ export const DateFilter = ({
       ) : null}
       {onChange ? (
         <Flex flexDirection="column">
-          <FromTo value={dateValue} onChange={onChange} />
+          <FromTo
+            buttonText={buttonText}
+            value={dateValue}
+            onChange={onChange}
+          />
         </Flex>
       ) : null}
       {filterOptions.length > 0 ? (
