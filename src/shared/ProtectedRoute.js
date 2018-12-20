@@ -1,3 +1,4 @@
+//@ts-check
 import React from "react";
 import { Route, Redirect } from "react-router";
 import { HomePageSpinner } from "./primitives/Spinner";
@@ -16,7 +17,7 @@ export class ProtectedRoute extends React.Component {
     let exists = dispatch({ type: actions.TOKEN_EXIST });
     return dispatch({ type: actions.AUTHENTICATE })
       .then(data => {
-        this.setState({ authenticated: data });
+        this.setState({ authenticated: Boolean(data) });
       })
       .catch(error => {
         this.setState({ autthenticated: false });
