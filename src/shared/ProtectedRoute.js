@@ -14,13 +14,12 @@ export class ProtectedRoute extends React.Component {
   }
   isAuthenticated() {
     let { dispatch, actions } = this.context;
-    let exists = dispatch({ type: actions.TOKEN_EXIST });
     return dispatch({ type: actions.AUTHENTICATE })
       .then(data => {
         this.setState({ authenticated: Boolean(data) });
       })
       .catch(error => {
-        this.setState({ autthenticated: false });
+        this.setState({ authenticated: false });
       });
   }
   render() {
