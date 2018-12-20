@@ -14,7 +14,7 @@ function loadFireStore() {
     // Initialize Cloud Firestore through Firebase
     const settings = { /* your settings... */ timestampsInSnapshots: true };
     db.settings(settings);
-    return db
+    return db;
   });
 }
 if (!firebase.apps.length) {
@@ -86,12 +86,18 @@ function appFireBase(keys) {
   };
 }
 function parseJwt(token) {
-  if(token){
+  if (token) {
     var base64Url = token.split(".")[1];
-    var base64 = base64Url.replace("-", "+").replace("_", "/");
-    return JSON.parse(window.atob(base64));
+    if (base64Url) {
+      try {
+        var base64 = base64Url.replace("-", "+").replace("_", "/");
+        return JSON.parse(window.atob(base64));
+      } catch (err) {
+        return {};
+      }
+    }
   }
-  return {}
+  return {};
 }
 function genericGet(ref, defaultParam = {}) {
   return ref
