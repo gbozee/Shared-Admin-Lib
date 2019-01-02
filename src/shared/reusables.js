@@ -41,8 +41,11 @@ export const ListItem = ({
   to,
   heading,
   subHeading,
+  date,
   rightSection,
   onClick,
+  verified=false,
+  gender,
   ...rest
 }) => {
   return (
@@ -57,16 +60,20 @@ export const ListItem = ({
         `}
       >
         <Box>
+        <Text>{date}</Text>
           <Text fontSize={5}>{heading}</Text>
           <Text>{subHeading}</Text>
         </Box>
-        <Flex
+         <Flex
           flexDirection="column"
           css={css`
             align-self: center;
+            align-items: center;
           `}
         >
-          {rightSection}
+          <Text>{gender}</Text>
+          <Box>{rightSection}</Box>
+          {verified && <Text>✔</Text>}
         </Flex>
       </Flex>
     </AsLink>
