@@ -1,6 +1,6 @@
 {
   "name": "tuteria-shared",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Shared Library for admin apps",
   "main": "index.js",
   "author": "Biola",
@@ -8,7 +8,10 @@
   "private": false,
   "scripts": {
     "build": "./node_modules/.bin/babel src --out-dir lib --copy-files",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "storybook": "start-storybook -p 6006 --ci",
+    "copy_now": "cp now.json.sample ./storybook-static/now.json",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@babel/cli": "^7.2.0",
@@ -25,7 +28,13 @@
     "react-modal": "3.7.1",
     "react-router-dom": "4.3.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@storybook/react": "^4.1.4",
+    "@storybook/addon-actions": "^4.1.4",
+    "@storybook/addon-links": "^4.1.4",
+    "@storybook/addons": "^4.1.4",
+    "babel-loader": "^8.0.4"
+  },
   "bundledDependencies": [
     "@emotion/core",
     "@emotion/styled",

@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "name": "tuteria-systems",
+  "alias": "tuteria-systems",
+  "routes": [
+    {
+      "src": "^/sb_dll/(.*)",
+      "dest": "/sb_dll/$1"
+    },
+    {
+      "src": "^/favicon.ico",
+      "dest": "/favicon.ico"
+    },
+    {
+      "src": "^/iframe.html",
+      "dest": "/iframe.html"
+    },
+    {
+      "src": "^/(.*)",
+      "dest": "/$1"
+    },
+    {
+      "src": "^/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}

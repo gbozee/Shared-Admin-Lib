@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { Box, Flex, Button, Text, Link } from "@rebass/emotion";
+import { Box, Flex, Button, Text, Link,Heading } from "@rebass/emotion";
 import React from "react";
 import format from "date-fns/format";
 
@@ -102,3 +102,61 @@ export const SectionListPage = ({ data,keyValue="date",keyIndex='order',LinkComp
     });
   return rows;
 };
+
+export const DetailHeader = ({ heading, subHeading, children }) => {
+  return (
+    <Flex
+      mb={4}
+      flexDirection="column"
+      css={css`
+        align-items: center;
+      `}
+    >
+      <Heading fontSize={5}>{heading}</Heading>
+      <Text>{subHeading}</Text>
+      {children}
+    </Flex>
+  );
+};
+
+export const PVerificationListItem = ({
+  heading,
+  subHeading,
+  date,
+  rightSection,
+  verified = false,
+  to,
+  ...rest
+}) => {
+  return (
+    <AsLink to={to} {...rest}>
+      <Flex
+        py={3}
+        px={2}
+        width={1}
+        justifyContent="space-between"
+        css={css`
+          border-bottom: 1px solid black;
+        `}
+      >
+        <Box>
+          <Text>{date}</Text>
+          <Text fontSize={5}>{heading}</Text>
+          <Text>{subHeading}</Text>
+        </Box>
+        <Flex
+          flexDirection="column"
+          css={css`
+            align-self: center;
+            align-items: center;
+          `}
+        >
+          <Box>{rightSection}</Box>
+          {verified && <Text>✔</Text>}
+        </Flex>
+      </Flex>
+    </AsLink>
+  );
+};
+
+

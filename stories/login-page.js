@@ -1,0 +1,127 @@
+import React from "react";
+
+import { storiesOf } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
+import { linkTo } from "@storybook/addon-links";
+
+import { Button, Welcome } from "@storybook/react/demo";
+import LoginPage from "../src/shared/LoginPage";
+import {
+  ListItem,
+  ListGroup,
+  DetailHeader,
+  SectionListPage,
+  DetailItem,
+  PVerificationListItem
+} from "../src/shared/reusables";
+import { DateFilter } from "../src/shared/DateFilter";
+import { SpinnerContainer } from "../src/shared/primitives/Spinner";
+import { DialogButton } from "../src/shared/primitives";
+import DataProvider, {
+  ProtectedRoute,
+  DataContext
+} from "../src/shared/DataProvider";
+import { Dialog } from "../src/shared/primitives/Modal";
+storiesOf("Welcome", module).add("to Storybook", () => (
+  <Welcome showApp={linkTo("Button")} />
+));
+
+storiesOf("Button", module)
+  .add("with text", () => (
+    <Button onClick={action("clicked")}>Hello Button</Button>
+  ))
+  .add("with some emoji", () => (
+    <Button onClick={action("clicked")}>
+      <span role="img" aria-label="so cool">
+        😀 😎 👍 💯
+      </span>
+    </Button>
+  ));
+
+storiesOf("Pages", module).add("Login Page", () => (
+  <LoginPage
+    login={() => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // resolve();
+          reject({ data: "The credentials is invalid" });
+        }, 2000);
+      });
+    }}
+    toNextPage={() => {}}
+  />
+));
+
+storiesOf("Components", module)
+  .add("ListItem", () => (
+    <ListItem
+      to="http:/www.google.com"
+      heading="N10,000"
+      subHeading="james@example.com"
+      rightSection="10:00 am"
+    />
+  ))
+  .add("List Group", () => <ListGroup name="December, 12 2018" />)
+  .add("Dialog", () => <Dialog modalIsOpen>Are you sure</Dialog>)
+  .add("DetailItem", () => (
+    <DetailItem label="Client Email">James Novak</DetailItem>
+  ))
+  .add("DetailHeader", () => (
+    <DetailHeader heading="20000" subHeading={`to james@example.com`} />
+  ))
+  .add("DialogButton", () => (
+    <DialogButton
+      dialogText="Are you sure"
+      confirmAction={() => {}}
+      my={2}
+      width={400}
+      disabled={false}
+      children="Delete"
+    />
+  ))
+  .add("DateFilter", () => (
+    <DateFilter
+      onSearchChange={() => {}}
+      buttonText="This Month"
+      searchValue=""
+      dateValue={{}}
+      onChange={() => {}}
+      onFilterChange={() => {}}
+      selection={""}
+      onKeyDown={() => {}}
+      filterOptions={[
+        { value: "", label: "Select Filter" },
+        { value: "verified", label: "Verified" },
+        { value: "not_verified", label: "Not Verified" }
+      ]}
+      searchButton={{
+        display: false,
+        onClick: () => {}
+      }}
+    />
+  ))
+  .add("SectionListPage", () => (
+    <SectionListPage
+      data={[
+        { name: "Danny Novak", email: "james@example.com", amount: "20000" }
+      ]}
+      callback={transaction => ({
+        // date: transaction.date,
+        heading: transaction.name,
+        subHeading: transaction.email,
+        rightSection: `N${transaction.amount.toLocaleString()}`,
+        verified: true
+      })}
+    />
+  ))
+  .add("SpinnerContainer", () => <SpinnerContainer condition={true} />)
+  .add("PVerificationListItem", () => (
+    <PVerificationListItem
+      {...{
+        heading: "Sample Heading",
+        subHeading: "transaction.email",
+        rightSection: `N20 000`,
+        verified: true
+      }}
+    />
+  ));
