@@ -23,9 +23,6 @@ import DataProvider, {
   DataContext
 } from "../src/shared/DataProvider";
 import { Dialog } from "../src/shared/primitives/Modal";
-storiesOf("Welcome", module).add("to Storybook", () => (
-  <Welcome showApp={linkTo("Button")} />
-));
 
 storiesOf("Pages", module).add("Login Page", () => (
   <LoginPage
