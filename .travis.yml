@@ -10,5 +10,5 @@ script:
   - yarn build-storybook
   - npm install -g now
   - yarn copy_now
-  - cd build && now --no-clipboard --token=$NOW_TOKEN  && now alias --token=$NOW_TOKEN
+  - cd storybook-static && now --no-clipboard --token=$NOW_TOKEN  && now alias --token=$NOW_TOKEN
 
