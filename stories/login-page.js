@@ -4,7 +4,6 @@ import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import { linkTo } from "@storybook/addon-links";
 
-import { Button, Welcome } from "@storybook/react/demo";
 import LoginPage from "../src/shared/LoginPage";
 import {
   ListItem,
@@ -12,11 +11,13 @@ import {
   DetailHeader,
   SectionListPage,
   DetailItem,
-  PVerificationListItem
+  PVerificationListItem,
+  TutorDetailHeader,
+  VerificationItem
 } from "../src/shared/reusables";
 import { DateFilter } from "../src/shared/DateFilter";
-import { SpinnerContainer } from "../src/shared/primitives/Spinner";
-import { DialogButton } from "../src/shared/primitives";
+import { SpinnerContainer,HomePageSpinner } from "../src/shared/primitives/Spinner";
+import { DialogButton, Button } from "../src/shared/primitives";
 import DataProvider, {
   ProtectedRoute,
   DataContext
@@ -25,18 +26,6 @@ import { Dialog } from "../src/shared/primitives/Modal";
 storiesOf("Welcome", module).add("to Storybook", () => (
   <Welcome showApp={linkTo("Button")} />
 ));
-
-storiesOf("Button", module)
-  .add("with text", () => (
-    <Button onClick={action("clicked")}>Hello Button</Button>
-  ))
-  .add("with some emoji", () => (
-    <Button onClick={action("clicked")}>
-      <span role="img" aria-label="so cool">
-        😀 😎 👍 💯
-      </span>
-    </Button>
-  ));
 
 storiesOf("Pages", module).add("Login Page", () => (
   <LoginPage
@@ -124,4 +113,28 @@ storiesOf("Components", module)
         verified: true
       }}
     />
-  ));
+  ))
+  .add("TutorDetailHeader", () => (
+    <TutorDetailHeader
+      image="https://ca.slack-edge.com/T0HKF4Y2E-U8E5J3UT0-4d4906bb6a86-72"
+      detail={[
+        "20 years ago",
+        "James Novak",
+        "james@example.com",
+        "08022332233"
+      ]}
+      children={<div>Id verified</div>}
+    />
+  ))
+  .add("VerificationItem", () => (
+    <VerificationItem
+      buttons={[
+        {
+          children: "Approve Manually",
+          dialogText: "Are you sure you want to manually approve the email",
+          confirmAction: () => {}
+        }
+      ]}
+      label="Email Verification"
+    />
+  )).add("HomePageSpinner", ()=><HomePageSpinner/>);

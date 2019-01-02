@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { Box, Flex, Button, Text, Link,Heading } from "@rebass/emotion";
+import { Box, Flex, Button, Text, Link,Heading ,Image} from "@rebass/emotion";
 import React from "react";
 import format from "date-fns/format";
-
+import {DialogButton} from "./primitives"
 export function getDate(date, short = false) {
   let dd = new Date(date);
   return format(dd, short ? "MMM D, YYYY" : "MMMM D, YYYY");
@@ -159,4 +159,55 @@ export const PVerificationListItem = ({
   );
 };
 
+export const TutorDetailHeader = ({
+  image = "https://via.placeholder.com/100",
+  detail,
+  children
+}) => {
+  return (
+    <Flex>
+      <Image src={image} height={100} />
+      <Flex
+        mb={4}
+        flexDirection="column"
+        css={css`
+          flex: 2;
+        `}
+      >
+        <Text mb={1}>{detail[0]}</Text>
+        <Heading fontSize={5}>{detail[1]}</Heading>
+        <Text mb={1}>{detail[2]}</Text>
+        <Text mb={1}>{detail[3]}</Text>
+      </Flex>
+      <Flex
+        flexDirection="column"
+        css={css`
+          align-self: center;
+        `}
+      >
+        {children}
+      </Flex>
+    </Flex>
+  );
+};
+
+export const VerificationItem = ({ label, children, buttons = [] }) => {
+  return (
+    <Flex py={3} justifyContent="space-between">
+      <Flex flexDirection="column">
+        {label && (
+          <Text fontWeight="bold" pb={3}>
+            {label}
+          </Text>
+        )}
+        {children}
+      </Flex>
+      <Flex>
+        {buttons.map((button, index) => (
+          <DialogButton mr={index === 0 ? 3 : 0} {...button} />
+        ))}
+      </Flex>
+    </Flex>
+  );
+};
 
