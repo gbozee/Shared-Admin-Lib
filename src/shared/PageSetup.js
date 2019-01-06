@@ -29,7 +29,7 @@ export const WithRouter = ({
       authenticateUser={token => new Promise(resolve => resolve(true))}
     >
       <React.Suspense fallback={<Spinner />}>
-        <RouterComponent {...routerProps}>
+        <RComponent {...routerProps}>
           <>
             {heading}
             <Switch>
@@ -61,7 +61,7 @@ export const WithRouter = ({
               {children}
             </Switch>
           </>
-        </RouterComponent>
+        </RComponent>
       </React.Suspense>
     </DataProvider>
   );

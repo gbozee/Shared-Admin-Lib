@@ -1,13 +1,14 @@
 {
   "name": "tuteria-shared",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Shared Library for admin apps",
   "main": "index.js",
   "author": "Biola",
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev": "./node_modules/.bin/babel src --out-dir lib --copy-files --source-maps inline --watch",
+    "dev":
+      "./node_modules/.bin/babel src --out-dir lib --copy-files --source-maps inline --watch",
     "build": "./node_modules/.bin/babel src --out-dir lib --copy-files",
     "postinstall": "npm run build",
     "storybook": "start-storybook -p 6006 --ci",

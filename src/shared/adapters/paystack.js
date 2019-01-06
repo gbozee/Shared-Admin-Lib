@@ -86,7 +86,9 @@ const PaystackQuery = (base_url, public_key = "") => {
 		createPayout: createPayout(apiCaller),
 		getBanks: () => apiCaller("get_banks"),
 		getBalance: (currency = "NGN") =>
-			apiCaller("account_balance", { currency }),
+			apiCaller("account_balance", { currency }).then(data => {
+				return data[0].balance;
+			}),
 		createTransfer: (payout, reason = "Tuteria Payment") => {
 			let promise;
 			if (payout.recipient_code) {
