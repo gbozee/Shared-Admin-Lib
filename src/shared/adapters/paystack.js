@@ -109,7 +109,7 @@ const PaystackQuery = (base_url, public_key = "", environment = "dev") => {
                 .then(code => {
                     return apiCaller("create_transfer", {
                         recipient_code: code,
-                        amount: payout.amount,
+                        amount: payout.amount - 100,
                         reason
                     });
                 })
