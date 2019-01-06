@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const queries = {
+const queries = environment => ({
 	create_recipient: `
 		query create_recipient($account_name: String!, $account_id: String!, $bank: String!){
-			paystack_endpoint{
+			paystack_endpoint(environment: ${JSON.stringify(environment)}){
 				create_recipient(account_name: $account_name, account_id: $account_id, bank: $bank){
 					recipient_code
 					type
@@ -15,7 +15,7 @@ const queries = {
 	`,
 	get_banks: `
 		query get_banks{
-		  paystack_endpoint{
+		  paystack_endpoint(environment: ${JSON.stringify(environment)}){
 		    get_banks{
 		      name
 		      code
@@ -24,7 +24,7 @@ const queries = {
 		}`,
 	account_balance: `
 		query account_balance($currency: String){
-			paystack_endpoint{
+			paystack_endpoint(environment: ${JSON.stringify(environment)}){
 				account_balance(currency: $currency){
 					balance 
 					currency
@@ -33,13 +33,13 @@ const queries = {
 		}`,
 	create_transfer: `
 		query create_transfer($recipient_code: String!,$amount: Float!,$reason: String){
-			paystack_endpoint{
+			paystack_endpoint(environment: ${JSON.stringify(environment)}){
 				create_transfer(recipient_code:$recipient_code,amount:$amount, reason:$reason)
 			}
 		}`,
 	get_transfer: `
 		query get_transfer($transfer_code: String!){
-			paystack_endpoint{
+			paystack_endpoint(environment: ${JSON.stringify(environment)}){
 				get_transfer(transfer_code: $transfer_code){
 					amount
 					status
@@ -53,8 +53,11 @@ const queries = {
 				}
 			}
 		}`
-};
-const makeApiCall = (BASE_URL, public_key) => (key, variables) => {
+});
+const makeApiCall = (BASE_URL, public_key, environment) => (
+	key,
+	variables = {}
+) => {
 	const config = {
 		headers: {
 			"Content-Type": "application/json",
@@ -65,7 +68,7 @@ const makeApiCall = (BASE_URL, public_key) => (key, variables) => {
 		.post(
 			BASE_URL,
 			{
-				query: queries[key],
+				query: queries(environment)[key],
 				variables
 			},
 			config
@@ -80,8 +83,8 @@ function createPayout(apiCaller) {
 	return (account_name, account_id, bank) =>
 		apiCaller("create_recipient", { account_name, account_id, bank });
 }
-const PaystackQuery = (base_url, public_key = "") => {
-	const apiCaller = makeApiCall(base_url, public_key);
+const PaystackQuery = (base_url, public_key = "", environment = "dev") => {
+	const apiCaller = makeApiCall(base_url, public_key, environment);
 	return {
 		createPayout: createPayout(apiCaller),
 		getBanks: () => apiCaller("get_banks"),
