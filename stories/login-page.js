@@ -1,4 +1,8 @@
+/** @jsx jsx */
+
 import React from "react";
+import { css, jsx } from "@emotion/core";
+import { Box, Flex, Text, Link, Heading, Image } from "@rebass/emotion";
 
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
@@ -13,10 +17,14 @@ import {
   DetailItem,
   PVerificationListItem,
   TutorDetailHeader,
-  VerificationItem
+  VerificationItem,
+  RequestListItem
 } from "../src/shared/reusables";
 import { DateFilter } from "../src/shared/DateFilter";
-import { SpinnerContainer,HomePageSpinner } from "../src/shared/primitives/Spinner";
+import {
+  SpinnerContainer,
+  HomePageSpinner
+} from "../src/shared/primitives/Spinner";
 import { DialogButton, Button } from "../src/shared/primitives";
 import DataProvider, {
   ProtectedRoute,
@@ -41,21 +49,21 @@ storiesOf("Pages", module).add("Login Page", () => (
 storiesOf("Components", module)
   .add("ListItem", () => (
     <React.Fragment>
-    <ListItem
-      to="http:/www.google.com"
-      heading="N10,000"
-      subHeading="james@example.com"
-      rightSection="10:00 am"
-    />
-    <ListItem
-      to="http:/www.google.com"
-      date="Age 23"
-      gender="M"
-      verified={true}
-      heading="N10,000"
-      subHeading="james@example.com"
-      rightSection="10:00 am"
-    />
+      <ListItem
+        to="http:/www.google.com"
+        heading="N10,000"
+        subHeading="james@example.com"
+        rightSection="10:00 am"
+      />
+      <ListItem
+        to="http:/www.google.com"
+        date="Age 23"
+        gender="M"
+        verified={true}
+        heading="N10,000"
+        subHeading="james@example.com"
+        rightSection="10:00 am"
+      />
     </React.Fragment>
   ))
   .add("List Group", () => <ListGroup name="December, 12 2018" />)
@@ -145,4 +153,28 @@ storiesOf("Components", module)
       ]}
       label="Email Verification"
     />
-  )).add("HomePageSpinner", ()=><HomePageSpinner/>);
+  ))
+  .add("HomePageSpinner", () => <HomePageSpinner />)
+  .add("RequestListItem", () => (
+    <RequestListItem
+      to="http:/www.google.com"
+      {...{
+        slug: "ABCDESDDESS",
+        full_name: "Shola Ameobi",
+        email: "james@example.com",
+        phone_no: "08033002232",
+        skill: "IELTS",
+        tutor: "Chidiebere",
+        status: "pending",
+        created: "2018-10-12 14:10:33",
+        modified: "2018-10-12 14:10:33"
+      }}
+      children={
+        <Flex flexDirection="column">
+          <Text fontWeight="bold">Remarks</Text>
+          <Text>Sent a message to the client to approve lessons</Text>
+          <Text fontSize="12px">Last Updated: 20/10/2018</Text>
+        </Flex>
+      }
+    />
+  ));

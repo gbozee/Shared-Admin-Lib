@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { Box, Flex, Button, Text, Link,Heading ,Image} from "@rebass/emotion";
+import { Box, Flex, Button, Text, Link, Heading, Image } from "@rebass/emotion";
 import React from "react";
 import format from "date-fns/format";
-import {DialogButton} from "./primitives"
+import { DialogButton } from "./primitives";
 export function getDate(date, short = false) {
   let dd = new Date(date);
   return format(dd, short ? "MMM D, YYYY" : "MMMM D, YYYY");
@@ -44,8 +44,12 @@ export const ListItem = ({
   date,
   rightSection,
   onClick,
-  verified=false,
+  verified = false,
+  leftTop,
   gender,
+  rightTop,
+  children,
+  rightBottom = <Text>✔</Text>,
   ...rest
 }) => {
   return (
@@ -60,20 +64,21 @@ export const ListItem = ({
         `}
       >
         <Box>
-        <Text>{date}</Text>
+          <Text>{leftTop || date}</Text>
           <Text fontSize={5}>{heading}</Text>
           <Text>{subHeading}</Text>
         </Box>
-         <Flex
+        {children}
+        <Flex
           flexDirection="column"
           css={css`
             align-self: center;
             align-items: center;
           `}
         >
-          <Text>{gender}</Text>
+          <Text>{rightTop || gender}</Text>
           <Box>{rightSection}</Box>
-          {verified && <Text>✔</Text>}
+          {verified && rightBottom}
         </Flex>
       </Flex>
     </AsLink>
@@ -94,17 +99,33 @@ export function getTime(date) {
   return format(dd, "h:mm a");
 }
 
-export const SectionListPage = ({ data,keyValue="date",keyIndex='order',LinkComponent=Link, callback = () => {},Component=ListItem }) => {
+export const SectionListPage = ({
+  data,
+  keyValue = "date",
+  keyIndex = "order",
+  LinkComponent = Link,
+  callback = () => {},
+  Component = ListItem
+}) => {
   let rows = [];
   let lastCategory = null;
   [...data]
-    .sort((a, b) => new Date(b[keyValue]).getTime() - new Date(a[keyValue]).getTime())
+    .sort(
+      (a, b) =>
+        new Date(b[keyValue]).getTime() - new Date(a[keyValue]).getTime()
+    )
     .forEach((withdrawal, index) => {
       let date = getDate(withdrawal[keyValue]);
       if (date !== lastCategory) {
         rows.push(<ListGroup name={date} key={date} />);
       }
-      rows.push(<Component key={withdrawal[keyIndex]} {...callback(withdrawal)} Link={LinkComponent} />);
+      rows.push(
+        <Component
+          key={withdrawal[keyIndex]}
+          {...callback(withdrawal)}
+          Link={LinkComponent}
+        />
+      );
       lastCategory = date;
     });
   return rows;
@@ -218,3 +239,60 @@ export const VerificationItem = ({ label, children, buttons = [] }) => {
   );
 };
 
+export const RequestListItem = ({
+  slug,
+  full_name,
+  email,
+  phone_no,
+  skill,
+  tutor,
+  status,
+  to,
+  children,
+  ...rest
+}) => {
+  return (
+    <ListItem
+      to={to}
+      leftTop={`Slug: ${slug}`}
+      rightTop={`Status: ${status}`}
+      verified={true}
+      rightBottom={
+        tutor && (
+          <Text
+            css={css`
+              font-size: 15px;
+            `}
+          >
+            Tutor: {tutor}
+          </Text>
+        )
+      }
+      heading={
+        <Flex
+          justifyContent="space-between"
+          css={css`
+            align-items: center;
+            width: 105%;
+          `}
+        >
+          <Heading>{full_name}</Heading>
+          <Text fontSize={1}>({email})</Text>
+        </Flex>
+      }
+      subHeading={phone_no && `Phone no: ${phone_no}`}
+      rightSection={
+        <Text
+          css={css`
+            font-weight: bold;
+          `}
+        >
+          {skill}
+        </Text>
+      }
+      {...rest}
+    >
+      {children}
+    </ListItem>
+  );
+};
