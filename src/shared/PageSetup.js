@@ -14,8 +14,11 @@ export const WithRouter = ({
   firebase,
   context,
   toNextPage = () => {},
+  RouterComponent,
+  routerProps={},
   test = true
 }) => {
+  let RComponent = RouterComponent || Router
   return (
     <DataProvider
       test={test}
@@ -26,7 +29,7 @@ export const WithRouter = ({
       authenticateUser={token => new Promise(resolve => resolve(true))}
     >
       <React.Suspense fallback={<Spinner />}>
-        <Router>
+        <RouterComponent {...routerProps}>
           <>
             {heading}
             <Switch>
@@ -58,7 +61,7 @@ export const WithRouter = ({
               {children}
             </Switch>
           </>
-        </Router>
+        </RouterComponent>
       </React.Suspense>
     </DataProvider>
   );

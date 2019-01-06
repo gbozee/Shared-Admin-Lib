@@ -79,7 +79,6 @@ export class DataProvider extends React.Component {
   authenticateUser = (callback = () => {}) => {
     let { auth } = this.state.context.state;
     let firebaseFunc = this.props.appFirebase(this.props.context.keys);
-
     if (auth) {
       return new Promise(resolve => resolve(true));
     }
