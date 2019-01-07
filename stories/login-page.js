@@ -30,7 +30,7 @@ import DataProvider, {
   ProtectedRoute,
   DataContext
 } from "../src/shared/DataProvider";
-import { Dialog } from "../src/shared/primitives/Modal";
+import { Dialog, ModalButton } from "../src/shared/primitives/Modal";
 
 storiesOf("Pages", module).add("Login Page", () => (
   <LoginPage
