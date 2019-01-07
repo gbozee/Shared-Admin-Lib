@@ -227,7 +227,8 @@ export const Dialog = ({
   children,
   buttonText,
   action,
-  hideFooter
+  hideFooter,
+  heading
 }) => {
   return (
     <ImageModal
@@ -238,6 +239,7 @@ export const Dialog = ({
       buttonClass={'red'}
       buttonText={buttonText}
       action={action}
+      heading={heading}
       hideFooter={hideFooter}
     >
       {children}
@@ -254,7 +256,7 @@ export class DialogButton extends React.Component {
     this.setState({ confirm: false });
   };
   render() {
-    let { dialogText, hideFooter, ...rest } = this.props;
+    let { dialogText, hideFooter, heading, ...rest } = this.props;
     return (
       <>
         <Button
@@ -268,6 +270,7 @@ export class DialogButton extends React.Component {
           close={() => {
             this.setState({ confirm: false });
           }}
+          heading={heading}
           hideFooter={hideFooter}
           action={this.confirmAction}
         >
