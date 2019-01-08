@@ -18,7 +18,9 @@ import {
   PVerificationListItem,
   TutorDetailHeader,
   VerificationItem,
-  RequestListItem
+  RequestListItem,
+  BookingDetailHeader,
+  BookingListItem
 } from "../src/shared/reusables";
 import { DateFilter } from "../src/shared/DateFilter";
 import {
@@ -46,26 +48,26 @@ storiesOf("Pages", module).add("Login Page", () => (
   />
 ));
 
-storiesOf("Components", module)
-  .add("ListItem", () => (
-    <React.Fragment>
-      <ListItem
-        to="http:/www.google.com"
-        heading="N10,000"
-        subHeading="james@example.com"
-        rightSection="10:00 am"
-      />
-      <ListItem
-        to="http:/www.google.com"
-        date="Age 23"
-        gender="M"
-        verified={true}
-        heading="N10,000"
-        subHeading="james@example.com"
-        rightSection="10:00 am"
-      />
-    </React.Fragment>
-  ))
+let Components = storiesOf("Components", module);
+Components.add("ListItem", () => (
+  <React.Fragment>
+    <ListItem
+      to="http:/www.google.com"
+      heading="N10,000"
+      subHeading="james@example.com"
+      rightSection="10:00 am"
+    />
+    <ListItem
+      to="http:/www.google.com"
+      date="Age 23"
+      gender="M"
+      verified={true}
+      heading="N10,000"
+      subHeading="james@example.com"
+      rightSection="10:00 am"
+    />
+  </React.Fragment>
+))
   .add("List Group", () => <ListGroup name="December, 12 2018" />)
   .add("Dialog", () => <Dialog modalIsOpen>Are you sure</Dialog>)
   .add("DetailItem", () => (
@@ -178,3 +180,22 @@ storiesOf("Components", module)
       }
     />
   ));
+let booking_item = {
+  user: { full_name: "Mrs Ego", email: "ego@example.com" },
+  tutor: {
+    full_name: "Jamie novako",
+    email: "jamie@example.com"
+  },
+  percentage_split: 75,
+  skill_name: "English Language",
+  status: "DELIVERED",
+  first_session: "2018-10-12 14:10:33",
+  last_session: "2018-10-12 14:10:33",
+  total_price: 20000,
+  hijack_tutor_link: "http://www.google.com",
+  hijack_client_link: "http://www.google.com",
+  order: "AABBDDESEES"
+};
+Components.add("BookingDetailHeader", () => (
+  <BookingDetailHeader {...booking_item} />
+)).add("BookingListItem", () => <BookingListItem {...booking_item} />);

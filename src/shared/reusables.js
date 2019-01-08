@@ -238,7 +238,61 @@ export const VerificationItem = ({ label, children, buttons = [] }) => {
     </Flex>
   );
 };
-
+const BaseListItem = ({
+  to,
+  leftTop,
+  rightTop,
+  rightBottom,
+  heading,
+  heading_subtext,
+  sub_heading,
+  rightSection,
+  children,
+  ...rest
+}) => (
+  <ListItem
+    to={to}
+    leftTop={leftTop}
+    rightTop={rightTop}
+    verified={true}
+    rightBottom={
+      rightBottom && (
+        <Text
+          css={css`
+            font-size: 15px;
+          `}
+        >
+          {rightBottom}
+        </Text>
+      )
+    }
+    heading={
+      <Flex
+        justifyContent="flex-start"
+        css={css`
+          align-items: center;
+        `}
+      >
+        <Heading pr={2}>{heading}</Heading>
+        <Text fontSize={1}>({heading_subtext})</Text>
+      </Flex>
+    }
+    subHeading={sub_heading}
+    rightSection={
+      <Text
+        fontSize="20px"
+        css={css`
+          font-weight: bold;
+        `}
+      >
+        {rightSection}
+      </Text>
+    }
+    {...rest}
+  >
+    {children}
+  </ListItem>
+);
 export const RequestListItem = ({
   slug,
   full_name,
@@ -252,47 +306,148 @@ export const RequestListItem = ({
   ...rest
 }) => {
   return (
-    <ListItem
-      to={to}
-      leftTop={`Slug: ${slug}`}
-      rightTop={`Status: ${status}`}
-      verified={true}
-      rightBottom={
-        tutor && (
-          <Text
-            css={css`
-              font-size: 15px;
-            `}
-          >
-            Tutor: {tutor}
-          </Text>
-        )
-      }
-      heading={
-        <Flex
-          justifyContent="space-between"
-          css={css`
-            align-items: center;
-            width: 105%;
-          `}
-        >
-          <Heading>{full_name}</Heading>
-          <Text fontSize={1}>({email})</Text>
-        </Flex>
-      }
-      subHeading={phone_no && `Phone no: ${phone_no}`}
-      rightSection={
-        <Text
-          css={css`
-            font-weight: bold;
-          `}
-        >
-          {skill}
+    <React.Fragment>
+      <BaseListItem
+        {...{
+          to,
+          leftTop: `Slug: ${slug}`,
+          rightTop: `Status :${status}`,
+          rightBottom: `Tutor: ${tutor}`,
+          heading: full_name,
+          heading_subtext: email,
+          sub_heading: phone_no && `Phone no: ${phone_no}`,
+          rightSection: skill,
+          children,
+          ...rest
+        }}
+      />
+    </React.Fragment>
+  );
+};
+const ViewProfile = ({ label, value, link_text = "Hijack and view", to }) => (
+  <Text pb={2}>
+    <strong>{label}:</strong> {value}
+    {to && (
+      <Link
+        target="_blank"
+        href={to}
+        css={css`
+          padding-left: 10px;
+        `}
+      >
+        {link_text}
+      </Link>
+    )}
+  </Text>
+);
+export const BookingDetailHeader = ({
+  skill_name,
+  tutor,
+  order,
+  user,
+  total_price,
+  options = [20, 30, 40, 50, 60, 70, 75, 80, 85],
+  percentage_split,
+  first_session,
+  status,
+  last_session,
+  hijack_client_link,
+  hijack_tutor_link,
+  onSplitChange = () => {}
+}) => {
+  return (
+    <Flex justifyContent="space-between">
+      <Flex flexDirection="column">
+        <Heading pb={3}>
+          {skill_name} Lessons with {tutor.full_name}({tutor.email})
+        </Heading>
+        <ViewProfile label="Order" value={order} />
+        <ViewProfile
+          label="Client"
+          value={`${user.full_name} (${user.email})`}
+          to={hijack_client_link}
+        />
+        <ViewProfile
+          label="Tutor"
+          value={`${tutor.full_name} (${tutor.email})`}
+          to={hijack_tutor_link}
+        />
+        {first_session &&
+          last_session && (
+            <Text pb={2}>
+              <strong>Duration:</strong>{" "}
+              {getDuration(first_session, last_session)}
+            </Text>
+          )}
+      </Flex>
+      <Flex
+        flexDirection="column"
+        css={css`
+          align-items: flex-start;
+        `}
+      >
+        <Text pb={2} fontSize="20px">
+          Budget:{" "}
+          <strong>
+            {total_price}/{(total_price * percentage_split) / 100}
+          </strong>
         </Text>
-      }
-      {...rest}
-    >
-      {children}
-    </ListItem>
+        <Text pb={2}>
+          Percentage Split:
+          <select value={percentage_split} onChange={onSplitChange}>
+            {options.map(option => (
+              <option key={option} value={option}>
+                {option}%
+              </option>
+            ))}
+          </select>
+        </Text>
+        <Text>
+          <strong>Status:</strong> {status}
+        </Text>
+      </Flex>
+    </Flex>
+  );
+};
+function getDuration(first_session, last_session, time = true, short = false) {
+  if (first_session && last_session) {
+    return `${getDate(first_session, short)} ${
+      time ? getTime(first_session) : ""
+    } - ${getDate(last_session, short)} ${time ? getTime(first_session) : ""}`;
+  }
+}
+export const BookingListItem = ({
+  order,
+  user,
+  tutor,
+  total_price,
+  status,
+  to,
+  skill_name,
+  first_session,
+  last_session,
+  remark
+}) => {
+  return (
+    <BaseListItem
+      to={to}
+      {...{
+        leftTop: `Order: ${order} / Skill: ${skill_name}`,
+        heading: user.full_name,
+        heading_subtext: user.email,
+        sub_heading: `Tutor: ${tutor.full_name} (${tutor.email})`,
+        rightSection: total_price,
+        rightBottom: `Duration: ${getDuration(
+          first_session,
+          last_session,
+          false,
+          true
+        )}`,
+        rightTop: `Status: ${status}`,
+        created: "2018-10-12 14:10:33",
+        modified: "2018-10-12 14:10:33"
+      }}
+      children={remark}
+    />
   );
 };
