@@ -1,12 +1,12 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import { Box, Flex, Button, Text, Link, Heading, Image } from "@rebass/emotion";
-import React from "react";
-import format from "date-fns/format";
-import { DialogButton } from "./primitives";
+import { css, jsx } from '@emotion/core';
+import { Box, Flex, Button, Text, Link, Heading, Image } from '@rebass/emotion';
+import React from 'react';
+import format from 'date-fns/format';
+import { DialogButton } from './primitives';
 export function getDate(date, short = false) {
   let dd = new Date(date);
-  return format(dd, short ? "MMM D, YYYY" : "MMMM D, YYYY");
+  return format(dd, short ? 'MMM D, YYYY' : 'MMMM D, YYYY');
 }
 export const ListGroup = ({ name }) => {
   return (
@@ -96,19 +96,19 @@ export const DetailItem = ({ label, children, flexDirection }) => {
 
 export function getTime(date) {
   let dd = new Date(date);
-  return format(dd, "h:mm a");
+  return format(dd, 'h:mm a');
 }
 
 export function SectionListPage({
   data,
-  keyValue = "date",
+  keyValue = 'date',
   orderFunc = (a, b) =>
     new Date(b[keyValue]).getTime() - new Date(a[keyValue]).getTime(),
-  keyIndex = "order",
+  keyIndex = 'order',
   funcGetter = (item, keyValue) => getDate(item[keyValue]),
   LinkComponent = Link,
   callback = () => {},
-  Component = ListItem
+  Component = ListItem,
 }) {
   let rows = [];
   let lastCategory = null;
@@ -186,9 +186,9 @@ export const PVerificationListItem = ({
 };
 
 export const TutorDetailHeader = ({
-  image = "https://via.placeholder.com/100",
+  image = 'https://via.placeholder.com/100',
   detail,
-  children
+  children,
 }) => {
   return (
     <Flex>
@@ -316,26 +316,28 @@ export const RequestListItem = ({
           sub_heading: phone_no && `Phone no: ${phone_no}`,
           rightSection: skill,
           children,
-          ...rest
+          ...rest,
         }}
       />
     </React.Fragment>
   );
 };
-const ViewProfile = ({ label, value, link_text = "Hijack and view", to }) => (
+const ViewProfile = ({ label, value, link_text = 'Hijack and view', to }) => (
   <Text pb={2}>
-    <strong>{label}:</strong> {value}
-    {to && (
-      <Link
-        target="_blank"
-        href={to}
-        css={css`
-          padding-left: 10px;
-        `}
-      >
-        {link_text}
-      </Link>
-    )}
+    <Flex>
+      <strong>{label}:</strong> {value}
+      {to && (
+        <Link
+          target="_blank"
+          href={to}
+          css={css`
+            padding-left: 10px;
+          `}
+        >
+          {link_text}
+        </Link>
+      )}
+    </Flex>
   </Text>
 );
 export const BookingDetailHeader = ({
@@ -351,7 +353,7 @@ export const BookingDetailHeader = ({
   last_session,
   hijack_client_link,
   hijack_tutor_link,
-  onSplitChange = () => {}
+  onSplitChange = () => {},
 }) => {
   return (
     <Flex justifyContent="space-between">
@@ -370,13 +372,12 @@ export const BookingDetailHeader = ({
           value={`${tutor.full_name} (${tutor.email})`}
           to={hijack_tutor_link}
         />
-        {first_session &&
-          last_session && (
-            <Text pb={2}>
-              <strong>Duration:</strong>{" "}
-              {getDuration(first_session, last_session)}
-            </Text>
-          )}
+        {first_session && last_session && (
+          <Text pb={2}>
+            <strong>Duration:</strong>{' '}
+            {getDuration(first_session, last_session)}
+          </Text>
+        )}
       </Flex>
       <Flex
         flexDirection="column"
@@ -385,7 +386,7 @@ export const BookingDetailHeader = ({
         `}
       >
         <Text pb={2} fontSize="20px">
-          Budget:{" "}
+          Budget:{' '}
           <strong>
             {total_price}/{(total_price * percentage_split) / 100}
           </strong>
@@ -410,8 +411,8 @@ export const BookingDetailHeader = ({
 function getDuration(first_session, last_session, time = true, short = false) {
   if (first_session && last_session) {
     return `${getDate(first_session, short)} ${
-      time ? getTime(first_session) : ""
-    } - ${getDate(last_session, short)} ${time ? getTime(first_session) : ""}`;
+      time ? getTime(first_session) : ''
+    } - ${getDate(last_session, short)} ${time ? getTime(first_session) : ''}`;
   }
 }
 export const BookingListItem = ({
@@ -424,7 +425,7 @@ export const BookingListItem = ({
   skill_name,
   first_session,
   last_session,
-  remark
+  remark,
 }) => {
   return (
     <BaseListItem
@@ -442,8 +443,8 @@ export const BookingListItem = ({
           true
         )}`,
         rightTop: `Status: ${status}`,
-        created: "2018-10-12 14:10:33",
-        modified: "2018-10-12 14:10:33"
+        created: '2018-10-12 14:10:33',
+        modified: '2018-10-12 14:10:33',
       }}
       children={remark}
     />
@@ -459,7 +460,7 @@ export function SubjectDetailView({
   status,
   location,
   stats,
-  skill
+  skill,
 }) {
   return (
     <Flex flexDirection="column">
@@ -510,7 +511,7 @@ export function SubjectDetailView({
           `}
         >
           <option>Select Status</option>
-          {["Active", "Require Modification", "Denied"].map(option => (
+          {['Active', 'Require Modification', 'Denied'].map(option => (
             <option key={option} value={option}>
               {option}
             </option>
