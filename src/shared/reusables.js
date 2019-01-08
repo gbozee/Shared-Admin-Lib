@@ -549,3 +549,12 @@ export const SessionListItem = ({
     />
   );
 };
+
+export const RatingComponent = ({ rating, color }) => {
+  const array = Array.from(Array(Math.round(rating)), (x, i) => i + 1);
+  return array.map((value, index) => (
+    <span style={{ color: color }} key={index.toString()}>
+      &#9733;
+    </span>
+  ));
+};
