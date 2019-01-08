@@ -20,7 +20,8 @@ import {
   VerificationItem,
   RequestListItem,
   BookingDetailHeader,
-  BookingListItem
+  BookingListItem,
+  SubjectDetailView
 } from "../src/shared/reusables";
 import { DateFilter } from "../src/shared/DateFilter";
 import {
@@ -199,3 +200,70 @@ let booking_item = {
 Components.add("BookingDetailHeader", () => (
   <BookingDetailHeader {...booking_item} />
 )).add("BookingListItem", () => <BookingListItem {...booking_item} />);
+
+const SubjectListItemComponent = ({ name, to }) => (
+  <Link
+    href={to}
+    css={css`
+      display: block;
+      border-bottom: 1px solid black;
+      padding-top: 15px;
+      padding-bottom: 15px;
+    `}
+  >
+    {name}
+  </Link>
+);
+Components.add("SubjectStatusListView", () => (
+  <SectionListPage
+    data={[
+      { skill_name: "English", status: "active" },
+      { skill_name: "Chemistry", status: "denied" },
+      { skill_name: "Yoruba", status: "pending" },
+      { skill_name: "French", status: "active" },
+      { skill_name: "Accounting", status: "modification" },
+      { skill_name: "Hausa", status: "denied" },
+      { skill_name: "Physics", status: "modification" }
+    ]}
+    callback={skill => ({
+      name: skill.skill_name,
+      to: skill.status !== "denied" && "http://www.google.com"
+    })}
+    funcGetter={item => item.status}
+    Component={SubjectListItemComponent}
+    orderFunc={(a, b) => {
+      if (a.status < b.status) return -1;
+      if (a.status > b.status) return 1;
+      return 0;
+    }}
+    keyIndex="skill_name"
+  />
+));
+Components.add("SubjectDetailView", () => (
+  <SubjectDetailView
+    {...{
+      skill: {
+        name: "English Language"
+      },
+      heading:
+        "I have the gadgets and tutoring skills, passing is the only option",
+      description: `Listening, writing and speaking are basic abilities one must possess as it is used daily to communicate locally but how well have you mastered these skills especially in a foreign environment? 
+I would start by introducing you to various aspects of English speakers on an audio headphone as well as identifying such pronunciations, word for word within time and quicker response time
+I would introduce you to newer ways to skim and scan as well as summarize at the same time(multitasking)
+Also we would demystify the common errors people make thus giving you an edge for the exams
+We would also cover quicker ways to write within time and expose you to academic materials as well as past questions of old ielts exams`,
+      quiz: {
+        score: 40,
+        pass_mark: 50
+      },
+      link: "http://www.google.com",
+      status: "active",
+      price: 2000,
+      location: "gwarinpa, Abuja",
+      stats: {
+        hours_taught: 31,
+        active_bookings: 0
+      }
+    }}
+  />
+));

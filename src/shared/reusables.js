@@ -99,37 +99,35 @@ export function getTime(date) {
   return format(dd, "h:mm a");
 }
 
-export const SectionListPage = ({
+export function SectionListPage({
   data,
   keyValue = "date",
+  orderFunc = (a, b) =>
+    new Date(b[keyValue]).getTime() - new Date(a[keyValue]).getTime(),
   keyIndex = "order",
+  funcGetter = (item, keyValue) => getDate(item[keyValue]),
   LinkComponent = Link,
   callback = () => {},
   Component = ListItem
-}) => {
+}) {
   let rows = [];
   let lastCategory = null;
-  [...data]
-    .sort(
-      (a, b) =>
-        new Date(b[keyValue]).getTime() - new Date(a[keyValue]).getTime()
-    )
-    .forEach((withdrawal, index) => {
-      let date = getDate(withdrawal[keyValue]);
-      if (date !== lastCategory) {
-        rows.push(<ListGroup name={date} key={date} />);
-      }
-      rows.push(
-        <Component
-          key={withdrawal[keyIndex]}
-          {...callback(withdrawal)}
-          Link={LinkComponent}
-        />
-      );
-      lastCategory = date;
-    });
+  [...data].sort(orderFunc).forEach((withdrawal, index) => {
+    let date = funcGetter(withdrawal, keyValue);
+    if (date !== lastCategory) {
+      rows.push(<ListGroup name={date} key={date} />);
+    }
+    rows.push(
+      <Component
+        key={withdrawal[keyIndex]}
+        {...callback(withdrawal)}
+        Link={LinkComponent}
+      />
+    );
+    lastCategory = date;
+  });
   return rows;
-};
+}
 
 export const DetailHeader = ({ heading, subHeading, children }) => {
   return (
@@ -451,3 +449,77 @@ export const BookingListItem = ({
     />
   );
 };
+
+export function SubjectDetailView({
+  heading,
+  description,
+  price,
+  quiz,
+  link,
+  status,
+  location,
+  stats,
+  skill
+}) {
+  return (
+    <Flex flexDirection="column">
+      <Flex justifyContent="space-between" pb={2}>
+        <Flex flexDirection="column">
+          <Text fontSize={3} pb={2}>
+            {heading}
+          </Text>
+          <Flex justifyContent="space-between">
+            <Text>{stats.active_bookings} Active bookings</Text>
+            <Text>{stats.hours_taught} Hours taught</Text>
+            <Text>{location}</Text>
+          </Flex>
+        </Flex>
+        <Flex
+          flexDirection="column"
+          css={css`
+            align-items: center;
+          `}
+        >
+          <Text fontSize={3}>{price}</Text>
+          <Text>
+            <Link href={link} target="_blank">
+              View Skill Profile
+            </Link>
+          </Text>
+        </Flex>
+      </Flex>
+      <ListGroup name="description" />
+      <DetailItem>{description}</DetailItem>
+      <ListGroup name="Quiz Result" />
+      <DetailItem label="Score">
+        <Flex
+          css={css`
+            align-items: center;
+          `}
+        >
+          <Text pr={3}>{quiz.score}</Text>
+          {quiz.pass_mark > quiz.score && <Button>Retake Test</Button>}
+        </Flex>
+      </DetailItem>
+      <ListGroup name="Admin Actions" />
+      <DetailItem label="Set Status">
+        <select
+          css={css`
+            padding-top: 10px;
+            padding-bottom: 10px;
+          `}
+        >
+          <option>Select Status</option>
+          {["Active", "Require Modification", "Denied"].map(option => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </DetailItem>
+      <DetailItem label="Freeze Subject">
+        <Button>Freeze {skill.name}</Button>
+      </DetailItem>
+    </Flex>
+  );
+}

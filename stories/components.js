@@ -40,8 +40,7 @@ const TABS = [
   { label: "Tab 3", content: <Content>Three</Content> },
   { label: "Tab 4", content: <Content>Four</Content> }
 ];
-
-storiesOf("Primitives", module)
+const Components = storiesOf("Primitives", module)
   .add("with text", () => (
     <Button onClick={action("clicked")}>Hello Button</Button>
   ))
@@ -58,3 +57,4 @@ storiesOf("Primitives", module)
       </TabContent>
     </Tabs>
   ));
+
