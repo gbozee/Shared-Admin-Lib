@@ -31,7 +31,7 @@ export const Input = ({
         }
       `}
     >
-      <label htmlFor={rest.name}>{label}</label>
+      {label && <label htmlFor={rest.name}>{label}</label>}
       <input {...{ type, value, onChange, ...rest }} />
     </Flex>
   );

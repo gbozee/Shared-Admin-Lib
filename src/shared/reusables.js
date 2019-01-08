@@ -85,9 +85,9 @@ export const ListItem = ({
   );
 };
 
-export const DetailItem = ({ label, children }) => {
+export const DetailItem = ({ label, children, flexDirection }) => {
   return (
-    <Flex py={2} justifyContent="space-between">
+    <Flex py={2} justifyContent="space-between" flexDirection={flexDirection}>
       <Text fontSize={3}>{label}</Text>
       <Text fontSize={3}>{children}</Text>
     </Flex>

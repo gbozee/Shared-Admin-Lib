@@ -1,12 +1,12 @@
 /** @jsx jsx */
-import React from "react";
-import styled from "@emotion/styled";
-import { Global, css, jsx } from "@emotion/core";
-import ReactModal from "react-modal";
-import { Button } from ".";
+import React from 'react';
+import styled from '@emotion/styled';
+import { Global, css, jsx } from '@emotion/core';
+import ReactModal from 'react-modal';
+import { Button } from '.';
 
-import { Box, Flex, Button as EButton, Text, Link } from "@rebass/emotion";
-import "./modal.css";
+import { Box, Flex, Button as EButton, Text, Link } from '@rebass/emotion';
+import './modal.css';
 
 const xs = 768;
 
@@ -19,21 +19,21 @@ export const ModalFooter = props => {
     buttonType,
     is,
     showSpinner,
-    buttonClass = "primary"
+    buttonClass = 'primary',
   } = props;
   return (
     <div className="modal-footer" style={style}>
       <div className="row">
         <Flex justifyContent="space-between">
           <Button
-            type={"button"}
+            type={'button'}
             onClick={onClose}
-            buttonClass={"btn faint-gray-button capitalize"}
+            buttonClass={'btn faint-gray-button capitalize'}
           >
             Cancel
           </Button>
           <Button
-            type={buttonType || "submit"}
+            type={buttonType || 'submit'}
             is={is}
             showSpinner={showSpinner}
             onClick={modalAction}
@@ -57,7 +57,7 @@ export const ModalHeader = props => (
   <div className="modal-header">
     <div className="row">
       <div className="col-80">
-        <h3 className={"modal-title"}>{props.children}</h3>
+        <h3 className={'modal-title'}>{props.children}</h3>
       </div>
       <div className="col-20" style={{ paddingRight: 0 }}>
         <button className="modal-close" onClick={props.onClose}>
@@ -103,7 +103,7 @@ class ImageModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      height: null
+      height: null,
     };
     this.node = null;
   }
@@ -112,16 +112,16 @@ class ImageModal extends React.Component {
   };
   render() {
     const {
-      backgroundColor = "rgba(71, 82, 93, 0.7)",
+      backgroundColor = 'rgba(71, 82, 93, 0.7)',
       heading,
       headingCss,
-      buttonText = "Submit",
-      hideFooter = false
+      buttonText = 'Submit',
+      hideFooter = false,
     } = this.props;
     return (
       <Modal
-        className={"modal-dialog small"}
-        css={this.props.css || ""}
+        className={'modal-dialog small'}
+        css={this.props.css || ''}
         gutter={this.props.gutter}
         isOpen={this.props.showModal}
         onRequestClose={this.props.handleCloseModal}
@@ -131,15 +131,15 @@ class ImageModal extends React.Component {
         ariaHideApp={false}
         style={{
           overlay: {
-            position: "fixed",
+            position: 'fixed',
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            overflowY: "auto",
+            overflowY: 'auto',
             backgroundColor,
-            zIndex: 9999
-          }
+            zIndex: 9999,
+          },
         }}
       >
         <Global
@@ -226,7 +226,9 @@ export const Dialog = ({
   close,
   children,
   buttonText,
-  action
+  action,
+  hideFooter,
+  heading
 }) => {
   return (
     <ImageModal
@@ -234,9 +236,11 @@ export const Dialog = ({
       gutter={4}
       showModal={modalIsOpen}
       handleCloseModal={close}
-      buttonClass={"red"}
+      buttonClass={'red'}
       buttonText={buttonText}
       action={action}
+      heading={heading}
+      hideFooter={hideFooter}
     >
       {children}
     </ImageModal>
@@ -245,14 +249,14 @@ export const Dialog = ({
 
 export class DialogButton extends React.Component {
   state = {
-    confirm: false
+    confirm: false,
   };
   confirmAction = () => {
     this.props.confirmAction();
     this.setState({ confirm: false });
   };
   render() {
-    let { dialogText, ...rest } = this.props;
+    let { dialogText, hideFooter, heading, ...rest } = this.props;
     return (
       <>
         <Button
@@ -266,6 +270,8 @@ export class DialogButton extends React.Component {
           close={() => {
             this.setState({ confirm: false });
           }}
+          heading={heading}
+          hideFooter={hideFooter}
           action={this.confirmAction}
         >
           {dialogText}
@@ -274,4 +280,5 @@ export class DialogButton extends React.Component {
     );
   }
 }
+
 export default ImageModal;
