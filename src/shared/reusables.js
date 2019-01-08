@@ -272,7 +272,7 @@ const BaseListItem = ({
         `}
       >
         <Heading pr={2}>{heading}</Heading>
-        <Text fontSize={1}>({heading_subtext})</Text>
+        {heading_subtext && <Text fontSize={1}>({heading_subtext})</Text>}
       </Flex>
     }
     subHeading={sub_heading}
@@ -524,3 +524,28 @@ export function SubjectDetailView({
     </Flex>
   );
 }
+
+export const SessionListItem = ({
+  to,
+  date,
+  order,
+  price,
+  status,
+  remark,
+  onEdit,
+  no_of_hours
+}) => {
+  return (
+    <BaseListItem
+      to={to}
+      {...{
+        leftTop: `Order: ${order}`,
+        heading: price,
+        rightSection: <Button onClick={onEdit}>Edit Session</Button>,
+        sub_heading: `Status: ${status}`,
+        rightBottom: `Date: ${getDate(date)}`,
+        rightTop: `Status: ${status}`,
+      }}
+    />
+  );
+};
