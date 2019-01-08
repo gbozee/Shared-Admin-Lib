@@ -23,6 +23,7 @@ import {
   BookingListItem,
   SubjectDetailView,
   SessionListItem,
+  RatingComponent,
 } from '../src/shared/reusables';
 import { DateFilter } from '../src/shared/DateFilter';
 import {
@@ -281,3 +282,5 @@ Components.add('SessionListItem', () => (
     }}
   />
 ));
+
+Components.add('Rating Component', () => (<RatingComponent rating={score}/>))
