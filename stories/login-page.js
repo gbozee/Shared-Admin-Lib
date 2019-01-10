@@ -283,4 +283,4 @@ Components.add('SessionListItem', () => (
   />
 ));
 
-Components.add('Rating Component', () => (<RatingComponent rating={score}/>))
+Components.add('Rating Component', () => (<RatingComponent rating={4}/>))
