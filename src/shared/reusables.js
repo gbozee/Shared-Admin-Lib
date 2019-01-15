@@ -108,8 +108,13 @@ export function SectionListPage({
   funcGetter = (item, keyValue) => getDate(item[keyValue]),
   LinkComponent = Link,
   callback = () => {},
-  Component = ListItem
+  Component = ListItem,
+  ...rest
 }) {
+  let _keyFunc = withdrawal => {
+    return withdrawal[keyIndex];
+  };
+  let keyFunc = rest.keyFunc || _keyFunc;
   let rows = [];
   let lastCategory = null;
   [...data].sort(orderFunc).forEach((withdrawal, index) => {
@@ -119,7 +124,7 @@ export function SectionListPage({
     }
     rows.push(
       <Component
-        key={withdrawal[keyIndex]}
+        key={keyFunc(withdrawal)}
         {...callback(withdrawal)}
         Link={LinkComponent}
       />
@@ -509,14 +514,15 @@ export function SubjectDetailView({
           `}
         >
           <Text pr={3}>{skill.quiz.score}</Text>
-          {skill.quiz.pass_mark > skill.quiz.score && (
-            <DialogButton
-              dialogText="Are you sure you want this tutor to retake the test?"
-              confirmAction={onRetakeTest}
-            >
-              {`Retake Test`}
-            </DialogButton>
-          )}
+          {skill.quiz &&
+            !skill.quiz.passed && (
+              <DialogButton
+                dialogText="Are you sure you want this tutor to retake the test?"
+                confirmAction={onRetakeTest}
+              >
+                {`Retake Test`}
+              </DialogButton>
+            )}
         </Flex>
       </DetailItem>
       <ListGroup name="Admin Actions" />
