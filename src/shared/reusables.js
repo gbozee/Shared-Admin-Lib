@@ -562,7 +562,7 @@ export const SessionListItem = ({
       {...{
         leftTop: `Order: ${order}`,
         heading: price,
-        rightSection: <Button onClick={onEdit}>Edit Session</Button>,
+        rightSection: onEdit && <Button onClick={onEdit}>Edit Session</Button>,
         sub_heading: `Status: ${status}`,
         rightBottom: `Date: ${getDate(date)}`,
         rightTop: `Status: ${status}`
