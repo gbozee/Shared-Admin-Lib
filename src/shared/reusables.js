@@ -1,12 +1,12 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-import { Box, Flex, Button, Text, Link, Heading, Image } from '@rebass/emotion';
-import React from 'react';
-import format from 'date-fns/format';
-import { DialogButton } from './primitives';
+import { css, jsx } from "@emotion/core";
+import { Box, Flex, Text, Link, Heading, Image } from "@rebass/emotion";
+import React from "react";
+import format from "date-fns/format";
+import { DialogButton, Button, DialogElement } from "./primitives";
 export function getDate(date, short = false) {
   let dd = new Date(date);
-  return format(dd, short ? 'MMM D, YYYY' : 'MMMM D, YYYY');
+  return format(dd, short ? "MMM D, YYYY" : "MMMM D, YYYY");
 }
 export const ListGroup = ({ name }) => {
   return (
@@ -17,7 +17,7 @@ export const ListGroup = ({ name }) => {
 };
 export const AsLink = ({ to, onClick, children, ...rest }) => {
   let WLink = rest.Link || Link;
-
+  let V = Link;
   return Boolean(to) || Boolean(onClick) ? (
     <WLink
       to={to}
@@ -96,19 +96,19 @@ export const DetailItem = ({ label, children, flexDirection }) => {
 
 export function getTime(date) {
   let dd = new Date(date);
-  return format(dd, 'h:mm a');
+  return format(dd, "h:mm a");
 }
 
 export function SectionListPage({
   data,
-  keyValue = 'date',
+  keyValue = "date",
   orderFunc = (a, b) =>
     new Date(b[keyValue]).getTime() - new Date(a[keyValue]).getTime(),
-  keyIndex = 'order',
+  keyIndex = "order",
   funcGetter = (item, keyValue) => getDate(item[keyValue]),
   LinkComponent = Link,
   callback = () => {},
-  Component = ListItem,
+  Component = ListItem
 }) {
   let rows = [];
   let lastCategory = null;
@@ -186,9 +186,11 @@ export const PVerificationListItem = ({
 };
 
 export const TutorDetailHeader = ({
-  image = 'https://via.placeholder.com/100',
+  image = "https://via.placeholder.com/100",
   detail,
   children,
+  frozen,
+  unFreezeProfile
 }) => {
   return (
     <Flex>
@@ -208,9 +210,18 @@ export const TutorDetailHeader = ({
       <Flex
         flexDirection="column"
         css={css`
-          align-self: center;
+          align-self: ${frozen ? "flex-start" : "center"};
         `}
       >
+        {frozen && (
+          <DialogButton
+            dialogText="Are you sure you want to unfreeze tutor profile"
+            confirmAction={unFreezeProfile}
+            mb={2}
+          >
+            Un Freeze Profile
+          </DialogButton>
+        )}
         {children}
       </Flex>
     </Flex>
@@ -316,13 +327,13 @@ export const RequestListItem = ({
           sub_heading: phone_no && `Phone no: ${phone_no}`,
           rightSection: skill,
           children,
-          ...rest,
+          ...rest
         }}
       />
     </React.Fragment>
   );
 };
-const ViewProfile = ({ label, value, link_text = 'Hijack and view', to }) => (
+const ViewProfile = ({ label, value, link_text = "Hijack and view", to }) => (
   <Text pb={2}>
     <Flex>
       <strong>{label}:</strong> {value}
@@ -353,7 +364,7 @@ export const BookingDetailHeader = ({
   last_session,
   hijack_client_link,
   hijack_tutor_link,
-  onSplitChange = () => {},
+  onSplitChange = () => {}
 }) => {
   return (
     <Flex justifyContent="space-between">
@@ -372,12 +383,13 @@ export const BookingDetailHeader = ({
           value={`${tutor.full_name} (${tutor.email})`}
           to={hijack_tutor_link}
         />
-        {first_session && last_session && (
-          <Text pb={2}>
-            <strong>Duration:</strong>{' '}
-            {getDuration(first_session, last_session)}
-          </Text>
-        )}
+        {first_session &&
+          last_session && (
+            <Text pb={2}>
+              <strong>Duration:</strong>{" "}
+              {getDuration(first_session, last_session)}
+            </Text>
+          )}
       </Flex>
       <Flex
         flexDirection="column"
@@ -386,7 +398,7 @@ export const BookingDetailHeader = ({
         `}
       >
         <Text pb={2} fontSize="20px">
-          Budget:{' '}
+          Budget:{" "}
           <strong>
             {total_price}/{(total_price * percentage_split) / 100}
           </strong>
@@ -411,8 +423,8 @@ export const BookingDetailHeader = ({
 function getDuration(first_session, last_session, time = true, short = false) {
   if (first_session && last_session) {
     return `${getDate(first_session, short)} ${
-      time ? getTime(first_session) : ''
-    } - ${getDate(last_session, short)} ${time ? getTime(first_session) : ''}`;
+      time ? getTime(first_session) : ""
+    } - ${getDate(last_session, short)} ${time ? getTime(first_session) : ""}`;
   }
 }
 export const BookingListItem = ({
@@ -426,6 +438,7 @@ export const BookingListItem = ({
   first_session,
   last_session,
   remark,
+  ...rest
 }) => {
   return (
     <BaseListItem
@@ -443,36 +456,33 @@ export const BookingListItem = ({
           true
         )}`,
         rightTop: `Status: ${status}`,
-        created: '2018-10-12 14:10:33',
-        modified: '2018-10-12 14:10:33',
+        created: "2018-10-12 14:10:33",
+        modified: "2018-10-12 14:10:33"
       }}
       children={remark}
+      {...rest}
     />
   );
 };
 
 export function SubjectDetailView({
-  heading,
-  description,
-  price,
-  quiz,
-  link,
-  status,
-  location,
-  stats,
   skill,
+  onRetakeTest,
+  onStatusChange,
+  dialogText = () => ``,
+  options = ["Active", "Require Modification", "Denied"]
 }) {
   return (
     <Flex flexDirection="column">
       <Flex justifyContent="space-between" pb={2}>
         <Flex flexDirection="column">
-          <Text fontSize={3} pb={2}>
-            {heading}
+          <Text fontSize={5} pb={2}>
+            {skill.heading}
           </Text>
           <Flex justifyContent="space-between">
-            <Text>{stats.active_bookings} Active bookings</Text>
-            <Text>{stats.hours_taught} Hours taught</Text>
-            <Text>{location}</Text>
+            <Text>{skill.stats.active_bookings} Active bookings</Text>
+            <Text>{skill.stats.hours_taught} Hours taught</Text>
+            <Text>{skill.location}</Text>
           </Flex>
         </Flex>
         <Flex
@@ -481,16 +491,16 @@ export function SubjectDetailView({
             align-items: center;
           `}
         >
-          <Text fontSize={3}>{price}</Text>
+          <Text fontSize={3}>{skill.price}</Text>
           <Text>
-            <Link href={link} target="_blank">
+            <Link href={skill.link} target="_blank">
               View Skill Profile
             </Link>
           </Text>
         </Flex>
       </Flex>
       <ListGroup name="description" />
-      <DetailItem>{description}</DetailItem>
+      <DetailItem>{skill.description}</DetailItem>
       <ListGroup name="Quiz Result" />
       <DetailItem label="Score">
         <Flex
@@ -498,28 +508,39 @@ export function SubjectDetailView({
             align-items: center;
           `}
         >
-          <Text pr={3}>{quiz.score}</Text>
-          {quiz.pass_mark > quiz.score && <Button>Retake Test</Button>}
+          <Text pr={3}>{skill.quiz.score}</Text>
+          {skill.quiz.pass_mark > skill.quiz.score && (
+            <DialogButton
+              dialogText="Are you sure you want this tutor to retake the test?"
+              confirmAction={onRetakeTest}
+            >
+              {`Retake Test`}
+            </DialogButton>
+          )}
         </Flex>
       </DetailItem>
       <ListGroup name="Admin Actions" />
       <DetailItem label="Set Status">
-        <select
-          css={css`
-            padding-top: 10px;
-            padding-bottom: 10px;
-          `}
-        >
-          <option>Select Status</option>
-          {['Active', 'Require Modification', 'Denied'].map(option => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </DetailItem>
-      <DetailItem label="Freeze Subject">
-        <Button>Freeze {skill.name}</Button>
+        <DialogElement dialogText={dialogText} confirmAction={onStatusChange}>
+          {onClick => (
+            <select
+              onChange={e => {
+                onClick(e.target.value);
+              }}
+              css={css`
+                padding-top: 10px;
+                padding-bottom: 10px;
+              `}
+            >
+              <option>Select Status</option>
+              {options.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.text}
+                </option>
+              ))}
+            </select>
+          )}
+        </DialogElement>
       </DetailItem>
     </Flex>
   );
@@ -544,13 +565,13 @@ export const SessionListItem = ({
         rightSection: <Button onClick={onEdit}>Edit Session</Button>,
         sub_heading: `Status: ${status}`,
         rightBottom: `Date: ${getDate(date)}`,
-        rightTop: `Status: ${status}`,
+        rightTop: `Status: ${status}`
       }}
     />
   );
 };
 
-export const RatingComponent = ({ rating=5, color }) => {
+export const RatingComponent = ({ rating = 5, color }) => {
   const array = Array.from(Array(Math.round(rating)), (x, i) => i + 1);
   return array.map((value, index) => (
     <span style={{ color: color }} key={index.toString()}>

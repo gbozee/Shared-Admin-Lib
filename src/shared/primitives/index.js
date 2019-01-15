@@ -2,7 +2,7 @@
 import { css, jsx } from "@emotion/core";
 import { Box, Flex, Button as EButton, Text, Link } from "@rebass/emotion";
 import React from "react";
-export { DialogButton } from "./Modal";
+export { DialogButton, DialogElement } from "./Modal";
 export { Tabs, TabContent } from "./Tabs";
 export const Button = ({ ...rest }) => {
   return (
