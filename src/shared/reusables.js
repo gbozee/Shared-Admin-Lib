@@ -322,6 +322,40 @@ export const RequestListItem = ({
     </React.Fragment>
   );
 };
+export const GroupLessonListItem = ({
+  slug,
+  full_name,
+  email,
+  phone_no,
+  budget,
+  no_of_students,
+  status,
+  to,
+  created,
+  children,
+  ...rest
+}) => {
+  return (
+    <React.Fragment>
+      <BaseListItem
+        {...{
+          to,
+          leftTop: `Slug: ${slug}`,
+          rightTop: `N ${budget}`,
+          rightBottom: getDate(created),
+          heading: full_name,
+          heading_subtext: email,
+          sub_heading: phone_no && `Phone no: ${phone_no}`,
+          rightSection: `${no_of_students} ${
+            no_of_students > 1 ? `students` : `student`
+          }`,
+          children,
+          ...rest,
+        }}
+      />
+    </React.Fragment>
+  );
+};
 const ViewProfile = ({ label, value, link_text = 'Hijack and view', to }) => (
   <Text pb={2}>
     <Flex>
@@ -533,7 +567,7 @@ export const SessionListItem = ({
   status,
   remark,
   onEdit,
-  no_of_hours
+  no_of_hours,
 }) => {
   return (
     <BaseListItem
@@ -550,7 +584,7 @@ export const SessionListItem = ({
   );
 };
 
-export const RatingComponent = ({ rating=5, color }) => {
+export const RatingComponent = ({ rating = 5, color }) => {
   const array = Array.from(Array(Math.round(rating)), (x, i) => i + 1);
   return array.map((value, index) => (
     <span style={{ color: color }} key={index.toString()}>

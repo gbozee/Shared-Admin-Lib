@@ -24,6 +24,7 @@ import {
   SubjectDetailView,
   SessionListItem,
   RatingComponent,
+  GroupLessonListItem,
 } from '../src/shared/reusables';
 import { DateFilter } from '../src/shared/DateFilter';
 import {
@@ -181,6 +182,21 @@ Components.add('ListItem', () => (
           <Text fontSize="12px">Last Updated: 20/10/2018</Text>
         </Flex>
       }
+    />
+  ))
+  .add('GroupLessonListItem', () => (
+    <GroupLessonListItem
+      to="http:/www.google.com"
+      {...{
+        slug: 'ABCDESDDESS',
+        full_name: 'Shola Ameobi',
+        email: 'james@example.com',
+        phone_no: '08033002232',
+        budget: 40000,
+        no_of_students: 5,
+        created: '2018-10-12 14:10:33',
+        modified: '2018-10-12 14:10:33',
+      }}
     />
   ));
 let booking_item = {
