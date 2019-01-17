@@ -91,7 +91,7 @@ export const DateFilter = ({
   placeholder = 'Search either email or order',
   buttonText,
   searchButton = {},
-  filters=[]
+  filters = [],
 }) => {
   return (
     <Flex
@@ -153,10 +153,10 @@ export const DateFilter = ({
                 align-self: flex-end;
                 margin-bottom: 16px;
                 margin-left: 20px;
+                width: 100%;
               `}
               value={filter.selection}
               onChange={onFilterChange}
-              placeholder={`Filter by ${filter.name}`}
             >
               {filter.options.map(option => (
                 <option key={option.label} value={option.value}>
