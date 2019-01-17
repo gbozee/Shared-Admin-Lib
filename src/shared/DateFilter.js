@@ -54,6 +54,7 @@ class FromTo extends React.Component {
         />
         <Button
           py="4px"
+          mt="24px"
           onClick={() => {
             let today = currentMonth();
 
@@ -168,11 +169,11 @@ export const DateFilter = ({
         : null}
       {searchButton.display ? (
         <Button
+          mt="24px"
+          ml="10px"
           css={css`
             height: 40px;
             align-self: center;
-            margin-top: 24px;
-            margin-left: 10px;
             ${searchButton.styles || ''}
           `}
           onClick={searchButton.onClick}
