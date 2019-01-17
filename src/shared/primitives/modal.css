@@ -73,7 +73,7 @@
 }
 
 .modal-header {
-  padding: 16px 0 32px 32px;
+  padding: 16px 0 16px 32px;
   /* background: #f5f5f5; */
   border-bottom: none;
 }
@@ -89,6 +89,7 @@
 
 .modal-body {
   padding: 16px 32px;
+  padding-top: 0;
   font-family: "AtlasGrotesk", -apple-system, "Helvetica Neue", sans-serif;
   font-size: 14px;
   font-weight: 300;
