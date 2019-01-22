@@ -9,6 +9,7 @@ import { linkTo } from "@storybook/addon-links";
 
 import { Button, Welcome } from "@storybook/react/demo";
 import { Tabs, TabContent } from "../src/shared/primitives";
+import { FormDrawer } from "../src/shared/components";
 
 storiesOf("Welcome", module).add("to Storybook", () => (
   <Welcome showApp={linkTo("Button")} />
@@ -56,5 +57,5 @@ const Components = storiesOf("Primitives", module)
         <Content>three</Content>
       </TabContent>
     </Tabs>
-  ));
-
+  ))
+  .add("Form Drawer", () => <FormDrawer />);

@@ -1,6 +1,15 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { Box, Flex, Text, Link, Heading, Image, Card } from "@rebass/emotion";
+import {
+  Box,
+  Flex,
+  Text,
+  Link,
+  Heading,
+  Image,
+  Card,
+  Button as DButton
+} from "@rebass/emotion";
 import React from "react";
 import format from "date-fns/format";
 import { DialogButton, Button, DialogElement } from "./primitives";
@@ -195,13 +204,17 @@ export const TutorDetailHeader = ({
   detail,
   children,
   frozen,
-  unFreezeProfile
+  unFreezeProfile,
+  leftSectionChildren,
+  overWriteChildren = false
 }) => {
   return (
     <Flex>
       <Image src={image} height={100} />
       <Flex
         mb={4}
+        pl={3}
+        pt={2}
         flexDirection="column"
         css={css`
           flex: 2;
@@ -211,24 +224,29 @@ export const TutorDetailHeader = ({
         <Heading fontSize={5}>{detail[1]}</Heading>
         <Text mb={1}>{detail[2]}</Text>
         <Text mb={1}>{detail[3]}</Text>
+        {leftSectionChildren}
       </Flex>
-      <Flex
-        flexDirection="column"
-        css={css`
-          align-self: ${frozen ? "flex-start" : "center"};
-        `}
-      >
-        {frozen && (
-          <DialogButton
-            dialogText="Are you sure you want to unfreeze tutor profile"
-            confirmAction={unFreezeProfile}
-            mb={2}
-          >
-            Un Freeze Profile
-          </DialogButton>
-        )}
-        {children}
-      </Flex>
+      {overWriteChildren ? (
+        children
+      ) : (
+        <Flex
+          flexDirection="column"
+          css={css`
+            align-self: ${frozen ? "flex-start" : "center"};
+          `}
+        >
+          {frozen && (
+            <DialogButton
+              dialogText="Are you sure you want to unfreeze tutor profile"
+              confirmAction={unFreezeProfile}
+              mb={2}
+            >
+              Un Freeze Profile
+            </DialogButton>
+          )}
+          {children}
+        </Flex>
+      )}
     </Flex>
   );
 };
@@ -654,5 +672,63 @@ export function SummaryCardList({ items }) {
         );
       })}
     </Flex>
+  );
+}
+
+export function RequestDetailHeader({ request }) {
+  return (
+    <TutorDetailHeader
+      overWriteChildren
+      detail={[
+        request.user.phone,
+        <React.Fragment>
+          {request.user.full_name}
+          <DButton
+            fontSize="15px"
+            ml={2}
+            css={css`
+              cursor: pointer;
+            `}
+          >
+            Create user account
+          </DButton>
+        </React.Fragment>,
+        request.user.email,
+        <Link target="_blank" target="http://www.google.com">
+          http://www.google.com
+        </Link>
+      ]}
+    >
+      <Flex
+        flexDirection="column"
+        css={css`
+          flex: 1.5;
+          align-self: center;
+        `}
+      >
+        <Flex flexDirection="column">
+          <Text pb={2}>
+            <strong>Slug:</strong> {request.slug}{" "}
+          </Text>
+          <Text pb={2}>
+            <strong>Request ID:</strong> {request.request_id}{" "}
+          </Text>
+          <Text>
+            <strong>Number of hours:</strong> {request.no_of_hours}{" "}
+          </Text>
+        </Flex>
+      </Flex>
+      <Box>
+        <Text pb={2} fontSize={5}>
+          <strong>Budget:</strong> {request.budget}{" "}
+        </Text>
+        <Text pb={2}>
+          <strong>Per hour rate:</strong> {request.per_hour_rate}{" "}
+        </Text>
+        <Text fontSize={3} pb={2}>
+          <strong>Status:</strong> {request.status}
+        </Text>
+      </Box>
+    </TutorDetailHeader>
   );
 }

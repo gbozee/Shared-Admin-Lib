@@ -17,6 +17,7 @@ import {
   DetailItem,
   PVerificationListItem,
   TutorDetailHeader,
+  RequestDetailHeader,
   VerificationItem,
   RequestListItem,
   BookingDetailHeader,
@@ -38,6 +39,7 @@ import DataProvider, {
   DataContext
 } from "../src/shared/DataProvider";
 import { Dialog, ModalButton } from "../src/shared/primitives/Modal";
+import { FormDrawer, TagsInput } from "../src/shared/components";
 
 storiesOf("Pages", module).add("Login Page", () => (
   <LoginPage
@@ -203,6 +205,36 @@ Components.add("ListItem", () => (
       frozen
       unFreezeProfile={() => {}}
       children={<div>Id verified</div>}
+    />
+  ))
+  .add("RequestDetailHeader", () => (
+    <RequestDetailHeader
+      request={{
+        user: {
+          full_name: "Tioluwani Kolawole",
+          email: "kolawole.tioluwani@gmail.com",
+          phone: "08078657912"
+        },
+        request_id: "23009",
+        no_of_hours: 7,
+        per_hour_rate: 2500,
+        budget: 35000,
+        slug: "ABSCDEFG",
+        address: "105 igi olugbin street",
+        vicinity: "Bariga",
+        state: "Lagos",
+        start_date: "2018-10-10 9:20:33",
+        start_time: "9:20:33",
+        no_of_students: 3,
+        status: "ISSUED",
+        curriculum: "British",
+        duration: "3pm - 5pm",
+        classes: ["JSS1", "JSS2", "SS1"],
+        days: ["Monday", "Wednesday", "Friday", "Saturday"],
+        subjects: ["Mathematics", "English Language", "Biology", "Chemistry"],
+        expectation:
+          "Lorem Khaled Ipsum is a major key to success. I’m giving you cloth talk, cloth. Special cloth alert, cut from a special cloth. The first of the month is coming, we have to get money, we have no choice."
+      }}
     />
   ))
   .add("VerificationItem", () => (
@@ -388,4 +420,127 @@ Components.add("SummaryCardList", () => (
       { name: "Combined Revenue", amount: 100000, count: 200 }
     ]}
   />
+)).add("Add New Request", () => (
+  <FormDrawer>
+    <form>
+      <Flex flexDirection="column">
+        <Flex pb={3}>
+          <Box>
+            <label>First name</label>
+            <input type="text" />
+          </Box>
+          <Box>
+            <label>Last name</label>
+            <input type="text" />
+          </Box>
+        </Flex>
+        <Flex pb={3}>
+          <Box>
+            <label>Email address</label>
+            <input type="text" />
+          </Box>
+          <Box>
+            <label>Phone Number</label>
+            <input type="text" />
+          </Box>
+        </Flex>
+        <Box pb={3}>
+          <label>Number of students</label>
+          <select>
+            <option>Select No of students</option>
+          </select>
+        </Box>
+        <Box pb={3}>
+          <label>Status</label>
+          <select>
+            <option>Select Status</option>
+          </select>
+        </Box>
+        <Box pb={3}>
+          <label>Days per week</label>
+          <select>
+            <option>Select duration</option>
+          </select>
+        </Box>
+        <Box pb={3}>
+          <label>Gender</label>
+          <select>
+            <option>Any</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+        </Box>
+        <Box pb={3}>
+          <label>Where you heard</label>
+          <select>
+            <option>Any</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+        </Box>
+        <Box pb={3}>
+          <label>Request Type</label>
+          <select>
+            <option>Regular Request</option>
+            <option>Group lessons</option>
+          </select>
+        </Box>
+        <Box pb={3}>
+          <label>Curriculum</label>
+          <select>
+            <option>Nigerian</option>
+            <option>British</option>
+          </select>
+        </Box>
+        <Box pb={3}>
+          <label>No of Hours per day</label>
+          <select>
+            <option>1 hour</option>
+            <option>1 hour 30 minutes</option>
+            <option>2 hours</option>
+          </select>
+        </Box>
+        <Flex flexDirection="column" pb={3}>
+          <label>Home address</label>
+          <input type="text" />
+        </Flex>
+        <Flex pb={3}>
+          <Box>
+            <label>State</label>
+            <input type="text" />
+          </Box>
+          <Box>
+            <label>Vicinity</label>
+            <input type="text" />
+          </Box>
+        </Flex>
+        <Box pb={3}>
+          <label>Expectation</label>
+          <textarea rows={3} />
+        </Box>
+        <Box pb={3}>
+          <label>Budget</label>
+          <input type="number" />
+        </Box>
+        <Box pb={3}>
+          <label for="parent-request">
+            <input type="checkbox" name="parent-request" />Is parent request
+          </label>
+        </Box>
+        <Box pb={3}>
+          <label>Available Days</label>
+          <TagsInput tags={["Monday", "Tuesday", "Thursday"]} />
+        </Box>
+        <Box pb={3}>
+          <label>Class of Child</label>
+          <TagsInput tags={["Monday", "Tuesday", "Thursday"]} />
+        </Box>
+        <Box pb={5}>
+          <label>Request Subjects</label>
+          <TagsInput tags={["Physics", "Chemistry", "Biology"]} />
+        </Box>
+        <Button type="submit">Submit</Button>
+      </Flex>
+    </form>
+  </FormDrawer>
 ));
