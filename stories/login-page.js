@@ -24,9 +24,10 @@ import {
   SubjectDetailView,
   SessionListItem,
   RatingComponent,
-  GroupLessonListItem,
-} from '../src/shared/reusables';
-import { DateFilter } from '../src/shared/DateFilter';
+  SummaryCardList,
+  getDate
+} from "../src/shared/reusables";
+import { DateFilter } from "../src/shared/DateFilter";
 import {
   SpinnerContainer,
   HomePageSpinner
@@ -91,26 +92,80 @@ Components.add("ListItem", () => (
     />
   ))
   .add("DateFilter", () => (
-    <DateFilter
-      onSearchChange={() => {}}
-      buttonText="This Month"
-      searchValue=""
-      dateValue={{}}
-      onChange={() => {}}
-      onFilterChange={() => {}}
-      selection={""}
-      onKeyDown={() => {}}
-      filterOptions={[
-        { value: "", label: "Select Filter" },
-        { value: "verified", label: "Verified" },
-        { value: "not_verified", label: "Not Verified" }
-      ]}
-      searchButton={{
-        display: false,
-        onClick: () => {}
-      }}
-    />
+    <Flex flexDirection="column">
+      <Box mb={3}>
+        <DateFilter
+          onSearchChange={() => {}}
+          buttonText="This Month"
+          searchValue=""
+          dateValue={{}}
+          onChange={() => {}}
+          onFilterChange={() => {}}
+          selection={""}
+          onKeyDown={() => {}}
+          filterOptions={[
+            { value: "", label: "Select Filter" },
+            { value: "verified", label: "Verified" },
+            { value: "not_verified", label: "Not Verified" }
+          ]}
+          searchButton={{
+            display: false,
+            onClick: () => {}
+          }}
+        />
+      </Box>
+      <Box>
+        <DateFilter
+          onSearchChange={() => {}}
+          buttonText="This Month"
+          searchValue=""
+          dateValue={{}}
+          onChange={() => {}}
+          onFilterChange={() => {}}
+          selection={""}
+          onKeyDown={() => {}}
+          // filterOptions={[
+          //   { value: "", label: "Select Filter" },
+          //   { value: "verified", label: "Verified" },
+          //   { value: "not_verified", label: "Not Verified" }
+          // ]}
+          searchButton={{
+            display: false,
+            onClick: () => {}
+          }}
+          filters={[
+            {
+              name: "Subject",
+              selection: "",
+              options: [
+                { value: "", label: "Filter by subject" },
+                { value: "Chinese", label: "Chinese" },
+                { value: "IELTS", label: "IELTS" },
+                { value: "Academic", label: "Academic" },
+                { value: "German", label: "German" }
+              ]
+            },
+            {
+              name: "Class",
+              selection: "",
+              options: [{ value: "", label: "Filter by class" }]
+            },
+            {
+              name: "Status",
+              selection: "",
+              options: [
+                { value: "", label: "Filter by status" },
+                { value: "Not Paid", label: "Not Paid" },
+                { value: "Paid Full", label: "Paid Full" },
+                { value: "Paid Half", label: "Paid Half" }
+              ]
+            }
+          ]}
+        />
+      </Box>
+    </Flex>
   ))
+
   .add("SectionListPage", () => (
     <SectionListPage
       data={[
@@ -164,42 +219,54 @@ Components.add("ListItem", () => (
   ))
   .add("HomePageSpinner", () => <HomePageSpinner />)
   .add("RequestListItem", () => (
-    <RequestListItem
-      to="http:/www.google.com"
-      {...{
-        slug: "ABCDESDDESS",
-        full_name: "Shola Ameobi",
-        email: "james@example.com",
-        phone_no: "08033002232",
-        skill: "IELTS",
-        tutor: "Chidiebere",
-        status: "pending",
-        created: "2018-10-12 14:10:33",
-        modified: "2018-10-12 14:10:33"
-      }}
-      children={
-        <Flex flexDirection="column">
-          <Text fontWeight="bold">Remarks</Text>
-          <Text>Sent a message to the client to approve lessons</Text>
-          <Text fontSize="12px">Last Updated: 20/10/2018</Text>
-        </Flex>
-      }
-    />
-  ))
-  .add('GroupLessonListItem', () => (
-    <GroupLessonListItem
-      to="http:/www.google.com"
-      {...{
-        slug: 'ABCDESDDESS',
-        full_name: 'Shola Ameobi',
-        email: 'james@example.com',
-        phone_no: '08033002232',
-        budget: 40000,
-        no_of_students: 5,
-        created: '2018-10-12 14:10:33',
-        modified: '2018-10-12 14:10:33',
-      }}
-    />
+    <Box>
+      <Box>
+        <RequestListItem
+          to="http:/www.google.com"
+          {...{
+            slug: "ABCDESDDESS",
+            full_name: "Shola Ameobi",
+            email: "james@example.com",
+            phone_no: "08033002232",
+            budget: 4000,
+            skill: "IELTS",
+            tutor: "Chidiebere",
+            status: "pending",
+            created: "2018-10-12 14:10:33",
+            modified: "2018-10-12 14:10:33"
+          }}
+          children={
+            <Flex flexDirection="column">
+              <Text fontWeight="bold">Remarks</Text>
+              <Text>Sent a message to the client to approve lessons</Text>
+              <Text fontSize="12px">Last Updated: 20/10/2018</Text>
+            </Flex>
+          }
+        />
+      </Box>
+
+      <Box>
+        <RequestListItem
+          to="http:/www.google.com"
+          {...{
+            slug: "ABCDESDDESS",
+            full_name: "Shola Ameobi",
+            email: "james@example.com",
+            phone_no: "08033002232",
+            no_of_students: 5,
+            request_type: "group",
+            budget: 4000,
+            skill: "IELTS",
+            tutor: "Chidiebere",
+            status: "pending",
+            created: "2018-10-12 14:10:33",
+            modified: "2018-10-12 14:10:33",
+            rightBottom: getDate("2018-10-12 14:10:33")
+            // rightBottom: "January Standard Class"
+          }}
+        />
+      </Box>
+    </Box>
   ));
 let booking_item = {
   user: { full_name: "Mrs Ego", email: "ego@example.com" },
@@ -301,4 +368,24 @@ Components.add("SessionListItem", () => (
   />
 ));
 
-Components.add('Rating Component', () => (<RatingComponent rating={4}/>))
+Components.add("Rating Component", () => <RatingComponent rating={4} />);
+Components.add("SummaryCardList", () => (
+  <SummaryCardList
+    items={[
+      {
+        name: "Paid Requests",
+        amount: 200000,
+        count: 3,
+        count_text: "Request count"
+      },
+      {
+        name: "Pending Requests",
+        amount: 500000,
+        count: 30,
+        count_text: "Request count"
+      },
+      { name: "Total Revenue from lessons", amount: 400000, count: 25 },
+      { name: "Combined Revenue", amount: 100000, count: 200 }
+    ]}
+  />
+));

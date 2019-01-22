@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { Box, Flex, Text, Link, Heading, Image } from "@rebass/emotion";
+import { Box, Flex, Text, Link, Heading, Image, Card } from "@rebass/emotion";
 import React from "react";
 import format from "date-fns/format";
 import { DialogButton, Button, DialogElement } from "./primitives";
@@ -261,6 +261,7 @@ const BaseListItem = ({
   heading_subtext,
   sub_heading,
   rightSection,
+  heading_footer,
   children,
   ...rest
 }) => (
@@ -313,10 +314,14 @@ export const RequestListItem = ({
   email,
   phone_no,
   skill,
+  budget,
   tutor,
   status,
   to,
   children,
+  no_of_students = 1,
+  request_type,
+  rightBottom,
   ...rest
 }) => {
   return (
@@ -326,11 +331,31 @@ export const RequestListItem = ({
           to,
           leftTop: `Slug: ${slug}`,
           rightTop: `Status :${status}`,
-          rightBottom: `Tutor: ${tutor}`,
+          rightBottom: (
+            <Flex flexDirection="column">
+              <Text>
+                {request_type === "group"
+                  ? `${skill} group lessons`
+                  : `Skill: ${skill}`}
+              </Text>
+              <Text>
+                {request_type === "group"
+                  ? rightBottom
+                  : tutor && `Tutor: ${tutor}`}
+              </Text>
+            </Flex>
+          ),
           heading: full_name,
           heading_subtext: email,
-          sub_heading: phone_no && `Phone no: ${phone_no}`,
-          rightSection: skill,
+          sub_heading: (
+            <React.Fragment>
+              <Text>{phone_no && `Phone no: ${phone_no}`}</Text>
+              <Text>
+                {no_of_students} {no_of_students > 1 ? `students` : `student`}
+              </Text>
+            </React.Fragment>
+          ),
+          rightSection: `N ${budget}`,
           children,
           ...rest
         }}
@@ -338,41 +363,8 @@ export const RequestListItem = ({
     </React.Fragment>
   );
 };
-export const GroupLessonListItem = ({
-  slug,
-  full_name,
-  email,
-  phone_no,
-  budget,
-  no_of_students,
-  status,
-  to,
-  created,
-  children,
-  ...rest
-}) => {
-  return (
-    <React.Fragment>
-      <BaseListItem
-        {...{
-          to,
-          leftTop: `Slug: ${slug}`,
-          rightTop: `N ${budget}`,
-          rightBottom: getDate(created),
-          heading: full_name,
-          heading_subtext: email,
-          sub_heading: phone_no && `Phone no: ${phone_no}`,
-          rightSection: `${no_of_students} ${
-            no_of_students > 1 ? `students` : `student`
-          }`,
-          children,
-          ...rest,
-        }}
-      />
-    </React.Fragment>
-  );
-};
-const ViewProfile = ({ label, value, link_text = 'Hijack and view', to }) => (
+export const GroupLessonListItem = RequestListItem;
+const ViewProfile = ({ label, value, link_text = "Hijack and view", to }) => (
   <Text pb={2}>
     <Flex>
       <strong>{label}:</strong> {value}
@@ -594,7 +586,7 @@ export const SessionListItem = ({
   status,
   remark,
   onEdit,
-  no_of_hours,
+  no_of_hours
 }) => {
   return (
     <BaseListItem
@@ -619,3 +611,48 @@ export const RatingComponent = ({ rating = 5, color }) => {
     </span>
   ));
 };
+export const RequestStatusSummary = ({
+  label,
+  amount = 0,
+  no = 0,
+  label_name = "No of bookings"
+}) => {
+  return (
+    <Card
+      fontSize={6}
+      fontWeight="bold"
+      width={[1, 1, 1 / 2]}
+      p={5}
+      my={5}
+      mx={2}
+      bg="#f6f6ff"
+      borderRadius={8}
+      boxShadow="0 2px 16px rgba(0, 0, 0, 0.25)"
+    >
+      <Box>
+        <Text fontSize={2}>{label}</Text>
+      </Box>
+      {amount.toLocaleString()}
+      <Text fontSize={3}>
+        {label_name}: {no}
+      </Text>
+    </Card>
+  );
+};
+export function SummaryCardList({ items }) {
+  return (
+    <Flex>
+      {items.map((summaryItem, index) => {
+        return (
+          <RequestStatusSummary
+            key={`${summaryItem.name}-${index}`}
+            label_name={summaryItem.count_text}
+            label={summaryItem.name}
+            amount={summaryItem.amount}
+            no={summaryItem.count}
+          />
+        );
+      })}
+    </Flex>
+  );
+}

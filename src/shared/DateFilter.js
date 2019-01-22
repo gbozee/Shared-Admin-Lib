@@ -1,23 +1,23 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-import { Box, Flex, Button } from '@rebass/emotion';
-import React from 'react';
-import { Input } from './LoginPage';
-import format from 'date-fns/format';
+import { css, jsx } from "@emotion/core";
+import { Box, Flex, Button } from "@rebass/emotion";
+import React from "react";
+import { Input } from "./LoginPage";
+import format from "date-fns/format";
 
 function currentMonth() {
   var date = new Date();
   var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
   return {
-    from: format(firstDay, 'YYYY-MM-DD'),
-    to: format(lastDay, 'YYYY-MM-DD'),
+    from: format(firstDay, "YYYY-MM-DD"),
+    to: format(lastDay, "YYYY-MM-DD")
   };
 }
 class FromTo extends React.Component {
   state = this.props.value || {
-    from: '',
-    to: '',
+    from: "",
+    to: ""
   };
   //   static getDerivedStateFromProps(props, state) {
   //     let { value = { from: "", to: "" } } = props;
@@ -42,7 +42,7 @@ class FromTo extends React.Component {
           name="from"
           isValid
           value={this.state.from}
-          onChange={this.onChange('from')}
+          onChange={this.onChange("from")}
         />
         <Input
           value={this.state.to}
@@ -50,7 +50,7 @@ class FromTo extends React.Component {
           type="date"
           name="to"
           isValid
-          onChange={this.onChange('to')}
+          onChange={this.onChange("to")}
         />
         <Button
           py="4px"
@@ -69,7 +69,7 @@ class FromTo extends React.Component {
             border-radius: 0;
           `}
         >
-          {this.props.buttonText || 'Reset'}
+          {this.props.buttonText || "Reset"}
         </Button>
       </Flex>
     );
@@ -85,14 +85,14 @@ export const DateFilter = ({
   onFilterChange = () => {},
   filterOptions = [],
   dateValue = {
-    from: '',
-    to: '',
+    from: "",
+    to: ""
   },
   selection,
-  placeholder = 'Search either email or order',
+  placeholder = "Search either email or order",
   buttonText,
   searchButton = {},
-  filters = [],
+  filters = []
 }) => {
   return (
     <Flex
@@ -119,6 +119,33 @@ export const DateFilter = ({
           />
         </Box>
       ) : null}
+      <Box
+        pr={4}
+        css={css`
+          align-self: flex-end;
+        `}
+      >
+        {filters.map(filter => (
+          <select
+            css={css`
+              height: 36px;
+              align-self: flex-end;
+              margin-bottom: 16px;
+              margin-left: 20px;
+              // width: 100%;
+            `}
+            value={filter.selection}
+            onChange={onFilterChange}
+          >
+            {filter.options.map(option => (
+              <option key={option.label} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        ))}
+      </Box>
+
       {onChange ? (
         <Flex flexDirection="column">
           <FromTo
@@ -146,27 +173,6 @@ export const DateFilter = ({
           ))}
         </select>
       ) : null}
-      {filters.length > 0
-        ? filters.map(filter => (
-            <select
-              css={css`
-                height: 36px;
-                align-self: flex-end;
-                margin-bottom: 16px;
-                margin-left: 20px;
-                width: 100%;
-              `}
-              value={filter.selection}
-              onChange={onFilterChange}
-            >
-              {filter.options.map(option => (
-                <option key={option.label} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          ))
-        : null}
       {searchButton.display ? (
         <Button
           mt="24px"
@@ -174,11 +180,11 @@ export const DateFilter = ({
           css={css`
             height: 40px;
             align-self: center;
-            ${searchButton.styles || ''}
+            ${searchButton.styles || ""};
           `}
           onClick={searchButton.onClick}
         >
-          {searchButton.text || 'Search'}
+          {searchButton.text || "Search"}
         </Button>
       ) : null}
     </Flex>
