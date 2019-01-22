@@ -279,7 +279,8 @@ export class FormDrawer extends Component {
       onSubmit,
       header,
       children,
-      edit
+      edit,
+      heading="Request"
     } = this.props;
     return (
       <React.Fragment>
@@ -305,7 +306,7 @@ export class FormDrawer extends Component {
         >
           <DrawerHeader>
             <Text fontWeight="medium" size="big" color="white">
-              {!edit ? "Add Customer" : "Edit Customer"}
+              {!edit ? `Create ${heading}` : `Edit ${heading}`}
             </Text>
 
             <EmptyButton

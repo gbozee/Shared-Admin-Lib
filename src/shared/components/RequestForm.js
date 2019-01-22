@@ -69,10 +69,18 @@ export class RequestForm extends Component {
   render() {
     const { fields, error } = this.state;
     return (
-      <form onSubmit={this.onSubmit}>
+      <form
+        onSubmit={this.onSubmit}
+        css={css`
+          label {
+            padding-bottom: 4px;
+            font-size: 14px;
+          }
+        `}
+      >
         <Flex flexDirection="column">
           <Flex pb={3}>
-            <Flex flexDirection="column">
+            <Flex flexDirection="column" width="100%" mr={2}>
               <label>First name</label>
               <input
                 type="text"
@@ -84,7 +92,7 @@ export class RequestForm extends Component {
                 <ErrorText>This field is required</ErrorText>
               )}
             </Flex>
-            <Flex flexDirection="column">
+            <Flex flexDirection="column" width="100%" ml={2}>
               <label>Last name</label>
               <input
                 type="text"
@@ -98,7 +106,7 @@ export class RequestForm extends Component {
             </Flex>
           </Flex>
           <Flex pb={3}>
-            <Flex flexDirection="column">
+            <Flex flexDirection="column" width="100%" mr={2}>
               <label>Email address</label>
               <input
                 type="email"
@@ -110,7 +118,7 @@ export class RequestForm extends Component {
                 <ErrorText>This field is required</ErrorText>
               )}
             </Flex>
-            <Flex flexDirection="column">
+            <Flex flexDirection="column" width="100%" ml={2}>
               <label>Phone Number</label>
               <input
                 type="tel"
@@ -273,7 +281,7 @@ export class RequestForm extends Component {
             )}
           </Flex>
           <Flex pb={3}>
-            <Flex flexDirection="column">
+            <Flex flexDirection="column" width="100%" mr={2}>
               <label>State</label>
               <input
                 type="text"
@@ -285,7 +293,7 @@ export class RequestForm extends Component {
                 <ErrorText>This field is required</ErrorText>
               )}
             </Flex>
-            <Flex flexDirection="column">
+            <Flex flexDirection="column" width="100%" ml={2}>
               <label>Vicinity</label>
               <input
                 type="text"

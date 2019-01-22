@@ -235,6 +235,7 @@ Components.add('ListItem', () => (
         expectation:
           'Lorem Khaled Ipsum is a major key to success. I’m giving you cloth talk, cloth. Special cloth alert, cut from a special cloth. The first of the month is coming, we have to get money, we have no choice.',
       }}
+      isOpen={true}
     />
   ))
   .add('VerificationItem', () => (
