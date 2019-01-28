@@ -411,6 +411,7 @@ export const BookingDetailHeader = ({
   percentage_split,
   first_session,
   status,
+  onEdit,
   last_session,
   hijack_client_link,
   hijack_tutor_link,
@@ -465,6 +466,7 @@ export const BookingDetailHeader = ({
         <Text>
           <strong>Status:</strong> {status}
         </Text>
+        <DButton css={css`width: 100%;`} mt={2} onClick={onEdit}>Edit</DButton>
       </Flex>
     </Flex>
   );

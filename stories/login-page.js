@@ -39,7 +39,7 @@ import DataProvider, {
   DataContext,
 } from '../src/shared/DataProvider';
 import { Dialog, ModalButton } from '../src/shared/primitives/Modal';
-import { FormDrawer, TagsInput, RequestForm } from '../src/shared/components';
+import { FormDrawer, TagsInput, RequestForm, BookingForm } from '../src/shared/components';
 
 storiesOf('Pages', module).add('Login Page', () => (
   <LoginPage
@@ -421,7 +421,22 @@ Components.add('SummaryCardList', () => (
       { name: 'Combined Revenue', amount: 100000, count: 200 },
     ]}
   />
-)).add('Add New Request', () => (
+))
+.add("Request form", () => (
+  <RequestForm/>
+))
+.add("Booking form", () => (
+  <BookingForm/>
+))
+.add('Booking Form In Drawer', () => (
+  <FormDrawer heading="Booking">
+    <BookingForm
+      fields={{client: 'test.tioluwani@gmail.com'}}
+      onSubmit={values => console.log(values)}
+    />
+  </FormDrawer>
+))
+.add('Request Form In Drawer', () => (
   <FormDrawer>
     <RequestForm
       fields={{
