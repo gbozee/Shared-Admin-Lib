@@ -65,6 +65,17 @@ export class BookingForm extends Component {
             padding-bottom: 4px;
             font-size: 14px;
           }
+          input[type=text],
+          input[type=email],
+          input[type=date],
+          input[type=number] {
+            padding: 0 12px;
+            height: 30px;
+          }
+          select {
+            padding: 0 12px;
+            height: 35px;
+          }
         `}
       >
         <Flex flexDirection="column">
