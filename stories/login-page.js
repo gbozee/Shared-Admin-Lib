@@ -39,7 +39,7 @@ import DataProvider, {
   DataContext,
 } from '../src/shared/DataProvider';
 import { Dialog, ModalButton } from '../src/shared/primitives/Modal';
-import { FormDrawer, TagsInput, RequestForm, BookingForm } from '../src/shared/components';
+import { FormDrawer, TagsInput, RequestForm, BookingForm, CardItem } from '../src/shared/components';
 
 storiesOf('Pages', module).add('Login Page', () => (
   <LoginPage
@@ -465,3 +465,4 @@ Components.add('SummaryCardList', () => (
     />
   </FormDrawer>
 ));
+Components.add("Card Item", () => <CardItem/>)
