@@ -39,7 +39,13 @@ import DataProvider, {
   DataContext,
 } from '../src/shared/DataProvider';
 import { Dialog, ModalButton } from '../src/shared/primitives/Modal';
-import { FormDrawer, TagsInput, RequestForm, BookingForm, CardItem } from '../src/shared/components';
+import {
+  FormDrawer,
+  TagsInput,
+  RequestForm,
+  BookingForm,
+  CardItem,
+} from '../src/shared/components';
 
 storiesOf('Pages', module).add('Login Page', () => (
   <LoginPage
@@ -422,47 +428,45 @@ Components.add('SummaryCardList', () => (
     ]}
   />
 ))
-.add("Request form", () => (
-  <RequestForm/>
-))
-.add("Booking form", () => (
-  <BookingForm/>
-))
-.add('Booking Form In Drawer', () => (
-  <FormDrawer heading="Booking">
-    <BookingForm
-      fields={{client: 'test.tioluwani@gmail.com'}}
-      onSubmit={values => console.log(values)}
-    />
-  </FormDrawer>
-))
-.add('Request Form In Drawer', () => (
-  <FormDrawer>
-    <RequestForm
-      fields={{
-        first_name: 'Tioluwani',
-        last_name: 'Kolawole',
-        email: 'kolawole8tiolu@gmail.com',
-        phone: '08078657912',
-        no_of_children: '2',
-        status: 'pending',
-        no_of_days: 5,
-        gender: 'male',
-        how_you_heard: '0',
-        request_type: 'regular request',
-        curriculum: 'nigerian',
-        hours: '1.5',
-        address: '32 Alara street, Onike',
-        state: 'Lagos',
-        vicinity: 'Yaba',
-        expectation: 'expectation',
-        budget: '35000',
-        classes: [],
-        subjects: ['English', 'Mathematics'],
-        days: ['Monday']
-      }}
-      onSubmit={values => console.log(values)}
-    />
-  </FormDrawer>
+  .add('Request form', () => <RequestForm />)
+  .add('Booking form', () => <BookingForm />)
+  .add('Booking Form In Drawer', () => (
+    <FormDrawer heading="Booking">
+      <BookingForm
+        fields={{ client: 'test.tioluwani@gmail.com' }}
+        onSubmit={values => console.log(values)}
+      />
+    </FormDrawer>
+  ))
+  .add('Request Form In Drawer', () => (
+    <FormDrawer>
+      <RequestForm
+        fields={{
+          first_name: 'Tioluwani',
+          last_name: 'Kolawole',
+          email: 'kolawole8tiolu@gmail.com',
+          phone: '08078657912',
+          no_of_children: '2',
+          status: 'pending',
+          no_of_days: 5,
+          gender: 'male',
+          how_you_heard: '0',
+          request_type: 'regular request',
+          curriculum: 'nigerian',
+          hours: '1.5',
+          address: '32 Alara street, Onike',
+          state: 'Lagos',
+          vicinity: 'Yaba',
+          expectation: 'expectation',
+          budget: '35000',
+          classes: [],
+          subjects: ['English', 'Mathematics'],
+          days: ['Monday'],
+        }}
+        onSubmit={values => console.log(values)}
+      />
+    </FormDrawer>
+  ));
+Components.add('Card Item', () => (
+  <CardItem>{onCancel => <BookingForm onCancel={onCancel} />}</CardItem>
 ));
-Components.add("Card Item", () => <CardItem/>)

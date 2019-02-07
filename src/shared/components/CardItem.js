@@ -13,18 +13,24 @@ const StyledSummaryCard = styled.div`
   border: 2px solid #ebecf0;
   padding: 24px 16px 24px 24px;
   border-radius: 3px;
+
+  button {
+    cursor: pointer;
+  }
 `;
 
 export class CardItem extends React.Component {
   state = {
     isOpen: false,
   };
+  onCancel = () => {
+    this.setState({isOpen: false})
+  }
   render() {
     const {
       title,
       text,
       subtext,
-      onEdit,
       onDelete,
       heading,
       subheading,
@@ -52,7 +58,7 @@ export class CardItem extends React.Component {
             </Flex>
           </Flex>
         ) : (
-          <BookingForm onCancel={() => this.setState({isOpen: false})} />
+          this.props.children(this.onCancel)
         )}
       </StyledSummaryCard>
     );
