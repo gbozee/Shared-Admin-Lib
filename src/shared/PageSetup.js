@@ -6,7 +6,6 @@ import DataProvider from "./DataProvider";
 import Spinner from "./primitives/Spinner";
 import { DataContext } from "./ProtectedRoute";
 import LoginPage from "./LoginPage";
-import appFireBase from "./adapters/backupFirebase";
 export const WithRouter = ({
   heading,
   children,
@@ -15,17 +14,17 @@ export const WithRouter = ({
   context,
   toNextPage = () => {},
   RouterComponent,
-  routerProps={},
+  routerProps = {},
   test = true
 }) => {
-  let RComponent = RouterComponent || Router
+  let RComponent = RouterComponent || Router;
   return (
     <DataProvider
       test={test}
       // adapter={testServerAdapter}
       adapter={adapter}
       context={context}
-      appFirebase={firebase || appFireBase}
+      appFirebase={firebase}
       authenticateUser={token => new Promise(resolve => resolve(true))}
     >
       <React.Suspense fallback={<Spinner />}>

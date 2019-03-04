@@ -11,8 +11,11 @@ const actions = {
 };
 export class DataProvider extends React.Component {
   dispatch = action => {
-    let { context } = this.props;
-    let firebaseFunc = this.props.appFirebase(context.keys);
+    let { context, appFirebase } = this.props;
+    let firebaseFunc = {};
+    if (appFirebase) {
+      firebaseFunc = appFirebase(context.keys);
+    }
     let options = context.dispatch(
       action,
       {
@@ -54,7 +57,7 @@ export class DataProvider extends React.Component {
       }
     });
   }
-  updateState = (obj, callback = () => { }) => {
+  updateState = (obj, callback = () => {}) => {
     let { context } = this.state;
     this.setState(
       {
