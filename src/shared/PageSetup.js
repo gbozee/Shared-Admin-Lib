@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
+import { css, jsx, Global } from "@emotion/core";
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DataProvider from "./DataProvider";
@@ -15,18 +15,25 @@ export const WithRouter = ({
   toNextPage = () => {},
   RouterComponent,
   routerProps = {},
+  auth,
   test = true
 }) => {
   let RComponent = RouterComponent || Router;
   return (
     <DataProvider
       test={test}
-      // adapter={testServerAdapter}
       adapter={adapter}
       context={context}
       appFirebase={firebase}
-      authenticateUser={token => new Promise(resolve => resolve(true))}
+      auth={auth}
     >
+      <Global
+        styles={css`
+          a.regular-link {
+            cursor: pointer;
+          }
+        `}
+      />
       <React.Suspense fallback={<Spinner />}>
         <RComponent {...routerProps}>
           <>

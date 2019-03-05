@@ -6,7 +6,7 @@ import { ListItem } from "../shared/reusables";
 import { Link } from "react-router-dom";
 import { DataContext } from "../shared/DataContext";
 import { SpinnerContainer } from "../shared/primitives/Spinner";
-
+import { useLoadData } from "./hooks";
 import { DateFilter } from "../shared/DateFilter";
 function determineAge(date) {
   let year = new Date(date).getFullYear();
@@ -14,13 +14,19 @@ function determineAge(date) {
   return new Date().getFullYear() - year;
 }
 const TutorListPage = ({ detailPageUrl = () => {} }) => {
-  const context = useContext(DataContext);
-  let [tutors, setTutors] = useState([]);
+  const { dispatch, actions } = useContext(DataContext);
   let [selection, setSelection] = useState("");
   let [searchParams, setSearchParams] = useState("");
-  useEffect(() => {
-    fetchList(true);
-  }, []);
+
+  let fetchData = (refresh = false) =>
+    dispatch({
+      type: actions.GET_UNVERIFIED_TUTORS,
+      value: { refresh, selection: selection }
+    });
+
+  let [{ data }, { refreshList, setData, onFilterChange }] = useLoadData({
+    fetchData
+  });
   const workedOn = slug => {};
   const onSearch = e => {
     setSearchParams(e.target.value);
@@ -29,18 +35,6 @@ const TutorListPage = ({ detailPageUrl = () => {} }) => {
     if (e.keyCode === 13) {
     }
   };
-  const fetchList = (refresh = false) => {
-    let { dispatch, actions } = context;
-    dispatch({
-      type: actions.GET_UNVERIFIED_TUTORS,
-      value: { refresh, selection: selection }
-    }).then(data => {
-      setTutors(data);
-    });
-  };
-  const refreshList = () => {
-    fetchList(true);
-  };
   const getState = (location = []) => {
     if (location) {
       let result = location[0] || {};
@@ -48,7 +42,7 @@ const TutorListPage = ({ detailPageUrl = () => {} }) => {
     }
   };
   return (
-    <SpinnerContainer condition={tutors.length === 0}>
+    <SpinnerContainer condition={data.length === 0}>
       <Flex flexDirection="column">
         <Flex
           flexDirection="row-reverse"
@@ -81,11 +75,7 @@ const TutorListPage = ({ detailPageUrl = () => {} }) => {
               onKeyDown={onKeyDown}
               onSearchChange={onSearch}
               selection={selection}
-              onFilterChange={e => {
-                setTutors([]);
-                setSelection(e.target.value);
-                fetchList(true);
-              }}
+              onFilterChange={onFilterChange}
               placeholder="Search by email"
               filterOptions={[
                 { value: "", label: "All" },
@@ -99,7 +89,7 @@ const TutorListPage = ({ detailPageUrl = () => {} }) => {
           </Flex>
         </Flex>
         <Flex flexDirection="column">
-          {tutors.map(tutor => (
+          {data.map(tutor => (
             <ListItem
               key={tutor.slug}
               date={`Age (${determineAge(tutor.dob)})`}

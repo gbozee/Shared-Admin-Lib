@@ -47,13 +47,17 @@ export class DataProvider extends React.Component {
     return this.props.adapter;
   };
   componentDidMount() {
-    let { context } = this.props;
-    let firebaseFunc = this.props.appFirebase(context.keys);
+    let { context, appFirebase } = this.props;
     this.authenticateUser(data => {
       if (data) {
-        firebaseFunc.loadFireStore().then(db => {
-          this.props.context.componentDidMount(this, firebaseFunc, data);
-        });
+        if (appFirebase) {
+          let firebaseFunc = this.props.appFirebase(context.keys);
+          firebaseFunc.loadFireStore().then(db => {
+            this.props.context.componentDidMount(this, firebaseFunc, data);
+          });
+        } else {
+          this.props.context.componentDidMount(this, {}, data);
+        }
       }
     });
   }
@@ -81,28 +85,25 @@ export class DataProvider extends React.Component {
   };
   authenticateUser = (callback = () => {}) => {
     let { auth } = this.state.context.state;
-    let firebaseFunc = this.props.appFirebase(this.props.context.keys);
+    let { authenticateUser } = this.props.auth;
     if (auth) {
       return new Promise(resolve => resolve(true));
     }
-    return firebaseFunc.getUserToken(this.getToken()).then(data => {
-      if (data) {
-        this.updateState({ auth: Boolean(data), agent: data }, () => {
-          callback(data);
-        });
+    return authenticateUser(this.props.context.keys, this.getToken()).then(
+      data => {
+        if (data) {
+          this.updateState({ auth: Boolean(data), agent: data }, () => {
+            callback(data);
+          });
+        }
+        return data;
       }
-      return data;
-    });
-    // return this.props.authenticateUser(this.getToken()).then(data => {
-    //   this.updateState({ auth: data });
-    //   return true;
-    // });
+    );
   };
 
   loginUser = ({ email, password }) => {
-    let firebaseFunc = this.props.appFirebase(this.props.context.keys);
-    return firebaseFunc
-      .loginUser(email, password)
+    let { loginUser } = this.props.auth;
+    return loginUser(this.props.context.keys, { email, password })
       .then(data => {
         if (data) {
           saveState({ token: data.token });
@@ -114,10 +115,6 @@ export class DataProvider extends React.Component {
       .catch(error => {
         throw error;
       });
-    // return this.getAdapter()
-    //   .login(email, password)
-    //   .then(data => {
-    //   });
   };
 
   render() {

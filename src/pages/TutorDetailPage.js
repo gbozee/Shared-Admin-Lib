@@ -2,7 +2,10 @@
 import { css, jsx } from "@emotion/core";
 import { Flex, Text, Heading, Link, Box } from "@rebass/emotion";
 import { DialogButton, Tabs, TabContent } from "../shared/primitives";
-import { HomePageSpinner } from "../shared/primitives/Spinner";
+import {
+  HomePageSpinner,
+  SpinnerContainer
+} from "../shared/primitives/Spinner";
 import { useEffect, useContext, useState } from "react";
 import {
   ListGroup,
@@ -81,20 +84,14 @@ export const TutorDetailPage = ({ match, history }) => {
   let [skills, setSkills] = useState([]);
 
   useEffect(() => {
-    let {
-      params: { email, slug }
-    } = match;
-    dispatch({
-      type: actions.TUTOR_INFO,
-      // value: { email, slug }
-      value: { email, slug }
-    })
-      .then(data => {
-        setRecord(data.record);
-        setData(data.data);
+    let { email, slug } = match.params;
+    dispatch({ type: actions.TUTOR_INFO, value: { email, slug } })
+      .then(result => {
+        setRecord(result.record);
+        setData(result.data);
         dispatch({
           type: actions.TUTOR_SKILLS,
-          value: { email: data.data.email }
+          value: { email: result.data.email }
         }).then(skillData => {
           setSkills(skillData);
         });
@@ -146,7 +143,7 @@ export const TutorDetailPage = ({ match, history }) => {
       children: "Approve Manually",
       dialogText: "Are you sure you want to manually approve the email",
       confirmAction: () => {
-        this.localDispatch(actions.APPROVE_TUTOR_EMAIL).then(r => {
+        localDispatch(actions.APPROVE_TUTOR_EMAIL).then(r => {
           setRecord(r);
           setData({ ...data, email_verified: true });
           setEmailApproval(true);
@@ -197,18 +194,6 @@ export const TutorDetailPage = ({ match, history }) => {
         }
       ];
     }
-    let reject = {
-      children: "Reject",
-      dialogText: "You are about to reject the ID of the tutor. Confirm?",
-      confirmAction: () => {
-        localDispatch(actions.REJECT_ID, {
-          full_name: data.full_name
-        }).then(rr => {
-          setRecord(rr);
-          setData({ ...data, identification: {} });
-        });
-      }
-    };
     let result = id_verified
       ? []
       : [
@@ -229,7 +214,18 @@ export const TutorDetailPage = ({ match, history }) => {
                 ? "Approve Again"
                 : "Approve ID"
           },
-          reject
+          {
+            children: "Reject",
+            dialogText: "You are about to reject the ID of the tutor. Confirm?",
+            confirmAction: () => {
+              localDispatch(actions.REJECT_ID, {
+                full_name: data.full_name
+              }).then(rr => {
+                setRecord(rr);
+                setData({ ...data, identification: {} });
+              });
+            }
+          }
         ];
     return result;
   };
@@ -293,9 +289,7 @@ export const TutorDetailPage = ({ match, history }) => {
       : true;
   }
   const fromWorkingDirectory = () => {
-    let {
-      params: { email }
-    } = match;
+    let { email } = match.params;
     return Boolean(email);
   };
   const updateCurriculum = () => {};
@@ -355,17 +349,15 @@ export const TutorDetailPage = ({ match, history }) => {
                 label="ID Verifications"
                 buttons={verificationButton()}
               >
-                {data.identification ? (
+                {data.identification && (
                   <Link
-                    css={css`
-                      cursor: pointer;
-                    `}
+                    className="regular-link"
                     target="_blank"
                     href={data.identification.link}
                   >
                     {data.identification.link}
                   </Link>
-                ) : null}
+                )}
               </VerificationItem>
             )}
             <VerificationItem
@@ -373,9 +365,7 @@ export const TutorDetailPage = ({ match, history }) => {
               buttons={profilePicButton()}
             >
               <Link
-                css={css`
-                  cursor: pointer;
-                `}
+                className="regular-link"
                 target="_blank"
                 href={data.profile_pic}
               >
@@ -412,13 +402,14 @@ export const TutorDetailPage = ({ match, history }) => {
               />
             ))}
             <ListGroup name="Subject Veluation Dump" />
-            <Flex>
-              <Flex
-                css={css`
+            <Flex
+              css={css`
+                > div {
                   flex: 1;
-                `}
-                flexDirection="column"
-              >
+                }
+              `}
+            >
+              <Flex flexDirection="column">
                 <Heading>Potential Subjects</Heading>
                 {data.potential_subjects.map(subject => (
                   <DetailItem key={subject} label={subject} />
@@ -428,12 +419,7 @@ export const TutorDetailPage = ({ match, history }) => {
                 <Heading>Answers</Heading>
                 {JSON.stringify(data.answers)}
               </Flex>
-              <Flex
-                css={css`
-                  flex: 1;
-                `}
-                flexDirection="column"
-              >
+              <Flex flexDirection="column">
                 <Heading>Classes</Heading>
                 {data.classes.map(klass => (
                   <DetailItem key={klass} label={klass} />
@@ -444,35 +430,29 @@ export const TutorDetailPage = ({ match, history }) => {
                 ))}
               </Flex>
             </Flex>
-            {data.curriculum_explanation ? (
-              <Box
-                my={3}
-                pb={3}
-                css={css`
-                  border-bottom: 1px solid #e8e8e8;
-                `}
-              >
-                <ListGroup name="Curriculum Explanation" />
-                <Box>
-                  <Text p={3}>{data.curriculum_explanation}</Text>
-                </Box>
-              </Box>
-            ) : (
-              <Box
-                my={3}
-                pb={3}
-                css={css`
-                  border-bottom: 1px solid #e8e8e8;
-                `}
-              >
+            <Box
+              my={3}
+              pb={3}
+              css={css`
+                border-bottom: 1px solid #e8e8e8;
+              `}
+            >
+              {data.curriculum_explanation ? (
+                <React.Fragment>
+                  <ListGroup name="Curriculum Explanation" />
+                  <Box>
+                    <Text p={3}>{data.curriculum_explanation}</Text>
+                  </Box>
+                </React.Fragment>
+              ) : (
                 <DialogButton
                   dialogText="Are you sure you want to notify this tutor"
                   confirmAction={updateCurriculum}
                 >
                   Notify tutor to update curriculum
                 </DialogButton>
-              </Box>
-            )}
+              )}
+            </Box>
             <Flex justifyContent="space-between" pt={3}>
               {!data.verified && (
                 <DialogButton
@@ -506,19 +486,24 @@ export const TutorDetailPage = ({ match, history }) => {
           </Flex>
         </TabContent>
         <TabContent heading="Subjects">
-          {" "}
           <Flex flexDirection="column">
-            {skills.length === 0 ? (
-              <HomePageSpinner />
-            ) : (
-              <Flex>
-                <Flex
-                  flexDirection="column"
-                  css={css`
+            <SpinnerContainer condition={skills.length === 0}>
+              <Flex
+                css={css`
+                  .list-view,
+                  .display-view {
+                    flex-direction: column;
+                  }
+                  .list-view {
                     flex: 1;
                     overflow-y: scroll;
-                  `}
-                >
+                  }
+                  .display-view {
+                    flex: 4;
+                  }
+                `}
+              >
+                <Flex className="list-view">
                   <SectionListPage
                     data={skills}
                     callback={skill => ({
@@ -537,41 +522,26 @@ export const TutorDetailPage = ({ match, history }) => {
                     keyFunc={ss => `${ss.skill_name}-${ss.status}`}
                   />
                 </Flex>
-                <Flex
-                  px={3}
-                  py={3}
-                  flexDirection="column"
-                  css={css`
-                    flex: 4;
-                  `}
-                >
+                <Flex className="display-view" p={3}>
                   <Switch>
-                    <Route
-                      path="/tutor-list/:slug/subjects/:skill"
-                      render={pathProps => {
-                        return (
-                          <SubjectDetailSection
-                            {...pathProps}
-                            updateSubjectStatus={updateSubjectStatus}
-                            skills={skills}
-                            onRetakeTest={updateSubjectStatus}
-                          />
-                        );
-                      }}
-                    />
-                    <Route
-                      path="/worked-records/:email/subjects/:skill"
-                      render={pathProps => {
-                        return (
-                          <SubjectDetailSection
-                            {...pathProps}
-                            updateSubjectStatus={updateSubjectStatus}
-                            skills={skills}
-                            onRetakeTest={updateSubjectStatus}
-                          />
-                        );
-                      }}
-                    />
+                    {[
+                      "/tutor-list/:slug/subjects/:skill",
+                      "/worked-records/:email/subjects/:skill"
+                    ].map(route => (
+                      <Route
+                        path={route}
+                        render={pathProps => {
+                          return (
+                            <SubjectDetailSection
+                              {...pathProps}
+                              updateSubjectStatus={updateSubjectStatus}
+                              skills={skills}
+                              onRetakeTest={updateSubjectStatus}
+                            />
+                          );
+                        }}
+                      />
+                    ))}
                     {skills[0] && skills[0].status !== "denied" && (
                       <Redirect
                         to={`${match.url}/subjects/${skills[0].skill_name}`}
@@ -580,7 +550,7 @@ export const TutorDetailPage = ({ match, history }) => {
                   </Switch>
                 </Flex>
               </Flex>
-            )}
+            </SpinnerContainer>
           </Flex>
         </TabContent>
       </Tabs>
