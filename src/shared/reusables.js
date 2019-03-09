@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
+import { css, jsx } from "@emotion/core";
 import {
   Box,
   Flex,
@@ -8,15 +8,15 @@ import {
   Heading,
   Image,
   Card,
-  Button as DButton,
-} from '@rebass/emotion';
-import React from 'react';
-import format from 'date-fns/format';
-import { DialogButton, Button, DialogElement } from './primitives';
-import { FormDrawer, RequestForm } from './components';
+  Button as DButton
+} from "@rebass/emotion";
+import React from "react";
+import format from "date-fns/format";
+import { DialogButton, Button, DialogElement } from "./primitives";
+import { FormDrawer, RequestForm } from "./components";
 export function getDate(date, short = false) {
   let dd = new Date(date);
-  return format(dd, short ? 'MMM D, YYYY' : 'MMMM D, YYYY');
+  return format(dd, short ? "MMM D, YYYY" : "MMMM D, YYYY");
 }
 export const ListGroup = ({ name }) => {
   return (
@@ -71,9 +71,16 @@ export const ListItem = ({
         justifyContent="space-between"
         css={css`
           border-bottom: 1px solid black;
+          @media(max-width: 768px){
+            flex-direction: column;
+          }
         `}
       >
-        <Box>
+        <Box
+          css={css`
+            flex: 1;
+          `}
+        >
           <Text>{leftTop || date}</Text>
           <Text fontSize={5}>{heading}</Text>
           <Text>{subHeading}</Text>
@@ -82,8 +89,13 @@ export const ListItem = ({
         <Flex
           flexDirection="column"
           css={css`
+            flex: 0.5;
             align-self: center;
             align-items: center;
+            @media(max-width: 768px){
+              position: absolute;
+              align-self: flex-end;
+            }
           `}
         >
           <Text>{rightTop || gender}</Text>
@@ -106,15 +118,15 @@ export const DetailItem = ({ label, children, flexDirection }) => {
 
 export function getTime(date) {
   let dd = new Date(date);
-  return format(dd, 'h:mm a');
+  return format(dd, "h:mm a");
 }
 
 export function SectionListPage({
   data,
-  keyValue = 'date',
+  keyValue = "date",
   orderFunc = (a, b) =>
     new Date(b[keyValue]).getTime() - new Date(a[keyValue]).getTime(),
-  keyIndex = 'order',
+  keyIndex = "order",
   funcGetter = (item, keyValue) => getDate(item[keyValue]),
   LinkComponent = Link,
   callback = () => {},
@@ -201,13 +213,13 @@ export const PVerificationListItem = ({
 };
 
 export const TutorDetailHeader = ({
-  image = 'https://via.placeholder.com/100',
+  image = "https://via.placeholder.com/100",
   detail,
   children,
   frozen,
   unFreezeProfile,
   leftSectionChildren,
-  overWriteChildren = false,
+  overWriteChildren = false
 }) => {
   return (
     <Flex>
@@ -233,7 +245,7 @@ export const TutorDetailHeader = ({
         <Flex
           flexDirection="column"
           css={css`
-            align-self: ${frozen ? 'flex-start' : 'center'};
+            align-self: ${frozen ? "flex-start" : "center"};
           `}
         >
           {frozen && (
@@ -338,9 +350,11 @@ export const RequestListItem = ({
   status,
   to,
   children,
+  summary,
   no_of_students = 1,
   request_type,
   rightBottom,
+  rightTop,
   ...rest
 }) => {
   return (
@@ -349,16 +363,16 @@ export const RequestListItem = ({
         {...{
           to,
           leftTop: `Slug: ${slug}`,
-          rightTop: `Status :${status}`,
+          rightTop: rightTop || `Status :${status}`,
           rightBottom: (
             <Flex flexDirection="column">
               <Text>
-                {request_type === 'group'
+                {request_type === "group"
                   ? `${skill} group lessons`
                   : `Skill: ${skill}`}
               </Text>
               <Text>
-                {request_type === 'group'
+                {request_type === "group"
                   ? rightBottom
                   : tutor && `Tutor: ${tutor}`}
               </Text>
@@ -370,20 +384,23 @@ export const RequestListItem = ({
             <React.Fragment>
               <Text>{phone_no && `Phone no: ${phone_no}`}</Text>
               <Text>
-                {no_of_students} {no_of_students > 1 ? `students` : `student`}
+                {summary ||
+                  `${no_of_students} ${
+                    no_of_students > 1 ? `students` : `student`
+                  }`}
               </Text>
             </React.Fragment>
           ),
           rightSection: `N ${budget}`,
           children,
-          ...rest,
+          ...rest
         }}
       />
     </React.Fragment>
   );
 };
 export const GroupLessonListItem = RequestListItem;
-const ViewProfile = ({ label, value, link_text = 'Hijack and view', to }) => (
+const ViewProfile = ({ label, value, link_text = "Hijack and view", to }) => (
   <Text pb={2}>
     <Flex>
       <strong>{label}:</strong> {value}
@@ -415,7 +432,7 @@ export const BookingDetailHeader = ({
   last_session,
   hijack_client_link,
   hijack_tutor_link,
-  onSplitChange = () => {},
+  onSplitChange = () => {}
 }) => {
   return (
     <Flex justifyContent="space-between">
@@ -436,7 +453,7 @@ export const BookingDetailHeader = ({
         />
         {first_session && last_session && (
           <Text pb={2}>
-            <strong>Duration:</strong>{' '}
+            <strong>Duration:</strong>{" "}
             {getDuration(first_session, last_session)}
           </Text>
         )}
@@ -448,7 +465,7 @@ export const BookingDetailHeader = ({
         `}
       >
         <Text pb={2} fontSize="20px">
-          Budget:{' '}
+          Budget:{" "}
           <strong>
             {total_price}/{(total_price * percentage_split) / 100}
           </strong>
@@ -466,7 +483,15 @@ export const BookingDetailHeader = ({
         <Text>
           <strong>Status:</strong> {status}
         </Text>
-        <DButton css={css`width: 100%;`} mt={2} onClick={onEdit}>Edit</DButton>
+        <DButton
+          css={css`
+            width: 100%;
+          `}
+          mt={2}
+          onClick={onEdit}
+        >
+          Edit
+        </DButton>
       </Flex>
     </Flex>
   );
@@ -474,8 +499,8 @@ export const BookingDetailHeader = ({
 function getDuration(first_session, last_session, time = true, short = false) {
   if (first_session && last_session) {
     return `${getDate(first_session, short)} ${
-      time ? getTime(first_session) : ''
-    } - ${getDate(last_session, short)} ${time ? getTime(first_session) : ''}`;
+      time ? getTime(first_session) : ""
+    } - ${getDate(last_session, short)} ${time ? getTime(first_session) : ""}`;
   }
 }
 export const BookingListItem = ({
@@ -507,8 +532,8 @@ export const BookingListItem = ({
           true
         )}`,
         rightTop: `Status: ${status}`,
-        created: '2018-10-12 14:10:33',
-        modified: '2018-10-12 14:10:33',
+        created: "2018-10-12 14:10:33",
+        modified: "2018-10-12 14:10:33"
       }}
       children={remark}
       {...rest}
@@ -521,7 +546,7 @@ export function SubjectDetailView({
   onRetakeTest,
   onStatusChange,
   dialogText = () => ``,
-  options = ['Active', 'Require Modification', 'Denied'],
+  options = ["Active", "Require Modification", "Denied"]
 }) {
   return (
     <Flex flexDirection="column">
@@ -605,7 +630,7 @@ export const SessionListItem = ({
   status,
   remark,
   onEdit,
-  no_of_hours,
+  no_of_hours
 }) => {
   return (
     <BaseListItem
@@ -616,7 +641,7 @@ export const SessionListItem = ({
         rightSection: onEdit && <Button onClick={onEdit}>Edit Session</Button>,
         sub_heading: `Status: ${status}`,
         rightBottom: `Date: ${getDate(date)}`,
-        rightTop: `Status: ${status}`,
+        rightTop: `Status: ${status}`
       }}
     />
   );
@@ -634,7 +659,7 @@ export const RequestStatusSummary = ({
   label,
   amount = 0,
   no = 0,
-  label_name = 'No of bookings',
+  label_name = "No of bookings"
 }) => {
   return (
     <Card
@@ -681,7 +706,7 @@ export function RequestDetailHeader({
   isOpen = false,
   onClose = () => {},
   openModal = () => {},
-  onSubmit = () => {},
+  onSubmit = () => {}
 }) {
   return (
     <TutorDetailHeader
@@ -703,7 +728,7 @@ export function RequestDetailHeader({
         request.user.email,
         <Link target="_blank" target="http://www.google.com">
           http://www.google.com
-        </Link>,
+        </Link>
       ]}
     >
       <Flex
@@ -715,22 +740,22 @@ export function RequestDetailHeader({
       >
         <Flex flexDirection="column">
           <Text pb={2}>
-            <strong>Slug:</strong> {request.slug}{' '}
+            <strong>Slug:</strong> {request.slug}{" "}
           </Text>
           <Text pb={2}>
-            <strong>Request ID:</strong> {request.request_id}{' '}
+            <strong>Request ID:</strong> {request.request_id}{" "}
           </Text>
           <Text>
-            <strong>Number of hours:</strong> {request.no_of_hours}{' '}
+            <strong>Number of hours:</strong> {request.no_of_hours}{" "}
           </Text>
         </Flex>
       </Flex>
       <Box>
         <Text pb={2} fontSize={5}>
-          <strong>Budget:</strong> {request.budget}{' '}
+          <strong>Budget:</strong> {request.budget}{" "}
         </Text>
         <Text pb={2}>
-          <strong>Per hour rate:</strong> {request.per_hour_rate}{' '}
+          <strong>Per hour rate:</strong> {request.per_hour_rate}{" "}
         </Text>
         <Text fontSize={3} pb={2}>
           <strong>Status:</strong> {request.status}

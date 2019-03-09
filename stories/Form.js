@@ -1,9 +1,10 @@
 import React, { cloneElement, useState, useReducer } from "react";
 
-const LabelWrapper = ({ children, label, name }) => (
+const LabelWrapper = ({ children, label, name, errorMessage }) => (
   <div>
     {label && <label htmlFor={name}>{label}</label>}
     {cloneElement(children, { id: name })}
+    {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
   </div>
 );
 const Input = ({ onChange = () => {}, options, ...props }) => (
@@ -50,21 +51,30 @@ function reducer(state, action) {
 const Button = ({ text = "Submit", ...props }) => (
   <button {...props}>{text}</button>
 );
-let formComponents = {
+let defaultFormComponents = {
   text: Input,
   email: Input,
   radio: Input,
   select: Select,
   checkbox: Input
 };
+const FormContext = React.createContext(defaultFormComponents);
+
+export const FormProvider = ({ formElements = {}, children }) => {
+  let components = { ...defaultFormComponents, ...formElements };
+  return (
+    <FormContext.Provider value={components}>{children}</FormContext.Provider>
+  );
+};
 export const Form = ({
   fields = [],
   render,
   error_messages = {},
-  onSubmit,
+  onSubmit = () => {},
   data,
   ButtonComponent = Button,
-  className = "simple-form"
+  className = "simple-form",
+  formProps = { noValidate: true }
 }) => {
   let formValues = {};
   let errorMessages = {};
@@ -78,16 +88,25 @@ export const Form = ({
     }
     let func = value => {
       let empty = (!Boolean(value) || value.length === 0) && error.empty;
-      let invalid = !fields[field].validate(value) && error.invalid;
+      let validateFunc = fields.find(x => x.name === field).validate;
+      let invalid = undefined;
+      if (validateFunc) {
+        invalid = !validateFunc(value) && error.invalid;
+      } else {
+        throw new Error(
+          `${field} field is missing the "validate" function property`
+        );
+      }
       return empty || invalid;
     };
     errorMessages[field] = func;
   });
   if (Boolean(data) && typeof data === "object") {
-    formValues = { ...formValues, data };
+    formValues = { ...formValues, ...data };
   }
   let [state, dispatch] = useReducer(reducer, formValues);
   let [displayError, toggleError] = useState(false);
+  let formComponentsContext = React.useContext(FormContext);
   let formFields = fields
     .map(field => {
       let result = {
@@ -103,8 +122,11 @@ export const Form = ({
       return result;
     })
     .map(field => {
-      let Component = formComponents[field.type];
-      let { type, ...rest } = field;
+      let Component = formComponentsContext[field.type];
+      let { type, component, ...rest } = field;
+      if (component) {
+        Component = component;
+      }
       let errorMessageFunc =
         errorMessages[field.name] ||
         function() {
@@ -142,7 +164,7 @@ export const Form = ({
   const submitButton = <ButtonComponent type="submit" />;
   if (!Boolean(render)) {
     return (
-      <form className={className} onSubmit={onFormSubmit}>
+      <form {...formProps} className={className} onSubmit={onFormSubmit}>
         {formFields.map(x => x.component)}
         {submitButton}
       </form>
@@ -153,7 +175,7 @@ export const Form = ({
     formRenderFields[field.name] = field.component;
   });
   return (
-    <form className={className} onSubmit={onFormSubmit}>
+    <form {...formProps} className={className} onSubmit={onFormSubmit}>
       {render(formRenderFields, submitButton)}
     </form>
   );

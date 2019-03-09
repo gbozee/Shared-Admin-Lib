@@ -4,10 +4,15 @@ import React from "react";
 import { css, jsx } from "@emotion/core";
 import { Box, Flex, Text } from "@rebass/emotion";
 import { storiesOf } from "@storybook/react";
-import { Form } from "./Form";
+import { Form, FormProvider } from "./Form";
 const TextArea = props => <textarea {...props} />;
 let data = [
-  { name: "email", type: "email", label: "Email" },
+  {
+    name: "email",
+    type: "email",
+    label: "Email",
+    validate: value => value.includes("@")
+  },
   { name: "first_name", label: "First name" },
   { name: "last_name", label: "Last name" },
   {
@@ -21,15 +26,20 @@ let data = [
     options: [["", "Select Age"], ["2", "Two year old"], ["3", "3 Year hold"]]
   }
 ];
+const Wrapper = ({ children }) => (
+  <Box
+    css={css`
+      .simple-form {
+        flex-direction: column;
+      }
+    `}
+  >
+    {children}{" "}
+  </Box>
+);
 storiesOf("Forms", module)
   .add("Default Rendering", () => (
-    <Box
-      css={css`
-        .simple-form {
-          flex-direction: column;
-        }
-      `}
-    >
+    <Wrapper>
       <Form
         fields={data}
         data={{}}
@@ -37,16 +47,10 @@ storiesOf("Forms", module)
           console.log(result);
         }}
       />
-    </Box>
+    </Wrapper>
   ))
   .add("With Existing Values", () => (
-    <Box
-      css={css`
-        .simple-form {
-          flex-direction: column;
-        }
-      `}
-    >
+    <Wrapper>
       <Form
         fields={data}
         data={{ email: "gbozee@example.com" }}
@@ -54,19 +58,16 @@ storiesOf("Forms", module)
           console.log(result);
         }}
       />
-    </Box>
+    </Wrapper>
   ))
   .add("Custom Layout", () => {
     return (
-      <Box
-        css={css`
-          .simple-form {
-            flex-direction: column;
-          }
-        `}
-      >
+      <Wrapper>
         <Form
           fields={data}
+          onSubmit={result => {
+            console.log(result);
+          }}
           render={(fields, button) => (
             <Flex flexDirection="column">
               <Flex>
@@ -80,25 +81,19 @@ storiesOf("Forms", module)
             </Flex>
           )}
         />
-      </Box>
+      </Wrapper>
     );
   })
   .add("Custom Elements", () => {
     return (
-      <Box
-        css={css`
-          .simple-form {
-            flex-direction: column;
-          }
-        `}
-      >
+      <Wrapper>
         <Form
           fields={[...data, { name: "expectaton", component: TextArea }]}
           onSubmit={result => {
             console.log(result);
           }}
         />
-      </Box>
+      </Wrapper>
     );
   })
   .add("With Error Messages", () => {
@@ -110,37 +105,25 @@ storiesOf("Forms", module)
       }
     };
     return (
-      <Box
-        css={css`
-          .simple-form {
-            flex-direction: column;
-          }
-        `}
-      >
+      <Wrapper>
         <Form
           fields={data}
           error_messages={errors}
           onSubmit={result => console.log(result)}
         />
         /
-      </Box>
+      </Wrapper>
     );
   })
   .add("Custom Components", () => {
     const formElements = {
-      input: TextArea
+      text: TextArea
     };
     return (
-      <Box
-        css={css`
-          .simple-form {
-            flex-direction: column;
-          }
-        `}
-      >
+      <Wrapper>
         <FormProvider formElements={formElements}>
           <Form fields={data} onSubmit={result => console.log(result)} />
         </FormProvider>
-      </Box>
+      </Wrapper>
     );
   });

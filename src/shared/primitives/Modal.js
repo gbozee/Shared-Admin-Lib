@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { Global, css, jsx } from "@emotion/core";
 import ReactModal from "react-modal";
@@ -19,29 +19,36 @@ export const ModalFooter = props => {
     buttonType,
     is,
     showSpinner,
-    buttonClass = "primary"
+    buttonClass = "primary",
+    override
   } = props;
   return (
     <div className="modal-footer" style={style}>
       <div className="row">
-        <Flex justifyContent="space-between">
-          <Button
-            type={"button"}
-            onClick={onClose}
-            buttonClass={"btn faint-gray-button capitalize"}
-          >
-            Cancel
-          </Button>
-          <Button
-            type={buttonType || "submit"}
-            is={is}
-            showSpinner={showSpinner}
-            onClick={modalAction}
-            buttonClass={`btn  ${buttonClass} capitalize`}
-          >
-            {children}
-          </Button>
-        </Flex>
+        {override ? (
+          override(onClose)
+        ) : (
+          <>
+            <Flex justifyContent="space-between">
+              <Button
+                type={"button"}
+                onClick={onClose}
+                buttonClass={"btn faint-gray-button capitalize"}
+              >
+                Cancel
+              </Button>
+              <Button
+                type={buttonType || "submit"}
+                is={is}
+                showSpinner={showSpinner}
+                onClick={modalAction}
+                buttonClass={`btn  ${buttonClass} capitalize`}
+              >
+                {children}
+              </Button>
+            </Flex>
+          </>
+        )}
       </div>
     </div>
   );
@@ -99,51 +106,49 @@ export const Modal = styled(ReactModal)`
     `};
 `;
 
-class ImageModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      height: null
-    };
-    this.node = null;
-  }
-  toggleHeight = height => {
-    this.setState({ height });
-  };
-  render() {
-    const {
-      backgroundColor = "rgba(71, 82, 93, 0.7)",
-      heading,
-      headingCss,
-      buttonText = "Submit",
-      hideFooter = false
-    } = this.props;
-    return (
-      <Modal
-        className={"modal-dialog small"}
-        css={this.props.css || ""}
-        gutter={this.props.gutter}
-        isOpen={this.props.showModal}
-        onRequestClose={this.props.handleCloseModal}
-        contentLabel="Minimal Modal Example"
-        modalWidth={this.props.width}
-        closeTimeoutMS={100}
-        ariaHideApp={false}
-        style={{
-          overlay: {
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            overflowY: "auto",
-            backgroundColor,
-            zIndex: 9999
-          }
-        }}
-      >
-        <Global
-          style={css`
+const ImageModal = ({
+  backgroundColor = "rgba(71, 82, 93, 0.7)",
+  heading,
+  headingCss,
+  buttonText = "Submit",
+  hideFooter = false,
+  gutter,
+  showModal,
+  handleCloseModal,
+  width,
+  children,
+  buttonClass,
+  action,
+  footerProps = {},
+  ...props
+}) => {
+  let [height, toggleHeight] = useState(null);
+  return (
+    <Modal
+      className={"modal-dialog small"}
+      css={props.css || ""}
+      gutter={gutter}
+      isOpen={showModal}
+      onRequestClose={handleCloseModal}
+      contentLabel="Minimal Modal Example"
+      modalWidth={width}
+      closeTimeoutMS={100}
+      ariaHideApp={false}
+      style={{
+        overlay: {
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflowY: "auto",
+          backgroundColor,
+          zIndex: 9999
+        }
+      }}
+    >
+      <Global
+        style={css`
                 .ReactModalPortal > div {
             // opacity: 0;
             .ReactModal__Content{
@@ -190,37 +195,35 @@ class ImageModal extends React.Component {
         }
         
         `}
-        />
-        {heading && (
-          <ModalHeader onClose={this.props.handleCloseModal}>
-            {heading}
-          </ModalHeader>
-        )}
-        <ModalContent>
-          <Flex
-            width={1}
-            css={css`
-              align-items: center;
-            `}
+      />
+      {heading && (
+        <ModalHeader onClose={handleCloseModal}>{heading}</ModalHeader>
+      )}
+      <ModalContent>
+        <Flex
+          width={1}
+          css={css`
+            align-items: center;
+          `}
+        >
+          <Text pb={4} fontSize={4} width={1}>
+            {children}
+          </Text>
+        </Flex>
+        {!hideFooter && (
+          <ModalFooter
+            buttonClass={buttonClass}
+            onClose={handleCloseModal}
+            modalAction={action}
+            {...footerProps}
           >
-            <Text pb={4} fontSize={4} width={1}>
-              {this.props.children}
-            </Text>
-          </Flex>
-          {!hideFooter && (
-            <ModalFooter
-              buttonClass={this.props.buttonClass}
-              onClose={this.props.handleCloseModal}
-              modalAction={this.props.action}
-            >
-              {buttonText}
-            </ModalFooter>
-          )}
-        </ModalContent>
-      </Modal>
-    );
-  }
-}
+            {buttonText}
+          </ModalFooter>
+        )}
+      </ModalContent>
+    </Modal>
+  );
+};
 export const Dialog = ({
   modalIsOpen,
   close,
@@ -228,7 +231,8 @@ export const Dialog = ({
   buttonText,
   action,
   hideFooter,
-  heading
+  heading,
+  footerChildren
 }) => {
   return (
     <ImageModal
@@ -241,77 +245,77 @@ export const Dialog = ({
       action={action}
       heading={heading}
       hideFooter={hideFooter}
+      footerProps={{ override: footerChildren }}
     >
       {children}
     </ImageModal>
   );
 };
 
-export class DialogElement extends React.Component {
-  state = {
-    confirm: false,
-    data: null
+export const DialogElement = ({
+  confirmAction,
+  dialogText,
+  hideFooter,
+  heading,
+  children
+}) => {
+  let [confirm, setConfirm] = useState(false);
+  let [data, setData] = useState(null);
+  const onConfirmAction = () => {
+    confirmAction(this.state.data);
+    setConfirm(false);
   };
-  confirmAction = () => {
-    this.props.confirmAction(this.state.data);
-    this.setState({ confirm: false });
+  const openModal = data => {
+    setConfirm(true);
+    setData(data);
   };
-  openModal = data => {
-    this.setState({ confirm: true, data });
-  };
-  render() {
-    let { dialogText, hideFooter, heading, children } = this.props;
-    return (
-      <>
-        {children(this.openModal)}
+  return (
+    <>
+      {children(openModal)}
 
-        <Dialog
-          modalIsOpen={this.state.confirm}
-          close={() => {
-            this.setState({ confirm: false });
-          }}
-          heading={heading}
-          hideFooter={hideFooter}
-          action={this.confirmAction}
-        >
-          {dialogText(this.state.data)}
-        </Dialog>
-      </>
-    );
-  }
-}
-export class DialogButton extends React.Component {
-  state = {
-    confirm: false
+      <Dialog
+        modalIsOpen={confirm}
+        close={() => setConfirm(false)}
+        heading={heading}
+        hideFooter={hideFooter}
+        action={onConfirmAction}
+      >
+        {dialogText(data)}
+      </Dialog>
+    </>
+  );
+};
+export const DialogButton = ({
+  confirmAction,
+  dialogText,
+  hideFooter,
+  heading,
+  footerChildren,
+  renderComponent = onClick => <Button onClick={onClick} />,
+  ...rest
+}) => {
+  let [confirm, setConfirm] = useState(false);
+  const onConfirmAction = () => {
+    confirmAction();
+    setConfirm(false);
   };
-  confirmAction = () => {
-    this.props.confirmAction();
-    this.setState({ confirm: false });
-  };
-  render() {
-    let { dialogText, hideFooter, heading, ...rest } = this.props;
-    return (
-      <>
-        <Button
-          {...rest}
-          onClick={() => {
-            this.setState({ confirm: true });
-          }}
-        />
-        <Dialog
-          modalIsOpen={this.state.confirm}
-          close={() => {
-            this.setState({ confirm: false });
-          }}
-          heading={heading}
-          hideFooter={hideFooter}
-          action={this.confirmAction}
-        >
-          {dialogText}
-        </Dialog>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      {React.cloneElement(renderComponent(() => setConfirm(true)), {
+        ...rest
+      })}
+      <Dialog
+        modalIsOpen={confirm}
+        close={() => setConfirm(false)}
+        heading={heading}
+        hideFooter={hideFooter}
+        action={onConfirmAction}
+        footerChildren={footerChildren}
+      >
+        {dialogText}
+      </Dialog>
+    </>
+  );
+};
 
 export default ImageModal;

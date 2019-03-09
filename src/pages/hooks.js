@@ -28,8 +28,8 @@ export const useLoadData = ({ fetchData }) => {
   ];
 };
 
-export const useSalesHook = location => {
-  let { search } = location;
+export const useSalesHook = (location = {}) => {
+  let { search = "" } = location;
   let { from = "", to = "", q = "", status = "" } = parseQuery(search);
   let [dateFilter, setDateFilter] = useState({ from, to });
   let [searchParam, setSearchParam] = useState(q);
