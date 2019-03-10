@@ -283,7 +283,7 @@ export const VerificationItem = ({ label, children, buttons = [] }) => {
     </Flex>
   );
 };
-const BaseListItem = ({
+export const BaseListItem = ({
   to,
   leftTop,
   rightTop,

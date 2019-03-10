@@ -11,6 +11,8 @@ import {
   AddToGroupClassModal
 } from "../src/components/sales";
 import GroupBookingListPage from "../src/pages/GroupBookingListPage";
+import { ListItem, BaseListItem } from "../src/shared/reusables";
+import Table from "../src/shared/components/Table";
 let requestData = [
   {
     data: {
@@ -112,6 +114,106 @@ storiesOf("Group Lesson Components", module)
     </>
   ))
   .add("Add to Group Class Prompt", () => <AddToGroupClassModal />)
+  .add("GroupClass ListItem", () => {
+    return (
+      <BaseListItem
+        to="http://www.google.com"
+        leftTop="Jan 10 2019 - Jan 31 2019"
+        heading="January Standard Class Ikeja"
+        subHeading="Tutor: Chidiebere"
+        rightSection={(200000).toLocaleString()}
+        rightTop="20 students"
+        rightBottom={<Text>Skill: IELTS</Text>}
+      />
+    );
+  })
+  .add("Group Class Detail", () => {
+    const customer_columns = [
+      {
+        Header: "Full name",
+        accessor: "name",
+        Cell: ({ original: { name } }) => <Text>{name}</Text>
+      },
+      {
+        Header: props => {
+          console.log(props);
+          return "Email";
+        },
+        accessor: "email",
+        Cell: ({ value }) => <span className="number">{value}</span>
+      },
+      {
+        Header: "Phone",
+        accessor: "phone"
+      },
+      {
+        Header: "Full Payment",
+        accessor: "full_payment",
+        Cell: ({ value }) => <Text>{value && `✔`}</Text>
+      }
+    ];
+    let data = [
+      {
+        name: "Jessica Jones",
+        email: "jessicajones@gmail.com",
+        phone: "(234) 818 390 8489",
+        full_payment: true
+      },
+      {
+        name: "Elizabeth Brown",
+        email: "elizabeth-92@example.com",
+        phone: "(829) 614 6596",
+        full_payment: false
+      },
+      {
+        name: "Maria Bell",
+        email: "mariabell@example.com",
+        phone: "(355) 509 1978",
+        full_payment: true
+      }
+    ];
+    let styling = css`
+      align-self: center;
+    `;
+    return (
+      <Box>
+        <Table
+          adminActions={
+            <Flex mb="10px" justifyContent="space-between">
+              <Box>
+                <label>Action: </label>
+                <select
+                  css={css`
+                    padding-top: 3px;
+                    padding-bottom: 3px;
+                  `}
+                >
+                  <option>-------</option>
+                  <option>Made full payment</option>
+                  <option>Send Curriculum information to clients</option>
+                </select>
+                <button
+                  css={css`
+                    margin-left: 10px;
+                    padding-top: 3px;
+                    padding-bottom: 3px;
+                  `}
+                >
+                  Go
+                </button>
+              </Box>
+              <Text css={styling}>Total Amount: 200000</Text>
+              <Text css={styling}>Tutor earns: 50000</Text>
+              <button>Pay Tutor</button>
+            </Flex>
+          }
+          data={data}
+          columns={customer_columns}
+          keyField="email"
+        />
+      </Box>
+    );
+  })
   .add("Group Bookings", () => {
     return <GroupBookingListPage />;
   });
