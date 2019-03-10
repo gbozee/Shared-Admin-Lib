@@ -3,18 +3,14 @@ import { css, jsx } from "@emotion/core";
 import { Flex } from "@rebass/emotion";
 import { DateFilter } from "../shared/DateFilter";
 import Link from "react-router-dom/Link";
-import { FormDrawer, RequestForm } from "../shared/components";
+import { FormDrawer } from "../shared/components";
 import { SpinnerContainer } from "../shared/primitives/Spinner";
-import {
-  RequestListItem,
-  SectionListPage,
-  SummaryCardList,
-  GroupLessonListItem,
-  getDate
-} from "../shared/reusables";
+import { SectionListPage } from "../shared/reusables";
 import { useState } from "react";
 import { Button } from "../shared/primitives";
 import { useSalesHook } from "./hooks";
+import { GroupBookingCreateForm } from "../components/sales";
+import { GroupBookingListItem } from "../components/sales/details";
 
 const RegularRequestListPage = ({ location, detailPageUrl = () => {} }) => {
   let {
@@ -28,20 +24,22 @@ const RegularRequestListPage = ({ location, detailPageUrl = () => {} }) => {
   const filteredResults = () => {
     return [
       {
-        slug: "ABCDESDDESS",
-        full_name: "Shola Ameobi",
-        email: "james@example.com",
-        phone_no: "08033002232",
         skill: "IELTS",
-        budget: 20000,
-        tutor: "Chidiebere",
-        status: "pending",
-        created: "2018-10-12 14:10:33",
-        modified: "2018-10-12 14:10:33"
+        no_of_students: 20,
+        amount: 200000,
+        schedule: "January Standard Class Ikeja",
+        first_session: "2019-01-10",
+        last_session: "2019-01-31",
+        tutor: { first_name: "Chidiebere" },
+        order: "AADDESSDES",
+        created: "2019-01-10"
       }
     ];
   };
   const onSearch = () => {};
+  const onCreateBooking = data => {
+    console.log(data);
+  };
   const actions = {
     ISSUED: 1,
     COMPLETED: 2,
@@ -54,33 +52,29 @@ const RegularRequestListPage = ({ location, detailPageUrl = () => {} }) => {
   };
   return (
     <Flex flexDirection="column">
-     
       <Flex justifyContent="flex-end">
-        <Button onClick={() => setShowModal(true)}>New Request</Button>
-        <FormDrawer isOpen={showModal} onClose={() => setShowModal(false)}>
-          <RequestForm />
+        <FormDrawer
+          heading="Group Booking"
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+        >
+          <GroupBookingCreateForm
+            skills={["IELTS"]}
+            tutors={[{ name: "Chidiebere", email: "chidi@example.com" }]}
+            onSubmit={onCreateBooking}
+          />
         </FormDrawer>
       </Flex>
       <Flex flexDirection={"column"}>
         <DateFilter
-          onSearchChange={e => {
-            setSearchParam(e.target.value);
-          }}
           buttonText="This Month"
-          searchValue={state.searchParam}
-          dateValue={state.dateFilter}
-          onChange={onDateFilter}
           onKeyDown={serverSearch}
           displayDate={false}
           selection={state.selection}
           onFilterChange={e => setSelection(e.target.value)}
           placeholder="Search by email"
-          searchButton={{
-            display: true,
-            onClick: serverSearch
-          }}
           filterOptions={[
-            { value: "", label: "All" },
+            { value: "", label: "All Bookings" },
             {
               value: actions.ISSUED,
               label: "issued requests"
@@ -110,7 +104,11 @@ const RegularRequestListPage = ({ location, detailPageUrl = () => {} }) => {
               label: "requests to be booked"
             }
           ]}
-        />
+        >
+          <Button mb={10} onClick={() => setShowModal(true)}>
+            New Booking
+          </Button>
+        </DateFilter>
       </Flex>
       <SpinnerContainer condition={state.loading}>
         <Flex flexDirection="column">
@@ -118,10 +116,10 @@ const RegularRequestListPage = ({ location, detailPageUrl = () => {} }) => {
             data={filteredResults()}
             callback={request => ({
               ...request,
-              to: detailPageUrl(request.slug)
+              to: detailPageUrl(request.order)
             })}
             LinkComponent={Link}
-            Component={RequestListItem}
+            Component={GroupBookingListItem}
             keyValue="created"
           />
         </Flex>

@@ -55,14 +55,20 @@ const Table = ({
   adminActions,
   ...rest
 }) => {
-  let [selectedAll, setSelectedAll] = React.useState(false);
-  let [selectedItems, setSelectedItems] = React.useState([]);
+  let {
+    selectedAll,
+    setSelectedAll,
+    selectedItems = [],
+    setSelectedItems
+  } = rest;
   return (
     <StyledTable {...{ tableRowCSS, tableHeadCSS, tableWrapperCSS }}>
       {adminActions}
       <div className="Chakra-Table__Wrapper">
         <SelectTable
           toggleAll={(...args) => {
+            let newState = !selectedAll;
+            setSelectedItems(newState ? data.map(x => x.email) : []);
             setSelectedAll(value => !value);
           }}
           selectAll={selectedAll}

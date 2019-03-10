@@ -4,6 +4,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { Box, Flex, Button as EButton, Text, Link } from "@rebass/emotion";
 import Application from "../application";
+import { Icon } from "./Icon";
 
 // export const EmptyButton = styled.button`
 //   transition: all 0.2s cubic-bezier(0.4, 0, 0.23, 1);
@@ -59,3 +60,19 @@ export const Button = ({ ...rest }) => {
     />
   );
 };
+
+export const CloseButton = ({ onClick }) => (
+  <EmptyButton
+    css={css`
+      top: 0;
+      position: absolute;
+      right: 0;
+      margin-top: 10px;
+      margin-right: 10px;
+      cursor: pointer;
+    `}
+    onClick={onClick}
+  >
+    <Icon name="close" size={20} />
+  </EmptyButton>
+);

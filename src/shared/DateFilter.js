@@ -92,7 +92,8 @@ export const DateFilter = ({
   placeholder = "Search either email or order",
   buttonText,
   searchButton = {},
-  filters = []
+  filters = [],
+  children
 }) => {
   return (
     <Flex
@@ -119,32 +120,34 @@ export const DateFilter = ({
           />
         </Box>
       ) : null}
-      <Box
-        pr={4}
-        css={css`
-          align-self: flex-end;
-        `}
-      >
-        {filters.map(filter => (
-          <select
-            css={css`
-              height: 36px;
-              align-self: flex-end;
-              margin-bottom: 16px;
-              margin-left: 20px;
-              // width: 100%;
-            `}
-            value={filter.selection}
-            onChange={onFilterChange}
-          >
-            {filter.options.map(option => (
-              <option key={option.label} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        ))}
-      </Box>
+      {filters.length > 0 && (
+        <Box
+          pr={4}
+          css={css`
+            align-self: flex-end;
+          `}
+        >
+          {filters.map(filter => (
+            <select
+              css={css`
+                height: 36px;
+                align-self: flex-end;
+                margin-bottom: 16px;
+                margin-left: 20px;
+                // width: 100%;
+              `}
+              value={filter.selection}
+              onChange={onFilterChange}
+            >
+              {filter.options.map(option => (
+                <option key={option.label} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          ))}
+        </Box>
+      )}
 
       {onChange ? (
         <Flex flexDirection="column">
@@ -187,6 +190,7 @@ export const DateFilter = ({
           {searchButton.text || "Search"}
         </Button>
       ) : null}
+      {children}
     </Flex>
   );
 };

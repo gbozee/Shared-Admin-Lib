@@ -4,26 +4,16 @@ import React from "react";
 import { css, jsx } from "@emotion/core";
 import { RequestListItem } from "../../shared/reusables";
 import { Flex, Text, Box } from "@rebass/emotion";
-import { Button, DialogButton } from "../../shared/primitives";
-import { Icon } from "../../shared/primitives/Icon";
+import {
+  Button,
+  DialogButton,
+  CloseButton,
+  Dropdown
+} from "../../shared/primitives";
 import Application from "../../shared/application";
-import { EmptyButton } from "../../shared/primitives/Button";
 import { format } from "date-fns";
+import { Form } from "../../shared/components/FormComponent";
 
-const Dropdown = ({ value, options = [], onChange, ...rest }) => {
-  return (
-    <select {...rest} value={value} onChange={e => onChange(e.target.value)}>
-      {options.map(option => {
-        let result = Array.isArray(option) ? option : [option, option];
-        return (
-          <option key={result[0]} value={result[0]}>
-            {result[1]}
-          </option>
-        );
-      })}
-    </select>
-  );
-};
 const RemarkComponent = ({ text, remark, updateRemark, onCold }) => {
   const dispatch = ({ type, value }) => {
     if (type == "update-remark") {
@@ -247,21 +237,7 @@ export const AddToGroupClassModal = ({
     </Application>
   );
 };
-const CloseButton = ({ onClick }) => (
-  <EmptyButton
-    css={css`
-      top: 0;
-      position: absolute;
-      right: 0;
-      margin-top: 10px;
-      margin-right: 10px;
-      cursor: pointer;
-    `}
-    onClick={onClick}
-  >
-    <Icon name="close" size={20} />
-  </EmptyButton>
-);
+
 export const RemarkModal = ({ text, dispatch, remark = "" }) => {
   let [remarkText, updateText] = React.useState(remark);
   return (
@@ -328,5 +304,55 @@ export const RemarkModal = ({ text, dispatch, remark = "" }) => {
         {text}
       </DialogButton>
     </Application>
+  );
+};
+
+export const GroupBookingCreateForm = ({
+  onSubmit,
+  skills = [],
+  tutors = []
+}) => {
+  let data = [
+    { name: "first_session", type: "date", label: "First session" },
+    { name: "last_session", type: "date", label: "Last session" },
+    {
+      name: "skill",
+      type: "select",
+      options: skills,
+      label: "Skill",
+      defaultText: "Select Skill"
+    },
+    {
+      name: "tutor",
+      type: "select",
+      options: tutors.map(x => [x.email, x.name]),
+      label: "Tutor",
+      defaultText: "Select Tutor"
+    },
+    { name: "display_name", label: "Booking Summary" }
+  ];
+  return (
+    <Form
+      fields={data}
+      onSubmit={onSubmit}
+      render={(fields, button) => {
+        return (
+          <>
+            <Box mb={10}>{fields.display_name}</Box>
+            <Flex mb={10} justifyContent="space-between">
+              <Box width="100%" pr={3}>
+                {fields.skill}
+              </Box>
+              <Box width="100%">{fields.tutor}</Box>
+            </Flex>
+            <Flex mb={10}>
+              {fields.first_session}
+              {fields.last_session}
+            </Flex>
+            {button}
+          </>
+        );
+      }}
+    />
   );
 };

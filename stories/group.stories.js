@@ -4,15 +4,20 @@ import React from "react";
 import { css, jsx } from "@emotion/core";
 import { Box, Flex, Text } from "@rebass/emotion";
 import { storiesOf } from "@storybook/react";
-import { Form, FormProvider } from "./Form";
 import {
   RequestItemDetail,
   RemarkModal,
-  AddToGroupClassModal
+  AddToGroupClassModal,
+  GroupBookingCreateForm
 } from "../src/components/sales";
 import GroupBookingListPage from "../src/pages/GroupBookingListPage";
 import { ListItem, BaseListItem } from "../src/shared/reusables";
 import Table from "../src/shared/components/Table";
+import {
+  GroupBookingListItem,
+  GroupBookingDetailClientTable
+} from "../src/components/sales/details";
+import { Form } from "../src/shared/components/FormComponent";
 let requestData = [
   {
     data: {
@@ -116,42 +121,21 @@ storiesOf("Group Lesson Components", module)
   .add("Add to Group Class Prompt", () => <AddToGroupClassModal />)
   .add("GroupClass ListItem", () => {
     return (
-      <BaseListItem
-        to="http://www.google.com"
-        leftTop="Jan 10 2019 - Jan 31 2019"
-        heading="January Standard Class Ikeja"
-        subHeading="Tutor: Chidiebere"
-        rightSection={(200000).toLocaleString()}
-        rightTop="20 students"
-        rightBottom={<Text>Skill: IELTS</Text>}
+      <GroupBookingListItem
+        {...{
+          skill: "IELTS",
+          no_of_students: 20,
+          amount: 200000,
+          schedule: "January Standard Class Ikeja",
+          first_session: "2019-01-10",
+          last_session: "2019-01-31",
+          tutor: { first_name: "Chidiebere" },
+          order: "AADDESSDES"
+        }}
       />
     );
   })
   .add("Group Class Detail", () => {
-    const customer_columns = [
-      {
-        Header: "Full name",
-        accessor: "name",
-        Cell: ({ original: { name } }) => <Text>{name}</Text>
-      },
-      {
-        Header: props => {
-          console.log(props);
-          return "Email";
-        },
-        accessor: "email",
-        Cell: ({ value }) => <span className="number">{value}</span>
-      },
-      {
-        Header: "Phone",
-        accessor: "phone"
-      },
-      {
-        Header: "Full Payment",
-        accessor: "full_payment",
-        Cell: ({ value }) => <Text>{value && `✔`}</Text>
-      }
-    ];
     let data = [
       {
         name: "Jessica Jones",
@@ -172,48 +156,33 @@ storiesOf("Group Lesson Components", module)
         full_payment: true
       }
     ];
-    let styling = css`
-      align-self: center;
-    `;
     return (
-      <Box>
-        <Table
-          adminActions={
-            <Flex mb="10px" justifyContent="space-between">
-              <Box>
-                <label>Action: </label>
-                <select
-                  css={css`
-                    padding-top: 3px;
-                    padding-bottom: 3px;
-                  `}
-                >
-                  <option>-------</option>
-                  <option>Made full payment</option>
-                  <option>Send Curriculum information to clients</option>
-                </select>
-                <button
-                  css={css`
-                    margin-left: 10px;
-                    padding-top: 3px;
-                    padding-bottom: 3px;
-                  `}
-                >
-                  Go
-                </button>
-              </Box>
-              <Text css={styling}>Total Amount: 200000</Text>
-              <Text css={styling}>Tutor earns: 50000</Text>
-              <button>Pay Tutor</button>
-            </Flex>
+      <GroupBookingDetailClientTable
+        data={data}
+        admin_actions={{
+          made_full_payment: records => {
+            console.log(records);
+          },
+          send_curriculum_information_to_client: records => {
+            console.log(records);
           }
-          data={data}
-          columns={customer_columns}
-          keyField="email"
-        />
-      </Box>
+        }}
+        booking_detail={{
+          status: "scheduled",
+          amount: 200000,
+          percent_split: 15
+        }}
+      />
     );
   })
   .add("Group Bookings", () => {
     return <GroupBookingListPage />;
+  })
+  .add("Group Booking CreateForm", () => {
+    return (
+      <GroupBookingCreateForm
+        skills={["IELTS"]}
+        tutors={[{ name: "Chidiebere", email: "chidi@example.com" }]}
+      />
+    );
   });

@@ -4,15 +4,17 @@ import React from "react";
 import { css, jsx } from "@emotion/core";
 import { Box, Flex, Text } from "@rebass/emotion";
 import { storiesOf } from "@storybook/react";
-import { Form, FormProvider } from "./Form";
+import { Form, FormProvider } from "../src/shared/components/FormComponent";
+import * as yup from "yup";
 const TextArea = props => <textarea {...props} />;
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .email()
+    .required("Email is required ")
+});
 let data = [
-  {
-    name: "email",
-    type: "email",
-    label: "Email",
-    validate: value => value.includes("@")
-  },
+  { name: "email", type: "email", label: "Email" },
   { name: "first_name", label: "First name" },
   { name: "last_name", label: "Last name" },
   {
@@ -42,6 +44,7 @@ storiesOf("Forms", module)
     <Wrapper>
       <Form
         fields={data}
+        validationSchema={schema}
         data={{}}
         onSubmit={result => {
           console.log(result);
@@ -54,6 +57,7 @@ storiesOf("Forms", module)
       <Form
         fields={data}
         data={{ email: "gbozee@example.com" }}
+        validationSchema={schema}
         onSubmit={result => {
           console.log(result);
         }}
@@ -65,6 +69,7 @@ storiesOf("Forms", module)
       <Wrapper>
         <Form
           fields={data}
+          validationSchema={schema}
           onSubmit={result => {
             console.log(result);
           }}
@@ -88,6 +93,7 @@ storiesOf("Forms", module)
     return (
       <Wrapper>
         <Form
+          validationSchema={schema}
           fields={[...data, { name: "expectaton", component: TextArea }]}
           onSubmit={result => {
             console.log(result);
@@ -108,6 +114,7 @@ storiesOf("Forms", module)
       <Wrapper>
         <Form
           fields={data}
+          validationSchema={schema}
           error_messages={errors}
           onSubmit={result => console.log(result)}
         />
