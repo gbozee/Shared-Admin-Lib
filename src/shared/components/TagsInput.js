@@ -1,15 +1,15 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import React from "react";
-import styled from "@emotion/styled";
-import { color } from "../design-systems/color";
-import { Icon } from "../primitives/Icon";
-import { border_radius } from "../design-systems/border";
-import { font_weight, font_family, font } from "../design-systems/font";
+import { css, jsx } from '@emotion/core';
+import React from 'react';
+import styled from '@emotion/styled';
+import { color } from '../design-systems/color';
+import { Icon } from '../primitives/Icon';
+import { border_radius } from '../design-systems/border';
+import { font_weight, font_family, font } from '../design-systems/font';
 
 function generateBgColor(props) {
   switch (props.appearance) {
-    case "gray":
+    case 'gray':
       return css`
         background-color: ${color.gray.ui_02};
         color: ${color.gray.primary};
@@ -19,17 +19,17 @@ function generateBgColor(props) {
           background-color: ${color.gray.ui_01};
         }
       `;
-    case "blue":
+    case 'blue':
       return css`
         background-color: rgb(76, 154, 255);
         color: rgb(23, 43, 77);
       `;
-    case "green":
+    case 'green':
       return css`
         background-color: rgb(87, 217, 163);
         color: rgb(23, 43, 77);
       `;
-    case "cyan":
+    case 'cyan':
       return css`
         background-color: ${color.cyan.primary};
 
@@ -43,7 +43,7 @@ function generateBgColor(props) {
           background-color: ${color.cyan.dark};
         }
       `;
-    case "lightCyan":
+    case 'lightCyan':
       return css`
         background-color: ${color.cyan.ui_01};
         color: ${color.gray.primary};
@@ -53,7 +53,7 @@ function generateBgColor(props) {
           background-color: ${color.cyan.faint};
         }
       `;
-    case "orange":
+    case 'orange':
       return css`
         background-color: rgb(255, 196, 0);
         color: ${color.gray.primary};
@@ -143,7 +143,7 @@ export class Tag extends React.Component {
       isRemovable,
       className,
       isAddable,
-      isRounded
+      isRounded,
     } = this.props;
 
     return (
@@ -155,7 +155,7 @@ export class Tag extends React.Component {
           appearance,
           isAddable,
           isRounded,
-          className: `Tag ${className}`
+          className: `Tag ${className}`,
         }}
         className="Tag"
         tabIndex="0"
@@ -182,7 +182,7 @@ export class Tag extends React.Component {
             className="Tag__Addon Tag__Addon--after"
             onClick={this.onRemove}
           >
-            <Icon name="close" size={16} />
+            <Icon name="close" color={color.gray.primary} size={16} />
           </button>
         )}
       </StyledTag>
@@ -192,12 +192,12 @@ export class Tag extends React.Component {
 
 Tag.defaultProps = {
   isRounded: true,
-  appearance: "cyan",
-  text: "Tag Text",
+  appearance: 'cyan',
+  text: 'Tag Text',
   isRemovable: false,
   isAddable: false,
   onAdd: () => {},
-  onRemove: () => {}
+  onRemove: () => {},
 };
 
 var _ENTER = 13;
@@ -243,7 +243,7 @@ export class TagsInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tags: this.props.tags
+      tags: this.props.tags || this.props.value || [],
     };
   }
 
@@ -251,11 +251,9 @@ export class TagsInput extends React.Component {
     var key = e.keyCode;
 
     if (key === _COMMA || key === _ENTER) {
-      if (validateEmail(e.target.innerHTML)) {
-        this.addTag(e.target.innerHTML);
-        e.preventDefault();
-        e.target.innerHTML = "";
-      }
+      this.addTag(e.target.innerHTML);
+      e.preventDefault();
+      e.target.innerHTML = '';   
     }
 
     if (
@@ -275,15 +273,15 @@ export class TagsInput extends React.Component {
 
   handlePaste = e => {
     e.preventDefault();
-    var text = e.clipboardData.getData("text/plain");
-    document.execCommand("insertHTML", false, text);
+    var text = e.clipboardData.getData('text/plain');
+    document.execCommand('insertHTML', false, text);
   };
 
   removeTag = tagText => {
     if (tagText) {
       this.setState(
         {
-          tags: [...this.state.tags.filter(tag => tag !== tagText)]
+          tags: [...this.state.tags.filter(tag => tag !== tagText)],
         },
         () => {
           this.props.onChange(this.state.tags);
@@ -292,7 +290,7 @@ export class TagsInput extends React.Component {
     } else {
       this.setState(
         {
-          tag: [...this.state.tags.pop()]
+          tag: [...this.state.tags.pop()],
         },
         () => {
           this.props.onChange(this.state.tags);
@@ -303,28 +301,31 @@ export class TagsInput extends React.Component {
 
   render() {
     const { tags } = this.state;
-    const { placeholder } = this.props;
+    const { placeholder, label } = this.props;
     return (
       <TagGroup>
-        {tags.map((tag, index) => {
-          return (
-            <Tag
-              key={`${tag}-${index}`}
-              appearance="gray"
-              isRemovable
-              small
-              onRemove={this.removeTag}
-              text={tag}
-              isRounded={false}
-            />
-          );
-        })}
+        <label>{label}</label>
+        <div>
+          {tags.map((tag, index) => {
+            return (
+              <Tag
+                key={`${tag}-${index}`}
+                appearance="gray"
+                isRemovable
+                small
+                onRemove={this.removeTag}
+                text={tag}
+                isRounded={false}
+              />
+            );
+          })}
+        </div>
         <TagInput
           contentEditable
           suppressContentEditableWarning
           onKeyDown={this.onKeyDown}
           onPaste={this.handlePaste}
-          placeholder={tags.length > 0 ? "" : placeholder}
+          placeholder={tags.length > 0 ? '' : placeholder}
         />
       </TagGroup>
     );
@@ -332,7 +333,7 @@ export class TagsInput extends React.Component {
 }
 
 TagsInput.defaultProps = {
-  onChange: emails => console.log(emails)
+  onChange: emails => console.log(emails),
 };
 
 export default TagsInput;

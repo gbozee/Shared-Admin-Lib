@@ -1,7 +1,7 @@
 /**@jsx jsx */
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
-import { Flex, Box, Text } from "@rebass/emotion";
+import { Flex, Text } from "@rebass/emotion";
 import React, { Component } from "react";
 import { Dropdown } from "../primitives";
 
@@ -74,8 +74,8 @@ export const Select = ({
 
 export const Checkbox = ({ name, label, value, onChange, onBlur }) => {
   return (
-    <Flex pb={3} flexDirection="column">
-      <label for={name}>
+    <Flex pb={3}>
+      <label>
         <input
           type="checkbox"
           id={name}
@@ -110,3 +110,7 @@ export const Textarea = ({
     </Flex>
   );
 };
+
+Textarea.defaultProps = {
+  rows: 8
+}

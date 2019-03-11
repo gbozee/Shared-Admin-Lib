@@ -41,7 +41,6 @@ import DataProvider, {
 import { Dialog, ModalButton } from '../src/shared/primitives/Modal';
 import {
   FormDrawer,
-  TagsInput,
   RequestForm,
   BookingForm,
   CardItem,
@@ -428,7 +427,7 @@ Components.add('SummaryCardList', () => (
     ]}
   />
 ))
-  .add('Request form', () => <RequestForm />)
+  .add('Request form', () => <RequestForm initialValues={{first_name: 'Tioluwani', last_name: 'Kolawole', days: ['Monday']}}/>)
   .add('Booking form', () => <BookingForm />)
   .add('Booking Form In Drawer', () => (
     <FormDrawer heading="Booking">

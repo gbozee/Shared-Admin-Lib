@@ -1,6 +1,7 @@
 import React, { useState, useReducer, useEffect } from "react";
 import { Button } from "../primitives";
 import { Select, Input, Textarea, Checkbox } from "./form-elements";
+import TagsInput from "./TagsInput";
 
 function reducer(state, action) {
   if (action.type == "change") {
@@ -16,7 +17,8 @@ let defaultFormComponents = {
   textarea: Textarea,
   text: Input,
   select: Select,
-  button: Button
+  button: Button,
+  tagsInput: TagsInput
 };
 const FormContext = React.createContext(defaultFormComponents);
 
@@ -78,6 +80,8 @@ export const Form = ({
       if (!Boolean(result.kind)) {
         if (Array.isArray(result.options)) {
           result.kind = "select";
+        } else if(result.tags) {
+          result.kind = "tagsInput"
         } else {
           result.kind = "text";
         }
