@@ -1,6 +1,6 @@
 /**@jsx jsx */
 import { css, jsx } from '@emotion/core';
-import { Flex } from '@rebass/emotion';
+import { Flex, Box } from '@rebass/emotion';
 import React, { Component } from 'react';
 import * as yup from 'yup';
 import { Button } from '../primitives';
@@ -122,8 +122,8 @@ export const BookingForm = ({ onSubmit, initialValues, onCancel }) => {
               {fields.last_session}
             </Flex>
             <Flex pb={3}>
-              {fields.status}
-              {fields.skill}
+              <Box width="100%" mr={2}>{fields.status}</Box>
+              <Box width="100%">{fields.skill}</Box>
             </Flex>
             <Flex pb={3} flexDirection="column">
               {fields.budget}

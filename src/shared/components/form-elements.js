@@ -52,7 +52,7 @@ export const Select = ({
   onBlur
 }) => {
   return (
-    <Flex pb={3} flexDirection="column">
+    <Flex pb={3} flexDirection="column" width="100%">
       {label && <label htmlFor={name}>{label}</label>}
       <Dropdown
         value={value}
