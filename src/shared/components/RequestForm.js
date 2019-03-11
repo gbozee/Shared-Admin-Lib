@@ -164,78 +164,10 @@ const formData = [
     label: 'Request Subjects',
   },
 ];
-export const formProps = {
+
+const formProps = {
   fields: formData,
   validationSchema: RequestFormValidation,
-  render: (fields, button) => {
-    return (
-      <div
-        css={css`
-          label {
-            padding-bottom: 4px;
-            font-size: 14px;
-          }
-          input[type='text'],
-          input[type='email'],
-          input[type='date'],
-          input[type='number'],
-          input[type='tel'] {
-            padding: 0 12px;
-            height: 30px;
-          }
-          select {
-            padding: 0 12px;
-            height: 35px;
-          }
-        `}
-      >
-        <Flex flexDirection="column">
-          <Flex pb={4}>
-            {fields.first_name}
-            {fields.last_name}
-          </Flex>
-          <Flex pb={4}>
-            {fields.email}
-            {fields.phone}
-          </Flex>
-          <Box pb={3}>{fields.no_of_children}</Box>
-          <Box pb={3}>{fields.status}</Box>
-          <Box pb={3}>{fields.no_of_days}</Box>
-          <Box pb={3}>{fields.gender}</Box>
-          <Box pb={3}>{fields.how_you_heard}</Box>
-          <Box pb={3}>{fields.request_type}</Box>
-          <Box pb={3}>{fields.curriculum}</Box>
-          <Box pb={3}>{fields.hours}</Box>
-          <Box pb={3}>{fields.address}</Box>
-          <Flex pb={3}>
-            {fields.state}
-            {fields.vicinity}
-          </Flex>
-          <Box pb={3}>{fields.expectation}</Box>
-          <Box pb={3}>{fields.budget}</Box>
-          <Box pb={3}>{fields.is_parent_request}</Box>
-
-          {fields.days && (
-            <Flex pb={3} flexDirection="column">
-              {fields.days}
-            </Flex>
-          )}
-          {fields.classes && (
-            <Flex pb={3} flexDirection="column">
-              {fields.classes}
-            </Flex>
-          )}
-          {fields.subjects && (
-            <Flex pb={5} flexDirection="column">
-              {fields.subjects}
-            </Flex>
-          )}
-          {button}
-          {/* <Button type="submit">Submit</Button> */}
-        </Flex>
-      </div>
-    );
-  },
 };
 
 export const RequestForm = ({ onSubmit, initialValues, isLoading }) => {
@@ -244,9 +176,75 @@ export const RequestForm = ({ onSubmit, initialValues, isLoading }) => {
       {...formProps}
       onSubmit={values => onSubmit(values)}
       data={initialValues}
-      render={(fields, button) =>
-        formProps.render(fields, button, { isLoading })
-      }
+      render={(fields, button) => {
+        return (
+          <div
+            css={css`
+              label {
+                padding-bottom: 4px;
+                font-size: 14px;
+              }
+              input[type='text'],
+              input[type='email'],
+              input[type='date'],
+              input[type='number'],
+              input[type='tel'] {
+                padding: 0 12px;
+                height: 30px;
+              }
+              select {
+                padding: 0 12px;
+                height: 35px;
+              }
+            `}
+          >
+            <Flex flexDirection="column">
+              <Flex pb={4}>
+                {fields.first_name}
+                {fields.last_name}
+              </Flex>
+              <Flex pb={4}>
+                {fields.email}
+                {fields.phone}
+              </Flex>
+              <Box pb={3}>{fields.no_of_children}</Box>
+              <Box pb={3}>{fields.status}</Box>
+              <Box pb={3}>{fields.no_of_days}</Box>
+              <Box pb={3}>{fields.gender}</Box>
+              <Box pb={3}>{fields.how_you_heard}</Box>
+              <Box pb={3}>{fields.request_type}</Box>
+              <Box pb={3}>{fields.curriculum}</Box>
+              <Box pb={3}>{fields.hours}</Box>
+              <Box pb={3}>{fields.address}</Box>
+              <Flex pb={3}>
+                {fields.state}
+                {fields.vicinity}
+              </Flex>
+              <Box pb={3}>{fields.expectation}</Box>
+              <Box pb={3}>{fields.budget}</Box>
+              <Box pb={3}>{fields.is_parent_request}</Box>
+
+              {fields.days && (
+                <Flex pb={3} flexDirection="column">
+                  {fields.days}
+                </Flex>
+              )}
+              {fields.classes && (
+                <Flex pb={3} flexDirection="column">
+                  {fields.classes}
+                </Flex>
+              )}
+              {fields.subjects && (
+                <Flex pb={5} flexDirection="column">
+                  {fields.subjects}
+                </Flex>
+              )}
+              {button}
+              {/* <Button type="submit">Submit</Button> */}
+            </Flex>
+          </div>
+        );
+      }}
     />
   );
 };
