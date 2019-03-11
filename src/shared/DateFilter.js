@@ -93,6 +93,7 @@ export const DateFilter = ({
   buttonText,
   searchButton = {},
   filters = [],
+  filterOptionsLabel,
   children
 }) => {
   return (
@@ -159,22 +160,25 @@ export const DateFilter = ({
         </Flex>
       ) : null}
       {filterOptions.length > 0 ? (
-        <select
-          css={css`
-            height: 36px;
-            align-self: flex-end;
-            margin-bottom: 16px;
-            margin-left: 20px;
-          `}
-          value={selection}
-          onChange={onFilterChange}
-        >
-          {filterOptions.map(option => (
-            <option key={option.label} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <Box>
+          {filterOptionsLabel}
+          <select
+            css={css`
+              height: 36px;
+              align-self: flex-end;
+              margin-bottom: 16px;
+              margin-left: 20px;
+            `}
+            value={selection}
+            onChange={onFilterChange}
+          >
+            {filterOptions.map(option => (
+              <option key={option.label} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </Box>
       ) : null}
       {searchButton.display ? (
         <Button

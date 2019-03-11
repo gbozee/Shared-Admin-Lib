@@ -8,12 +8,14 @@ import {
   Button,
   DialogButton,
   CloseButton,
-  Dropdown
+  Dropdown,
+  EmptyButton
 } from "../../shared/primitives";
 import Application from "../../shared/application";
 import { format } from "date-fns";
 import { Form } from "../../shared/components/FormComponent";
-
+import * as yup from "yup";
+import { Select } from "../../shared/components/form-elements";
 const RemarkComponent = ({ text, remark, updateRemark, onCold }) => {
   const dispatch = ({ type, value }) => {
     if (type == "update-remark") {
@@ -52,9 +54,25 @@ const confirmPrompt = (text, func) => {
   }
 };
 
-const GroupItemDetail = ({ data, remark = {}, actions }) => {
+const GroupItemDetail = ({
+  data,
+  remark = [],
+  actions,
+  classList,
+  createClass,
+  updateRemarks = () => {},
+  ...rest
+}) => {
   let [currentStatus, setCurrentStatus] = React.useState(data.status);
-  let [requestRemark, updateRemark] = React.useState(remark);
+  let mostRecentRemark = remark.sort((a, b) => {
+    return new Date(b.updated) - new Date(a.updated);
+  })[0] || { slug: data.slug };
+  let [requestRemark, setRemark] = React.useState(mostRecentRemark);
+  const updateRemark = record => {
+    let newRecord = { ...record, slug: data.slug };
+    setRemark(newRecord);
+    updateRemarks([...remark, newRecord]);
+  };
   const markAsCold = () => {
     actions.move_to_cold(data);
   };
@@ -68,6 +86,7 @@ const GroupItemDetail = ({ data, remark = {}, actions }) => {
     <RequestListItem
       request_type="group"
       {...data}
+      {...rest}
       rightTop={" "}
       rightBottom={
         <Flex>
@@ -116,6 +135,8 @@ const GroupItemDetail = ({ data, remark = {}, actions }) => {
             <Flex flexDirection="column" justifyContent="center">
               <AddToGroupClassModal
                 amount={data.budget}
+                classList={classList}
+                createClass={createClass}
                 onSubmit={onCreateBooking}
               />
             </Flex>
@@ -126,23 +147,43 @@ const GroupItemDetail = ({ data, remark = {}, actions }) => {
   );
 };
 
-export const RequestItemDetail = ({ type, data, remark, actions }) => {
-  return (
+export const RequestItemDetail = ({
+  type,
+  data,
+  remark,
+  actions,
+  classList,
+  createClass,
+  ...rest
+}) => {
+  return data.request_type === 5 ? (
     <GroupItemDetail
       remark={remark}
       actions={actions}
+      classList={classList}
+      createClass={createClass}
       data={{
         ...data,
         full_name: `${data.first_name} ${data.last_name}`,
         phone_no: data.number,
-        skill: data.request_subjects.join(","),
+        skill: (data.request_subjects || []).join(","),
         summary: (
           <Text fontWeight="bold">
-            Class Group: {data.request_info.request_details.schedule.summary}
+            Class Group:{" "}
+            {
+              (
+                data.request_info || {
+                  request_details: { schedule: {} }
+                }
+              ).request_details.schedule.summary
+            }
           </Text>
         )
       }}
+      {...rest}
     />
+  ) : (
+    <RequestListItem {...data} {...rest} />
   );
 };
 const buttonComponent = (
@@ -160,10 +201,13 @@ const buttonComponent = (
 export const AddToGroupClassModal = ({
   full_payment = true,
   amount = 40000,
-  onSubmit = () => {}
+  onSubmit = () => {},
+  classList = [],
+  createClass = () => {}
 }) => {
   let [radio, selectReadio] = React.useState(full_payment);
   let [amountToBePaid, changeAmount] = React.useState(amount);
+  let [selectedClass, setSelectedClass] = React.useState();
   return (
     <Application>
       <DialogButton
@@ -175,13 +219,15 @@ export const AddToGroupClassModal = ({
         }
         heading="Add Client to class group"
         confirmAction={() => {
-          confirmPrompt("Are you sure?", () => {
-            onSubmit(radio, amountToBePaid);
-          });
+          if (selectedClass) {
+            confirmPrompt("Are you sure?", () => {
+              onSubmit(radio, amountToBePaid, selectedClass);
+            });
+          }
         }}
         dialogText={
           <Flex flexDirection="column">
-            <Box>
+            <Box mb={10}>
               <label htmlFor="part-payment">
                 <input
                   id="part-payment"
@@ -210,6 +256,34 @@ export const AddToGroupClassModal = ({
                 />{" "}
                 Full Payment
               </label>
+            </Box>
+            <Select
+              label="Add to Class"
+              options={classList}
+              value={selectedClass}
+              onChange={setSelectedClass}
+            />
+            <Box>
+              <Text fontSize="15px">
+                if the selected class doesn't exist yet, click{" "}
+                <EmptyButton
+                  onClick={createClass}
+                  css={css`
+                    display: inline;
+                  `}
+                >
+                  <Text
+                    css={css`
+                      display: inline;
+                      text-decoration: underline;
+                      padding-right: 3px;
+                    `}
+                  >
+                    Here
+                  </Text>
+                </EmptyButton>
+                to create one
+              </Text>
             </Box>
             {!radio && (
               <Flex
@@ -306,7 +380,13 @@ export const RemarkModal = ({ text, dispatch, remark = "" }) => {
     </Application>
   );
 };
-
+const GroupBookingSchema = yup.object().shape({
+  first_session: yup.string().required(),
+  last_session: yup.string().required(),
+  skill: yup.string().required(),
+  tutor: yup.string().required(),
+  display_name: yup.string().required()
+});
 export const GroupBookingCreateForm = ({
   onSubmit,
   skills = [],
@@ -325,7 +405,7 @@ export const GroupBookingCreateForm = ({
     {
       name: "tutor",
       type: "select",
-      options: tutors.map(x => [x.email, x.name]),
+      options: tutors.map(x => [x.email, x.first_name]),
       label: "Tutor",
       defaultText: "Select Tutor"
     },
@@ -335,6 +415,7 @@ export const GroupBookingCreateForm = ({
     <Form
       fields={data}
       onSubmit={onSubmit}
+      validationSchema={GroupBookingSchema}
       render={(fields, button) => {
         return (
           <>

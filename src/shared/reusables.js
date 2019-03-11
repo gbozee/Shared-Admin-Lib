@@ -25,24 +25,28 @@ export const ListGroup = ({ name }) => {
     </Flex>
   );
 };
-export const AsLink = ({ to, onClick, children, ...rest }) => {
+export const AsLink = ({ to, onClick, children, wholeSection, ...rest }) => {
   let WLink = rest.Link || Link;
   let V = Link;
   return Boolean(to) || Boolean(onClick) ? (
-    <WLink
-      to={to}
-      onClick={onClick}
-      href={to}
-      css={css`
-        text-decoration: none;
-        color: #000;
-        :hover {
-          cursor: pointer;
-        }
-      `}
-    >
-      {children}
-    </WLink>
+    wholeSection ? (
+      <WLink
+        to={to}
+        onClick={onClick}
+        href={to}
+        css={css`
+          text-decoration: none;
+          color: #000;
+          :hover {
+            cursor: pointer;
+          }
+        `}
+      >
+        {children}
+      </WLink>
+    ) : (
+      children
+    )
   ) : (
     children
   );
@@ -58,12 +62,13 @@ export const ListItem = ({
   leftTop,
   gender,
   rightTop,
+  wholeSection,
   children,
   rightBottom = <Text>✔</Text>,
   ...rest
 }) => {
   return (
-    <AsLink to={to} onClick={onClick} {...rest}>
+    <AsLink wholeSection={wholeSection} to={to} onClick={onClick} {...rest}>
       <Flex
         py={3}
         px={2}
@@ -71,20 +76,22 @@ export const ListItem = ({
         justifyContent="space-between"
         css={css`
           border-bottom: 1px solid black;
-          @media(max-width: 768px){
+          @media (max-width: 768px) {
             flex-direction: column;
           }
         `}
       >
-        <Box
-          css={css`
-            flex: 1;
-          `}
-        >
-          <Text>{leftTop || date}</Text>
-          <Text fontSize={5}>{heading}</Text>
-          <Text>{subHeading}</Text>
-        </Box>
+        <AsLink to={to} wholeSection={!wholeSection} onClick={onClick}>
+          <Box
+            css={css`
+              flex: 1;
+            `}
+          >
+            <Text>{leftTop || date}</Text>
+            <Text fontSize={5}>{heading}</Text>
+            <Text>{subHeading}</Text>
+          </Box>
+        </AsLink>
         {children}
         <Flex
           flexDirection="column"
@@ -92,7 +99,7 @@ export const ListItem = ({
             flex: 0.5;
             align-self: center;
             align-items: center;
-            @media(max-width: 768px){
+            @media (max-width: 768px) {
               position: absolute;
               align-self: flex-end;
             }
@@ -291,6 +298,7 @@ export const BaseListItem = ({
   heading,
   heading_subtext,
   sub_heading,
+  wholeSection = true,
   rightSection,
   heading_footer,
   children,
@@ -300,6 +308,7 @@ export const BaseListItem = ({
     to={to}
     leftTop={leftTop}
     rightTop={rightTop}
+    wholeSection={wholeSection}
     verified={true}
     rightBottom={
       rightBottom && (
@@ -372,9 +381,7 @@ export const RequestListItem = ({
                   : `Skill: ${skill}`}
               </Text>
               <Text>
-                {request_type === "group"
-                  ? rightBottom
-                  : tutor && `Tutor: ${tutor}`}
+                {rightBottom ? rightBottom : tutor && `Tutor: ${tutor}`}
               </Text>
             </Flex>
           ),
@@ -666,7 +673,7 @@ export const RequestStatusSummary = ({
       fontSize={6}
       fontWeight="bold"
       width={[1, 1, 1 / 2]}
-      p={5}
+      p={30}
       my={5}
       mx={2}
       bg="#f6f6ff"

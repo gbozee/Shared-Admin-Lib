@@ -23,23 +23,51 @@ export const GroupBookingListItem = ({
   first_session,
   last_session,
   tutor,
+  status,
   schedule,
-  detailPageUrl = () => {}
+  detailPageUrl = () => {},
+  ...rest
 }) => {
   let stringDate = `${format(first_session, "MMM DD YYYY")} - ${format(
     last_session,
     "MMM DD YYYY"
   )}`;
+  console.log(rest)
   return (
     <BaseListItem
-      to={detailPageUrl(order)}
+      wholeSection={false}
       leftTop={stringDate}
       heading={schedule}
       subHeading={`Tutor: ${tutor.first_name}`}
       rightSection={amount.toLocaleString()}
       rightTop={`${no_of_students} students`}
       rightBottom={<Text>Skill: {skill}</Text>}
-    />
+      {...rest}
+    >
+      <Box
+        width="30%"
+        css={css`
+          align-self: center;
+        `}
+      >
+        {status === "initialized" ? (
+          <Button
+            css={css`
+              font-size: 14px;
+              padding-top: 8px;
+              padding-bottom: 8px;
+              width: auto;
+              align-self: center;
+              margin-top: -20px;
+            `}
+          >
+            Book Class
+          </Button>
+        ) : (
+          <Text>{status}</Text>
+        )}
+      </Box>
+    </BaseListItem>
   );
 };
 

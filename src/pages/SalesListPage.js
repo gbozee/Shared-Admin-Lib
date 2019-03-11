@@ -5,192 +5,11 @@ import { DateFilter } from "../shared/DateFilter";
 import Link from "react-router-dom/Link";
 import { FormDrawer, RequestForm } from "../shared/components";
 import { SpinnerContainer } from "../shared/primitives/Spinner";
-import {
-  RequestListItem,
-  SectionListPage,
-  SummaryCardList,
-  GroupLessonListItem,
-  getDate
-} from "../shared/reusables";
+import { SectionListPage, SummaryCardList, getDate } from "../shared/reusables";
 import { useState } from "react";
 import { Button } from "../shared/primitives";
 import { useSalesHook } from "./hooks";
-
-export const GroupLessonListPage = ({ location, detailPageUrl }) => {
-  let {
-    state,
-    actions: { setSearchParam, setDateFilter, setSelection, serverSearch }
-  } = useSalesHook(location);
-  const filteredResults = () => {
-    return [
-      {
-        slug: "ABCDESDDESS",
-        full_name: "Shola Ameobi",
-        email: "james@example.com",
-        phone_no: "08033002232",
-        budget: 40000,
-        no_of_students: 5,
-        skill: "IELTS",
-        tutor: "Chidiebere",
-        status: "pending",
-        created: "2018-10-12 14:10:33",
-        modified: "2018-10-12 14:10:33",
-        type: "January Standard Class",
-        duration: "10am - 2pm",
-        location: "Gbagada",
-        start_date:
-          "Sat Mar 23 2019 00:00:00 GMT+0100 (West Africa Standard Time)",
-        end_date:
-          "Sun Apr 14 2019 00:00:00 GMT+0100 (West Africa Standard Time)"
-      },
-      {
-        slug: "ABCDESDEES1",
-        full_name: "Dele Alli",
-        email: "dele.alli@example.com",
-        phone_no: "08033002132",
-        budget: 10000,
-        no_of_students: 8,
-        skill: "IELTS",
-        tutor: "Chidiebere",
-        status: "pending",
-        created: "2018-10-12 14:10:33",
-        modified: "2018-10-12 14:10:33",
-        type: "January Standard Class",
-        duration: "10am - 2pm",
-        location: "Gbagada",
-        start_date:
-          "Wed Apr 24 2019 00:00:00 GMT+0100 (West Africa Standard Time)",
-        end_date:
-          "Wed June 19 2019 00:00:00 GMT+0100 (West Africa Standard Time)"
-      },
-      {
-        slug: "ABCDESDEES1",
-        full_name: "Harry Kane",
-        email: "harrykane@example.com",
-        phone_no: "08078654412",
-        budget: 1000,
-        no_of_students: 18,
-        skill: "IELTS",
-        tutor: "Chidiebere",
-        status: "pending",
-        created: "2018-10-12 14:10:33",
-        modified: "2018-10-12 14:10:33",
-        type: "January Standard Class",
-        duration: "10am - 2pm",
-        location: "Gbagada",
-        start_date:
-          "Wed Apr 24 2019 00:00:00 GMT+0100 (West Africa Standard Time)",
-        end_date:
-          "Wed June 19 2019 00:00:00 GMT+0100 (West Africa Standard Time)"
-      }
-    ];
-  };
-  const onSearch = () => {};
-  const actions = {
-    ISSUED: 1,
-    COMPLETED: 2,
-    PENDING: 4,
-    MEETING: 5,
-    BOOKED: 6,
-    PAYED: 3,
-    COLD: 8,
-    TO_BE_BOOKED: 11
-  };
-  return (
-    <Flex flexDirection="column">
-      <SummaryCardList
-        items={[
-          {
-            name: "Paid Requests",
-            amount: 200000,
-            count: 3,
-            count_text: "Request count"
-          },
-          {
-            name: "Pending Requests",
-            amount: 500000,
-            count: 30,
-            count_text: "Request count"
-          },
-          { name: "Total Revenue from lessons", amount: 400000, count: 25 }
-        ]}
-      />
-      <Flex flexDirection={"column"}>
-        <DateFilter
-          onSearchChange={e => {
-            setSearchParam(e.target.value);
-          }}
-          buttonText="This Month"
-          searchValue={state.searchParam}
-          dateValue={state.dateFilter}
-          onChange={setDateFilter}
-          onKeyDown={serverSearch}
-          displayDate={false}
-          selection={state.selection}
-          onFilterChange={e => setSelection(e.target.value)}
-          placeholder="Search by email"
-          searchButton={{
-            display: true,
-            onClick: serverSearch
-          }}
-          filters={[
-            {
-              name: "Subject",
-              selection: "",
-              options: [
-                { value: "", label: "Filter by subject" },
-                { value: "Chinese", label: "Chinese" },
-                { value: "IELTS", label: "IELTS" },
-                { value: "Academic", label: "Academic" },
-                { value: "German", label: "German" }
-              ]
-            },
-            {
-              name: "Class",
-              selection: "",
-              options: [{ value: "", label: "Filter by class" }]
-            },
-            {
-              name: "Status",
-              selection: "",
-              options: [
-                { value: "", label: "Filter by status" },
-                { value: "Not Paid", label: "Not Paid" },
-                { value: "Paid Full", label: "Paid Full" },
-                { value: "Paid Half", label: "Paid Half" }
-              ]
-            }
-          ]}
-        />
-      </Flex>
-      <SpinnerContainer condition={state.loading}>
-        <Flex flexDirection="column">
-          <SectionListPage
-            data={filteredResults()}
-            callback={request => ({
-              ...request,
-              to: detailPageUrl(request.slug),
-              request_type: "group",
-              rightBottom: getDate(request.created)
-            })}
-            LinkComponent={Link}
-            Component={GroupLessonListItem}
-            keyValue="start_date"
-            funcGetter={item =>
-              `${item.type} (${getDate(item.start_date)} - ${getDate(
-                item.end_date
-              )})`
-            }
-            orderFunc={(a, b) =>
-              new Date(b.start_date).getTime() -
-              new Date(a.start_date).getTime()
-            }
-          />
-        </Flex>
-      </SpinnerContainer>
-    </Flex>
-  );
-};
+import { RequestItemDetail } from "../components/sales";
 
 const RegularRequestListPage = ({ location, detailPageUrl }) => {
   let {
@@ -201,23 +20,84 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
   const onDateFilter = ({ from, to }) => {
     setDateFilter({ from, to });
   };
-  const filteredResults = () => {
-    return [
+  const requestRemarks = () => {
+    let result = [
       {
         slug: "ABCDESDDESS",
+        body: "Sent a message to the client to approve lessons",
+        updated: "2018-03-09 12:30PM"
+      }
+    ];
+    return result;
+  };
+  const filteredResults = () => {
+    let result = [
+      {
+        slug: "ABCDESDDESTT",
         full_name: "Shola Ameobi",
         email: "james@example.com",
         phone_no: "08033002232",
         skill: "IELTS",
         budget: 20000,
+        request_type: 1,
         tutor: "Chidiebere",
         status: "pending",
         created: "2018-10-12 14:10:33",
         modified: "2018-10-12 14:10:33"
+      },
+      {
+        slug: "ABCDESDDESS",
+        first_name: "Shola",
+        last_name: "Ameobi",
+        email: "james@example.com",
+        number: "08033002232",
+        budget: 4000,
+        request_subjects: ["IELTS"],
+        request_type: 5,
+        tutor: "Chidiebere",
+        status: "pending",
+        created: "2018-10-12 14:10:33",
+        modified: "2018-10-12 14:10:33",
+        request_info: {
+          request_details: {
+            schedule: {
+              summary: "March Standard Class -Ikeja"
+            }
+          }
+        }
+      },
+      {
+        slug: "ABCDESDDESO",
+        first_name: "Shola",
+        last_name: "Ameobi",
+        email: "james@example.com",
+        number: "08033002232",
+        request_type: 5,
+        budget: 4000,
+        request_subjects: ["IELTS"],
+        tutor: "Chidiebere",
+        status: "payed",
+        created: "2018-10-12 14:10:33",
+        modified: "2018-10-12 14:10:33",
+        request_info: {
+          request_details: {
+            schedule: {
+              summary: "March Standard Class -Ikeja"
+            }
+          }
+        }
       }
     ];
+    return result;
   };
   const onSearch = () => {};
+  const filteredRequests = (condition, value) => {
+    let dd = filteredResults().filter(condition);
+    if (value === "budget") {
+      return dd.map(x => x[value]).reduce((a, b) => a + b, 0);
+    }
+    return dd.length;
+  };
   const actions = {
     ISSUED: 1,
     COMPLETED: 2,
@@ -234,18 +114,16 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
         items={[
           {
             name: "Paid Requests",
-            amount: 200000,
-            count: 3,
+            amount: filteredRequests(x => x.status === "payed", "budget"),
+            count: filteredRequests(x => x.status === "payed"),
             count_text: "Request count"
           },
           {
             name: "Pending Requests",
-            amount: 500000,
-            count: 30,
+            amount: filteredRequests(x => x.status === "pending", "budget"),
+            count: filteredRequests(x => x.status === "pending"),
             count_text: "Request count"
-          },
-          { name: "Total Revenue from lessons", amount: 400000, count: 25 },
-          { name: "Combined Revenue", amount: 100000, count: 200 }
+          }
         ]}
       />
       <Flex justifyContent="flex-end">
@@ -310,11 +188,11 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
           <SectionListPage
             data={filteredResults()}
             callback={request => ({
-              ...request,
-              to: detailPageUrl(request.slug)
+              data: { ...request, to: detailPageUrl(request.slug), Link: Link },
+              remark: requestRemarks().filter(x => x.slug === request.slug)
             })}
             LinkComponent={Link}
-            Component={RequestListItem}
+            Component={RequestItemDetail}
             keyValue="created"
           />
         </Flex>

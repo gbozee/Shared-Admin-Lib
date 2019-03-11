@@ -18,6 +18,9 @@ import {
   GroupBookingDetailClientTable
 } from "../src/components/sales/details";
 import { Form } from "../src/shared/components/FormComponent";
+import RegularRequestListPage, {
+  GroupLessonListPage
+} from "../src/pages/SalesListPage";
 let requestData = [
   {
     data: {
@@ -40,10 +43,13 @@ let requestData = [
         }
       }
     },
-    remark: {
-      body: "Sent a message to the client to approve lessons",
-      updated: "2018-03-09 12:30PM"
-    }
+    remark: [
+      {
+        slug: "ABCDESDDESS",
+        body: "Sent a message to the client to approve lessons",
+        updated: "2018-03-09 12:30PM"
+      }
+    ]
   },
   {
     data: {
@@ -66,10 +72,13 @@ let requestData = [
         }
       }
     },
-    remark: {
-      body: "Sent a message to the client to approve lessons",
-      updated: "2018-03-09 12:30PM"
-    }
+    remark: [
+      {
+        slug: "ABCDESDDESO",
+        body: "Sent a message to the client to approve lessons",
+        updated: "2018-03-09 12:30PM"
+      }
+    ]
   },
   {
     data: {
@@ -93,10 +102,13 @@ let requestData = [
       },
       booking: {}
     },
-    remark: {
-      body: "Sent a message to the client to approve lessons",
-      updated: "2018-03-09 12:30PM"
-    }
+    remark: [
+      {
+        slug: "ABCDESDDESD",
+        body: "Sent a message to the client to approve lessons",
+        updated: "2018-03-09 12:30PM"
+      }
+    ]
   }
 ];
 let actions = {
@@ -107,15 +119,17 @@ let actions = {
 storiesOf("Group Lesson Components", module)
   .add("List Item Component (Pending)", () => (
     <>
-      {requestData.map(dd => (
-        <RequestItemDetail
-          key={dd.data.slug}
-          type="group"
-          actions={actions}
-          remark={dd.remark}
-          data={dd.data}
-        />
-      ))}
+      {requestData
+        .map(x => ({ ...x, data: { ...x.data, request_type: 5 } }))
+        .map(dd => (
+          <RequestItemDetail
+            key={dd.data.slug}
+            type="group"
+            actions={actions}
+            remark={dd.remark}
+            data={dd.data}
+          />
+        ))}
     </>
   ))
   .add("Add to Group Class Prompt", () => <AddToGroupClassModal />)
@@ -176,7 +190,12 @@ storiesOf("Group Lesson Components", module)
     );
   })
   .add("Group Bookings", () => {
-    return <GroupBookingListPage />;
+    return (
+      <GroupBookingListPage
+        detailPageUrl={slug => slug}
+        location={{ search: "?status=initialized" }}
+      />
+    );
   })
   .add("Group Booking CreateForm", () => {
     return (
@@ -185,4 +204,7 @@ storiesOf("Group Lesson Components", module)
         tutors={[{ name: "Chidiebere", email: "chidi@example.com" }]}
       />
     );
+  })
+  .add("Group Request List Page", () => {
+    return <RegularRequestListPage location={{search:"?q=AADDESSDS"}} detailPageUrl={() => {}} />;
   });
