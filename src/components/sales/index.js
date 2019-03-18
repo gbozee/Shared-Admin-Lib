@@ -93,6 +93,8 @@ const GroupItemDetail = ({
           <Text mr={3}>Status: </Text>
           {data.booking ? (
             "Booked"
+          ) : currentStatus === "payed" ? (
+            "Payed"
           ) : (
             <Dropdown
               value={currentStatus}

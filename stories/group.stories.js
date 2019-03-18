@@ -21,6 +21,128 @@ import { Form } from "../src/shared/components/FormComponent";
 import RegularRequestListPage, {
   GroupLessonListPage
 } from "../src/pages/SalesListPage";
+import { DataContext } from "../src/shared/DataContext";
+function useContext() {
+  function workingRecords() {
+    return new Promise(resolve => resolve([{ slug: "ABCDESDDESS" }]));
+  }
+  function fetchData({ filter, searchParam, selection, dateFilter }) {
+    console.log({ selection, dateFilter, searchParam });
+    let result = [
+      {
+        slug: "ABCDESDDESTT",
+        full_name: "Shola Ameobi",
+        email: "james@example.com",
+        phone_no: "08033002232",
+        skill: "IELTS",
+        budget: 20000,
+        request_type: 1,
+        tutor: "Chidiebere",
+        status: "pending",
+        created: "2018-10-12 14:10:33",
+        modified: "2018-10-12 14:10:33"
+      },
+      {
+        slug: "ABCDESDDESS",
+        first_name: "Shola",
+        last_name: "Ameobi",
+        email: "james@example.com",
+        number: "08033002232",
+        budget: 4000,
+        request_subjects: ["IELTS"],
+        request_type: 5,
+        tutor: "Chidiebere",
+        status: "pending",
+        created: "2018-10-12 14:10:33",
+        modified: "2018-10-12 14:10:33",
+        request_info: {
+          request_details: {
+            schedule: {
+              summary: "March Standard Class -Ikeja"
+            }
+          }
+        }
+      },
+      {
+        slug: "ABCDESDDESO",
+        first_name: "Shola",
+        last_name: "Ameobi",
+        email: "james@example.com",
+        number: "08033002232",
+        request_type: 5,
+        budget: 4000,
+        request_subjects: ["IELTS"],
+        tutor: "Chidiebere",
+        status: "payed",
+        created: "2018-10-12 14:10:33",
+        modified: "2018-10-12 14:10:33",
+        request_info: {
+          request_details: {
+            schedule: {
+              summary: "March Standard Class -Ikeja"
+            }
+          }
+        }
+      }
+    ];
+    if (searchParam) {
+      result = result.filter(
+        x =>
+          x.email.toLowerCase().includes(searchParam.toLowerCase()) ||
+          x.slug.toLowerCase().includes(searchParam.toLowerCase())
+      );
+    }
+    if (selection && selection !== "working") {
+      result = result.filter(x => x.status === selection);
+    }
+    if (dateFilter && dateFilter.from && dateFilter.to) {
+      result = result.filter(x => {
+        let recordAsDate = new Date(x.created).getTime();
+        let fromDate = new Date(dateFilter.from).getTime();
+        let toDate = new Date(dateFilter.to).getTime();
+        return recordAsDate >= fromDate && recordAsDate <= toDate;
+      });
+    }
+
+    return () => new Promise(resolve => resolve(result));
+  }
+  function fetchRemark() {
+    let result = [
+      {
+        slug: "ABCDESDDESS",
+        body: "Sent a message to the client to approve lessons",
+        updated: "2018-03-09 12:30PM"
+      }
+    ];
+    return new Promise(resolve => resolve(result));
+  }
+  const ACTIONS = {
+    LOAD_DATA: "LOAD_DATA",
+    LOAD_REMARKS: "LOAD_REMARKS",
+    CHANGE_STATUS: "CHANGE_STATUS",
+    ADD_TO_CLASS: "ADD_TO_CLASS",
+    UPDATE_REMARK: "UPDATE_REMARK"
+  };
+  const dispatchData = ({ type, value }) => {
+    if (type === ACTIONS.LOAD_DATA) {
+      return fetchData(value)();
+    }
+    if (type == ACTIONS.LOAD_REMARKS) {
+      return fetchRemark();
+    }
+    if (type == ACTIONS.LOAD_WORKING_RECORDS) {
+      return workingRecords();
+    }
+    return new Promise(resolve => resolve());
+  };
+  return { dispatch: dispatchData, actions: ACTIONS, state: {} };
+}
+const DataProvider = ({ children }) => {
+  const localData = useContext();
+  return (
+    <DataContext.Provider value={localData}>{children}</DataContext.Provider>
+  );
+};
 let requestData = [
   {
     data: {
@@ -193,7 +315,7 @@ storiesOf("Group Lesson Components", module)
     return (
       <GroupBookingListPage
         detailPageUrl={slug => slug}
-        location={{ search: "?status=initialized" }}
+        location={{ search: "?status=initialized&displayModal=true" }}
       />
     );
   })
@@ -206,5 +328,12 @@ storiesOf("Group Lesson Components", module)
     );
   })
   .add("Group Request List Page", () => {
-    return <RegularRequestListPage location={{search:"?q=AADDESSDS"}} detailPageUrl={() => {}} />;
+    return (
+      <DataProvider>
+        <RegularRequestListPage
+          location={{ search: "?from=2018-01-01&to=2019-03-14" }}
+          detailPageUrl={() => {}}
+        />
+      </DataProvider>
+    );
   });

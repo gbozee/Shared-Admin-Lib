@@ -4,6 +4,7 @@ import { Box, Flex, Button } from "@rebass/emotion";
 import React from "react";
 import { Input } from "./LoginPage";
 import format from "date-fns/format";
+import subMonths from "date-fns/sub_months";
 
 function currentMonth() {
   var date = new Date();
@@ -14,10 +15,11 @@ function currentMonth() {
     to: format(lastDay, "YYYY-MM-DD")
   };
 }
+let monthsAgo = format(subMonths(new Date(), 2), "YYYY-MM-DD");
 class FromTo extends React.Component {
   state = this.props.value || {
-    from: "",
-    to: ""
+    from: monthsAgo,
+    to: currentMonth().to
   };
   //   static getDerivedStateFromProps(props, state) {
   //     let { value = { from: "", to: "" } } = props;
@@ -160,7 +162,11 @@ export const DateFilter = ({
         </Flex>
       ) : null}
       {filterOptions.length > 0 ? (
-        <Box>
+        <Box
+          css={css`
+            align-self: flex-end;
+          `}
+        >
           {filterOptionsLabel}
           <select
             css={css`

@@ -3,10 +3,7 @@ import { css, jsx } from "@emotion/core";
 import { Flex, Text, Heading } from "@rebass/emotion";
 import React, { useContext, useState, useEffect } from "react";
 import { DataContext } from "../shared/DataContext";
-import Route from "react-router/Route";
-import Switch from "react-router/Switch";
-import Redirect from "react-router/Redirect";
-import Link from "react-router-dom/Link";
+import { Route, Switch, Redirect, Link } from "react-router-dom";
 import { DialogButton, Button } from "../shared/primitives";
 
 import {

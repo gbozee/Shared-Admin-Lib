@@ -34,8 +34,8 @@ export const WithRouter = ({
           }
         `}
       />
-      <React.Suspense fallback={<Spinner />}>
-        <RComponent {...routerProps}>
+      <RComponent {...routerProps}>
+        <React.Suspense fallback={<Spinner />}>
           <>
             {heading}
             <Switch>
@@ -67,8 +67,8 @@ export const WithRouter = ({
               {children}
             </Switch>
           </>
-        </RComponent>
-      </React.Suspense>
+        </React.Suspense>
+      </RComponent>
     </DataProvider>
   );
 };

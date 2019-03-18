@@ -2,112 +2,76 @@
 import { css, jsx } from "@emotion/core";
 import { Flex } from "@rebass/emotion";
 import { DateFilter } from "../shared/DateFilter";
-import Link from "react-router-dom/Link";
+import { Link } from "react-router-dom";
 import { FormDrawer, RequestForm } from "../shared/components";
 import { SpinnerContainer } from "../shared/primitives/Spinner";
 import { SectionListPage, SummaryCardList, getDate } from "../shared/reusables";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Button } from "../shared/primitives";
-import { useSalesHook } from "./hooks";
+import { useSalesHook, useLoadData } from "./hooks";
 import { RequestItemDetail } from "../components/sales";
+import { DataContext } from "../shared/DataContext";
 
 const RegularRequestListPage = ({ location, detailPageUrl }) => {
   let {
     state,
     actions: { setSearchParam, setDateFilter, setSelection, serverSearch }
   } = useSalesHook(location);
+  let { dispatch, actions } = useContext(DataContext);
+  const loadData = () => dispatch({ type: actions.LOAD_DATA, value: state });
+  const loadWorkingData = () =>
+    dispatch({ type: actions.LOAD_WORKING_RECORDS });
+  const loadRemarks = () => dispatch({ type: actions.LOAD_REMARKS });
+  let [requestData, requestActions] = useLoadData({
+    fetchData: loadData
+  });
+  let [workingData, workingDataActions] = useLoadData({
+    fetchData: loadWorkingData
+  });
+  let [remarkData, remarkActions] = useLoadData({ fetchData: loadRemarks });
   let [showModal, setShowModal] = useState(false);
   const onDateFilter = ({ from, to }) => {
     setDateFilter({ from, to });
   };
-  const requestRemarks = () => {
-    let result = [
-      {
-        slug: "ABCDESDDESS",
-        body: "Sent a message to the client to approve lessons",
-        updated: "2018-03-09 12:30PM"
-      }
-    ];
-    return result;
-  };
-  const filteredResults = () => {
-    let result = [
-      {
-        slug: "ABCDESDDESTT",
-        full_name: "Shola Ameobi",
-        email: "james@example.com",
-        phone_no: "08033002232",
-        skill: "IELTS",
-        budget: 20000,
-        request_type: 1,
-        tutor: "Chidiebere",
-        status: "pending",
-        created: "2018-10-12 14:10:33",
-        modified: "2018-10-12 14:10:33"
-      },
-      {
-        slug: "ABCDESDDESS",
-        first_name: "Shola",
-        last_name: "Ameobi",
-        email: "james@example.com",
-        number: "08033002232",
-        budget: 4000,
-        request_subjects: ["IELTS"],
-        request_type: 5,
-        tutor: "Chidiebere",
-        status: "pending",
-        created: "2018-10-12 14:10:33",
-        modified: "2018-10-12 14:10:33",
-        request_info: {
-          request_details: {
-            schedule: {
-              summary: "March Standard Class -Ikeja"
-            }
-          }
-        }
-      },
-      {
-        slug: "ABCDESDDESO",
-        first_name: "Shola",
-        last_name: "Ameobi",
-        email: "james@example.com",
-        number: "08033002232",
-        request_type: 5,
-        budget: 4000,
-        request_subjects: ["IELTS"],
-        tutor: "Chidiebere",
-        status: "payed",
-        created: "2018-10-12 14:10:33",
-        modified: "2018-10-12 14:10:33",
-        request_info: {
-          request_details: {
-            schedule: {
-              summary: "March Standard Class -Ikeja"
-            }
-          }
-        }
-      }
-    ];
-    return result;
-  };
+  useEffect(() => {
+    requestActions.refreshList();
+  }, [
+    state.filter,
+    state.selection,
+    state.dateFilter.from,
+    state.dateFilter.to,
+    state.searchParam
+  ]);
   const onSearch = () => {};
+  const filteredResult = () => {
+    if (state.selection === "working") {
+      return requestData.data.filter(x =>
+        workingData.data.map(y => y.slug).includes(x.slug)
+      );
+    }
+    return requestData.data;
+  };
   const filteredRequests = (condition, value) => {
-    let dd = filteredResults().filter(condition);
+    let dd = filteredResult().filter(condition);
     if (value === "budget") {
       return dd.map(x => x[value]).reduce((a, b) => a + b, 0);
     }
     return dd.length;
   };
-  const actions = {
-    ISSUED: 1,
-    COMPLETED: 2,
-    PENDING: 4,
-    MEETING: 5,
-    BOOKED: 6,
-    PAYED: 3,
-    COLD: 8,
-    TO_BE_BOOKED: 11
+
+  const filtersFromServer = [
+    { label: "Pending Requests", value: "pending" },
+    { label: "Paid Requests", value: "payed" }
+  ];
+  const moveToCold = data => {
+    dispatch({ type: actions.CHANGE_STATUS, value: "cold" }).then(response => {
+      let newRequestData = requestData.data.filter(x => x.slug !== data.slug);
+      console.log(newRequestData);
+      requestActions.setData(newRequestData);
+    });
   };
+  const addClientToGroupClass = () => {};
+  const markRequestAsPayed = () => {};
   return (
     <Flex flexDirection="column">
       <SummaryCardList
@@ -151,45 +115,23 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
             onClick: serverSearch
           }}
           filterOptions={[
-            { value: "", label: "All" },
-            {
-              value: actions.ISSUED,
-              label: "issued requests"
-            },
-            {
-              value: actions.COMPLETED,
-              label: "completed requests"
-            },
-            {
-              value: actions.PENDING,
-              label: "pending requests"
-            },
-            {
-              value: actions.MEETING,
-              label: "meet with client"
-            },
-            {
-              value: actions.PAYED,
-              label: "paid requests"
-            },
-            {
-              value: actions.COLD,
-              label: "cold clients"
-            },
-            {
-              value: actions.TO_BE_BOOKED,
-              label: "requests to be booked"
-            }
-          ]}
+            { value: "", label: "All Requests" },
+            { value: "working", label: "Working Sections" }
+          ].concat(filtersFromServer)}
         />
       </Flex>
       <SpinnerContainer condition={state.loading}>
         <Flex flexDirection="column">
           <SectionListPage
-            data={filteredResults()}
+            data={filteredResult()}
             callback={request => ({
               data: { ...request, to: detailPageUrl(request.slug), Link: Link },
-              remark: requestRemarks().filter(x => x.slug === request.slug)
+              remark: remarkData.data.filter(x => x.slug === request.slug),
+              actions: {
+                move_to_cold: moveToCold,
+                add_client_to_group_class: addClientToGroupClass, //part payment and full payment consideration
+                mark_request_as_payed: markRequestAsPayed
+              }
             })}
             LinkComponent={Link}
             Component={RequestItemDetail}

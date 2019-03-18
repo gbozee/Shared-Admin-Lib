@@ -25,8 +25,8 @@ export const Input = ({
         }
         input {
           border-color: ${isValid ? "" : "red"};
-          line-height: 24px;
-          height: 24px;
+          // line-height: 24px;
+          // height: 24px;
           padding: 4px;
         }
       `}

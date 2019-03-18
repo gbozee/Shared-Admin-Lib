@@ -2,7 +2,7 @@
 import { css, jsx } from "@emotion/core";
 import { Flex } from "@rebass/emotion";
 import { DateFilter } from "../shared/DateFilter";
-import Link from "react-router-dom/Link";
+import { Link } from "react-router-dom";
 import { FormDrawer } from "../shared/components";
 import { SpinnerContainer } from "../shared/primitives/Spinner";
 import { SectionListPage } from "../shared/reusables";
@@ -118,7 +118,7 @@ const RegularRequestListPage = ({ location, detailPageUrl = () => {} }) => {
   let [bookingRecord, bookingActions] = useLoadData({
     fetchData: fetchData(state.filter)
   });
-  let [showModal, setShowModal] = useState(false);
+  let [showModal, setShowModal] = useState(state.displayModal);
   let tutors = [{ first_name: "Chidiebere", email: "chidi@example.com" }];
   const onDateFilter = ({ from, to }) => {
     setDateFilter({ from, to });

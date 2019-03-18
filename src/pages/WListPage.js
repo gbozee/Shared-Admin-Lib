@@ -4,7 +4,7 @@ import { Flex, Button, Text } from "@rebass/emotion";
 import React, { useContext, useState, useEffect } from "react";
 import { DataContext } from "../shared/DataContext";
 import { getTime, SectionListPage } from "../shared/reusables";
-import Link from "react-router-dom/Link";
+import { Link } from "react-router-dom";
 import { SpinnerContainer } from "../shared/primitives/Spinner";
 import { DateFilter } from "../shared/DateFilter";
 import { parseQuery } from "../shared/utils";
