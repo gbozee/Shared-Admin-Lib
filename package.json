@@ -32,7 +32,8 @@
 		"react": "16.8.4",
 		"react-dom": "16.8.4",
 		"react-modal": "3.8.1",
-		"react-router-dom": "4.4.0",
+		"react-router": "^4.4.0",
+		"react-router-dom": "^4.4.0",
 		"react-table": "^6.9.2",
 		"react-transition-group": "^2.6.1",
 		"yup": "^0.27.0"

@@ -22,6 +22,7 @@ import RegularRequestListPage, {
   GroupLessonListPage
 } from "../src/pages/SalesListPage";
 import { DataContext } from "../src/shared/DataContext";
+import Application from "../src/shared/application";
 function useContext() {
   function workingRecords() {
     return new Promise(resolve => resolve([{ slug: "ABCDESDDESS" }]));
@@ -140,7 +141,9 @@ function useContext() {
 const DataProvider = ({ children }) => {
   const localData = useContext();
   return (
-    <DataContext.Provider value={localData}>{children}</DataContext.Provider>
+    <Application>
+      <DataContext.Provider value={localData}>{children}</DataContext.Provider>
+    </Application>
   );
 };
 let requestData = [
@@ -244,31 +247,35 @@ storiesOf("Group Lesson Components", module)
       {requestData
         .map(x => ({ ...x, data: { ...x.data, request_type: 5 } }))
         .map(dd => (
-          <RequestItemDetail
-            key={dd.data.slug}
-            type="group"
-            actions={actions}
-            remark={dd.remark}
-            data={dd.data}
-          />
+          <Application>
+            <RequestItemDetail
+              key={dd.data.slug}
+              type="group"
+              actions={actions}
+              remark={dd.remark}
+              data={dd.data}
+            />
+          </Application>
         ))}
     </>
   ))
   .add("Add to Group Class Prompt", () => <AddToGroupClassModal />)
   .add("GroupClass ListItem", () => {
     return (
-      <GroupBookingListItem
-        {...{
-          skill: "IELTS",
-          no_of_students: 20,
-          amount: 200000,
-          schedule: "January Standard Class Ikeja",
-          first_session: "2019-01-10",
-          last_session: "2019-01-31",
-          tutor: { first_name: "Chidiebere" },
-          order: "AADDESSDES"
-        }}
-      />
+      <Application>
+        <GroupBookingListItem
+          {...{
+            skill: "IELTS",
+            no_of_students: 20,
+            amount: 200000,
+            schedule: "January Standard Class Ikeja",
+            first_session: "2019-01-10",
+            last_session: "2019-01-31",
+            tutor: { first_name: "Chidiebere" },
+            order: "AADDESSDES"
+          }}
+        />
+      </Application>
     );
   })
   .add("Group Class Detail", () => {
@@ -293,38 +300,44 @@ storiesOf("Group Lesson Components", module)
       }
     ];
     return (
-      <GroupBookingDetailClientTable
-        data={data}
-        admin_actions={{
-          made_full_payment: records => {
-            console.log(records);
-          },
-          send_curriculum_information_to_client: records => {
-            console.log(records);
-          }
-        }}
-        booking_detail={{
-          status: "scheduled",
-          amount: 200000,
-          percent_split: 15
-        }}
-      />
+      <Application>
+        <GroupBookingDetailClientTable
+          data={data}
+          admin_actions={{
+            made_full_payment: records => {
+              console.log(records);
+            },
+            send_curriculum_information_to_client: records => {
+              console.log(records);
+            }
+          }}
+          booking_detail={{
+            status: "scheduled",
+            amount: 200000,
+            percent_split: 15
+          }}
+        />
+      </Application>
     );
   })
   .add("Group Bookings", () => {
     return (
-      <GroupBookingListPage
-        detailPageUrl={slug => slug}
-        location={{ search: "?status=initialized&displayModal=true" }}
-      />
+      <Application>
+        <GroupBookingListPage
+          detailPageUrl={slug => slug}
+          location={{ search: "?status=initialized&displayModal=true" }}
+        />
+      </Application>
     );
   })
   .add("Group Booking CreateForm", () => {
     return (
-      <GroupBookingCreateForm
-        skills={["IELTS"]}
-        tutors={[{ name: "Chidiebere", email: "chidi@example.com" }]}
-      />
+      <Application>
+        <GroupBookingCreateForm
+          skills={["IELTS"]}
+          tutors={[{ name: "Chidiebere", email: "chidi@example.com" }]}
+        />
+      </Application>
     );
   })
   .add("Group Request List Page", () => {

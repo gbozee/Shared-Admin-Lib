@@ -11,7 +11,7 @@ import {
   Dropdown,
   EmptyButton
 } from "../../shared/primitives";
-import Application from "../../shared/application";
+import {Link} from 'react-router-dom'
 import { format } from "date-fns";
 import { Form } from "../../shared/components/FormComponent";
 import * as yup from "yup";
@@ -38,9 +38,13 @@ const RemarkComponent = ({ text, remark, updateRemark, onCold }) => {
           }
         `}
       >
-        <Text fontWeight="bold">Remarks</Text>
-        <Text>{remark.body}</Text>
-        <Text fontSize="12px">Last Updated: {remark.updated}</Text>
+        {remark.body ? (
+          <>
+            <Text fontWeight="bold">Remarks</Text>
+            <Text>{remark.body}</Text>
+            <Text fontSize="12px">Last Updated: {remark.updated}</Text>
+          </>
+        ) : null}
       </Flex>
       <RemarkModal dispatch={dispatch} remark={remark.body} text={text} />
     </>
@@ -73,6 +77,9 @@ const GroupItemDetail = ({
     setRemark(newRecord);
     updateRemarks([...remark, newRecord]);
   };
+  React.useEffect(() => {
+    setRemark(mostRecentRemark);
+  }, [remark.length, data.status]);
   const markAsCold = () => {
     actions.move_to_cold(data);
   };
@@ -211,175 +218,181 @@ export const AddToGroupClassModal = ({
   let [amountToBePaid, changeAmount] = React.useState(amount);
   let [selectedClass, setSelectedClass] = React.useState();
   return (
-    <Application>
-      <DialogButton
-        renderComponent={onChange =>
-          React.cloneElement(buttonComponent, {
-            onClick: onChange,
-            children: "Add to Class Group"
-          })
+    <DialogButton
+      renderComponent={onChange =>
+        React.cloneElement(buttonComponent, {
+          onClick: e => {
+            e.preventDefault();
+            onChange();
+          },
+          children: "Add to Class Group"
+        })
+      }
+      heading="Add Client to class group"
+      confirmAction={() => {
+        if (selectedClass) {
+          confirmPrompt("Are you sure?", () => {
+            onSubmit(radio, amountToBePaid, selectedClass);
+          });
         }
-        heading="Add Client to class group"
-        confirmAction={() => {
-          if (selectedClass) {
-            confirmPrompt("Are you sure?", () => {
-              onSubmit(radio, amountToBePaid, selectedClass);
-            });
-          }
-        }}
-        dialogText={
-          <Flex flexDirection="column">
-            <Box mb={10}>
-              <label htmlFor="part-payment">
-                <input
-                  id="part-payment"
-                  type="radio"
-                  name="payment_kind"
-                  checked={!radio}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      selectReadio(false);
-                    }
-                  }}
-                />
-                Part Payment
-              </label>
-              <label htmlFor="full-payment">
-                <input
-                  id="full-payment"
-                  type="radio"
-                  name="payment_kind"
-                  checked={radio}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      selectReadio(true);
-                    }
-                  }}
-                />{" "}
-                Full Payment
-              </label>
-            </Box>
-            <Select
-              label="Add to Class"
-              options={classList}
-              value={selectedClass}
-              onChange={setSelectedClass}
-            />
-            <Box>
-              <Text fontSize="15px">
-                if the selected class doesn't exist yet, click{" "}
-                <EmptyButton
-                  onClick={createClass}
-                  css={css`
-                    display: inline;
-                  `}
-                >
-                  <Text
-                    css={css`
-                      display: inline;
-                      text-decoration: underline;
-                      padding-right: 3px;
-                    `}
-                  >
-                    Here
-                  </Text>
-                </EmptyButton>
-                to create one
-              </Text>
-            </Box>
-            {!radio && (
-              <Flex
-                mt="20px"
-                p="5px"
-                css={css`
-                  label {
-                    margin-right: 10px;
-                    font-size: 15px;
+      }}
+      dialogText={
+        <Flex flexDirection="column">
+          <Box mb={10}>
+            <label htmlFor="part-payment">
+              <input
+                id="part-payment"
+                type="radio"
+                name="payment_kind"
+                checked={!radio}
+                onChange={e => {
+                  if (e.target.checked) {
+                    selectReadio(false);
                   }
+                }}
+              />
+              Part Payment
+            </label>
+            <label htmlFor="full-payment">
+              <input
+                id="full-payment"
+                type="radio"
+                name="payment_kind"
+                checked={radio}
+                onChange={e => {
+                  if (e.target.checked) {
+                    selectReadio(true);
+                  }
+                }}
+              />{" "}
+              Full Payment
+            </label>
+          </Box>
+          <Select
+            label="Add to Class"
+            options={classList}
+            value={selectedClass}
+            onChange={setSelectedClass}
+          />
+          <Box>
+            <Text fontSize="15px">
+              if the selected class doesn't exist yet, click{" "}
+              <EmptyButton
+                onClick={createClass}
+                css={css`
+                  display: inline;
                 `}
               >
-                <label htmlFor="amount-to-be-paid">Amount Paid: </label>
-                <input
-                  id="amount-to-be-paid"
-                  type="number"
-                  value={amountToBePaid}
-                  onChange={e => changeAmount(e.target.value)}
-                />
-              </Flex>
-            )}
-          </Flex>
-        }
-      />
-    </Application>
+                <Text as={Link}
+                  css={css`
+                    display: inline;
+                    text-decoration: underline;
+                    padding-right: 3px;
+                  `}
+                  to="/bookings/group?displayModal=true"
+                >
+                  Here
+                </Text>
+              </EmptyButton>
+              to create one
+            </Text>
+          </Box>
+          {!radio && (
+            <Flex
+              mt="20px"
+              p="5px"
+              css={css`
+                label {
+                  margin-right: 10px;
+                  font-size: 15px;
+                }
+              `}
+            >
+              <label htmlFor="amount-to-be-paid">Amount Paid: </label>
+              <input
+                id="amount-to-be-paid"
+                type="number"
+                value={amountToBePaid}
+                onChange={e => changeAmount(e.target.value)}
+              />
+            </Flex>
+          )}
+        </Flex>
+      }
+    />
   );
 };
 
 export const RemarkModal = ({ text, dispatch, remark = "" }) => {
   let [remarkText, updateText] = React.useState(remark);
   return (
-    <Application>
-      <DialogButton
-        css={css`
-          font-size: 14px;
-          padding-top: 8px;
-          padding-bottom: 8px;
-          width: 40%;
-          align-self: center;
-          margin-top: -20px;
-          align-self: flex-end;
-          position: absolute;
-          width: 163px;
-          @media (max-width: 768px) {
-            margin-top: 10px;
-            position: relative;
-          }
-        `}
-        heading="Take action on Pending Request"
-        footerChildren={onClose => (
-          <Flex justifyContent="space-between">
-            <CloseButton onClick={onClose} />
-            <Button
-              onClick={() => {
-                confirmPrompt("Update request remark?", () => {
-                  dispatch({ type: "update-remark", value: remarkText });
-                  onClose();
-                });
-              }}
-            >
-              Update Remark
-            </Button>
-            <Button
-              css={css`
-                background-color: red;
-              `}
-              onClick={() => {
-                confirmPrompt("Change request status to cold?", () => {
-                  dispatch({ type: "cold" });
-                  onClose();
-                });
-              }}
-            >
-              Move Request to Cold
-            </Button>
-          </Flex>
-        )}
-        dialogText={
-          <Box>
-            <textarea
-              css={css`
-                width: 100%;
-              `}
-              value={remarkText}
-              onChange={e => updateText(e.target.value)}
-              placeholder="Drop a remark on interaction with the client"
-              rows={6}
-            />
-          </Box>
+    <DialogButton
+      css={css`
+        font-size: 14px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        width: 40%;
+        align-self: center;
+        margin-top: -20px;
+        align-self: flex-end;
+        position: absolute;
+        width: 163px;
+        @media (max-width: 768px) {
+          margin-top: 10px;
+          position: relative;
         }
-      >
-        {text}
-      </DialogButton>
-    </Application>
+      `}
+      heading="Take action on Pending Request"
+      footerChildren={onClose => (
+        <Flex justifyContent="space-between">
+          <CloseButton onClick={onClose} />
+          <Button
+            disabled={!Boolean(remarkText)}
+            onClick={e => {
+              e.preventDefault();
+              confirmPrompt("Update request remark?", () => {
+                dispatch({ type: "update-remark", value: remarkText });
+                onClose();
+              });
+            }}
+          >
+            Update Remark
+          </Button>
+          <Button
+            css={css`
+              background-color: red;
+            `}
+            onClick={e => {
+              e.preventDefault();
+              confirmPrompt("Change request status to cold?", () => {
+                dispatch({ type: "cold" });
+                onClose();
+              });
+            }}
+          >
+            Move Request to Cold
+          </Button>
+        </Flex>
+      )}
+      dialogText={
+        <Box>
+          <textarea
+            css={css`
+              width: 100%;
+            `}
+            value={remarkText}
+            onChange={e => {
+              updateText(e.target.value);
+            }}
+            onClick={e => e.preventDefault()}
+            placeholder="Drop a remark on interaction with the client"
+            rows={6}
+          />
+        </Box>
+      }
+    >
+      {text}
+    </DialogButton>
   );
 };
 const GroupBookingSchema = yup.object().shape({

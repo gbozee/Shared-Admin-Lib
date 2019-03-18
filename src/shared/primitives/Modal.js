@@ -67,7 +67,13 @@ export const ModalHeader = props => (
         <h3 className={"modal-title"}>{props.children}</h3>
       </div>
       <div className="col-20" style={{ paddingRight: 0 }}>
-        <button className="modal-close" onClick={props.onClose}>
+        <button
+          className="modal-close"
+          onClick={e => {
+            e.preventDefault()
+            props.onClose();
+          }}
+        >
           <i className="ion ion-android-close" />
         </button>
       </div>
@@ -291,7 +297,14 @@ export const DialogButton = ({
   hideFooter,
   heading,
   footerChildren,
-  renderComponent = onClick => <Button onClick={onClick} />,
+  renderComponent = onClick => (
+    <Button
+      onClick={e => {
+        e.preventDefault();
+        onClick();
+      }}
+    />
+  ),
   ...rest
 }) => {
   let [confirm, setConfirm] = useState(false);

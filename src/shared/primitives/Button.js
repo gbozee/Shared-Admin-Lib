@@ -19,28 +19,26 @@ import { Icon } from "./Icon";
 //   width: ${props => (props.isFullWidth ? "100%" : "auto")};
 // `;
 export const EmptyButton = props => (
-  <Application>
-    <button
-      css={theme => css`
-        font-family: ${theme.fonts.font_family};
-        font-weight: ${theme.fonts.font_weight.medium};
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.23, 1);
-        border-radius: ${theme.borders.border_radius.default};
-        background: none;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        border: none;
-        margin: 0;
-        padding: 0;
-        cursor: pointer;
-        width: ${props => (props.isFullWidth ? "100%" : "auto")};
+  <button
+    css={theme => css`
+      font-family: ${theme.fonts.font_family};
+      font-weight: ${theme.fonts.font_weight.medium};
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.23, 1);
+      border-radius: ${theme.borders.border_radius.default};
+      background: none;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      border: none;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      width: ${props => (props.isFullWidth ? "100%" : "auto")};
 
-        ${theme.borders.focus_states.button};
-      `}
-      {...props}
-    />
-  </Application>
+      ${theme.borders.focus_states.button};
+    `}
+    {...props}
+  />
 );
 
 export const Button = ({ ...rest }) => {
@@ -71,7 +69,10 @@ export const CloseButton = ({ onClick }) => (
       margin-right: 10px;
       cursor: pointer;
     `}
-    onClick={onClick}
+    onClick={e => {
+      e.preventDefault();
+      onClick();
+    }}
   >
     <Icon name="close" size={20} />
   </EmptyButton>

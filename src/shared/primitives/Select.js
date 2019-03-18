@@ -2,7 +2,20 @@
 import { css, jsx } from "@emotion/core";
 export const Dropdown = ({ value, options = [], onChange, ...rest }) => {
   return (
-    <select {...rest} value={value} onChange={e => onChange(e.target.value)} css={css`width: 100%;`}>
+    <select
+      {...rest}
+      value={value}
+      onChange={e => {
+        e.preventDefault();
+        onChange(e.target.value);
+      }}
+      css={css`
+        width: 100%;
+      `}
+      onClick={e => {
+        e.preventDefault();
+      }}
+    >
       {options.map(option => {
         let result = Array.isArray(option) ? option : [option, option];
         return (

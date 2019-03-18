@@ -72,6 +72,7 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
   };
   const addClientToGroupClass = () => {};
   const markRequestAsPayed = () => {};
+  console.log(remarkData);
   return (
     <Flex flexDirection="column">
       <SummaryCardList

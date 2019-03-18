@@ -36,7 +36,7 @@ export class DataProvider extends React.Component {
     context: {
       state: {
         auth: false,
-        agent: null,
+        agent: this.props.agent,
         ...this.props.context.state
       },
       dispatch: this.dispatch,

@@ -6,6 +6,7 @@ import DataProvider from "./DataProvider";
 import Spinner from "./primitives/Spinner";
 import { DataContext } from "./ProtectedRoute";
 import LoginPage from "./LoginPage";
+import Application from "./application";
 export const WithRouter = ({
   heading,
   children,
@@ -16,60 +17,66 @@ export const WithRouter = ({
   RouterComponent,
   routerProps = {},
   auth,
-  test = true
+  SwitchComponent,
+  test = true,
+  agent
 }) => {
   let RComponent = RouterComponent || Router;
+  let SComponent = SwitchComponent || Switch;
   return (
-    <DataProvider
-      test={test}
-      adapter={adapter}
-      context={context}
-      appFirebase={firebase}
-      auth={auth}
-    >
-      <Global
-        styles={css`
-          a.regular-link {
-            cursor: pointer;
-          }
-        `}
-      />
-      <RComponent {...routerProps}>
-        <React.Suspense fallback={<Spinner />}>
-          <>
+    <Application>
+      <DataProvider
+        test={test}
+        adapter={adapter}
+        context={context}
+        appFirebase={firebase}
+        auth={auth}
+        agent={agent}
+      >
+        <Global
+          styles={css`
+            a.regular-link {
+              cursor: pointer;
+            }
+          `}
+        />
+        <>
+          <RComponent {...routerProps}>
             {heading}
-            <Switch>
+            <SComponent>
               {" "}
               <Route
                 path="/login"
                 render={props => {
                   return (
-                    <DataContext.Consumer>
-                      {({ dispatch, actions }) => {
-                        return (
-                          <LoginPage
-                            login={props =>
-                              dispatch({
-                                type: actions.LOGIN_USER,
-                                value: props
-                              })
-                            }
-                            toNextPage={() => {
-                              toNextPage(props);
-                            }}
-                          />
-                        );
-                      }}
-                    </DataContext.Consumer>
+                    <React.Suspense fallback={<Spinner />}>
+                      <DataContext.Consumer>
+                        {({ dispatch, actions }) => {
+                          return (
+                            <LoginPage
+                              login={props =>
+                                dispatch({
+                                  type: actions.LOGIN_USER,
+                                  value: props
+                                })
+                              }
+                              toNextPage={() => {
+                                toNextPage(props);
+                              }}
+                            />
+                          );
+                        }}
+                      </DataContext.Consumer>
+                    </React.Suspense>
                   );
                 }}
               />
               {children}
-            </Switch>
-          </>
-        </React.Suspense>
-      </RComponent>
-    </DataProvider>
+            </SComponent>
+          </RComponent>
+        </>
+      </DataProvider>
+    </Application>
   );
 };
 
