@@ -52,7 +52,7 @@ export const AsLink = ({ to, onClick, children, wholeSection, ...rest }) => {
   );
 };
 export const ListItem = ({
-  to,
+  to="/",
   heading,
   subHeading,
   date,

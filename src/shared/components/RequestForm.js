@@ -36,40 +36,40 @@ const formData = [
   },
   {
     type: 'tel',
-    name: 'phone',
+    name: 'number',
     label: 'Phone number',
     placeholder: '08078654312',
   },
   {
     kind: 'select',
-    placeholder: 'Number of children',
+    label: 'Number of children',
     options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     name: 'no_of_children',
   },
   {
     kind: 'select',
-    placeholder: 'Status',
+    label: 'Status',
     defaultText: 'Status',
     options: [['pending', 'Pending'], ['completed', 'Completed']],
     name: 'status',
   },
   {
     kind: 'select',
-    placeholder: 'Number of days',
+    label: 'Number of days',
     defaultText: 'Select duration',
     options: [1, 2, 3, 4, 5, 6, 7],
     name: 'no_of_days',
   },
   {
     kind: 'select',
-    placeholder: 'Gender',
+    label: 'Gender',
     defaultText: 'Any',
     options: [['M', 'Male'], ['F', 'Female']],
     name: 'gender',
   },
   {
     kind: 'select',
-    placeholder: 'Where you heard',
+    label: 'Where you heard',
     defaultText: 'Select an option',
     options: [
       [0, 'Facebook'],
@@ -93,7 +93,7 @@ const formData = [
   },
   {
     kind: 'select',
-    placeholder: 'Request Type',
+    label: 'Request Type',
     defaultText: 'Select an option',
     options: [
       ['regular request', 'Regular Request'],
@@ -103,14 +103,14 @@ const formData = [
   },
   {
     kind: 'select',
-    placeholder: 'Curriculum',
+    label: 'Curriculum',
     defaultText: 'Select a curriculum',
     options: [['nigeiran', 'Nigerian'], ['british', 'British']],
     name: 'curriculum',
   },
   {
     kind: 'select',
-    placeholder: 'No of Hours per day',
+    label: 'No of Hours per day',
     defaultText: 'Select an option',
     options: [[1, '1 hour'], [1.5, '1 hour 30 minutes'], [2, '2 hours']],
     name: 'hours',
@@ -205,7 +205,7 @@ export const RequestForm = ({ onSubmit, initialValues, isLoading }) => {
               </Flex>
               <Flex pb={4}>
                 {fields.email}
-                {fields.phone}
+                {fields.number}
               </Flex>
               <Box pb={3}>{fields.no_of_children}</Box>
               <Box pb={3}>{fields.status}</Box>

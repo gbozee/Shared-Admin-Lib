@@ -7,10 +7,14 @@ import { Button } from '../primitives';
 import { Form } from './FormComponent';
 
 const BookingFormValidation = yup.object().shape({
-  client: yup
+  first_name: yup.string().required('First name is required'),
+  last_name: yup.string().required('Last name is required'),
+  budget: yup.string().required('Last name is required'),
+  email: yup
     .string()
     .email()
     .required('Client is required'),
+  number: yup.string().required('Phone number is required'),
   tutor: yup
     .string()
     .email()
@@ -19,41 +23,55 @@ const BookingFormValidation = yup.object().shape({
 
 const formData = [
   {
-    name: 'client',
+    name: 'first_name',
+    label: 'First name',
+    placeholder: 'James',
+  },
+  {
+    name: 'last_name',
+    label: 'Last name',
+    placeholder: 'Harden',
+  },
+  {
+    name: 'email',
     type: 'email',
-    label: 'Client',
+    label: 'Email',
     placeholder: 'jamesharden@gmail.com',
   },
   {
     name: 'tutor',
-    type: 'email',
+    type: 'text',
     label: 'Tutor',
-    placeholder: 'jamesharden@gmail.com',
+    placeholder: 'Ayobami',
   },
-  {
-    name: 'first_session',
-    type: 'date',
-    label: 'First session',
-    placeholder: 'First session',
-  },
-  {
-    name: 'last_session',
-    type: 'date',
-    label: 'Last session',
-    placeholder: 'Last session',
-  },
+  // {
+  //   name: 'first_session',
+  //   type: 'date',
+  //   label: 'First session',
+  //   placeholder: 'First session',
+  // },
+  // {
+  //   name: 'last_session',
+  //   type: 'date',
+  //   label: 'Last session',
+  //   placeholder: 'Last session',
+  // },
   {
     kind: 'select',
     name: 'status',
     defaultText: 'Select a status',
-    options: [['pending', 'Pending'][('completed', 'Completed')]],
+    options: [
+      ['pending', 'Pending'],
+      ['completed', 'Completed'],
+      ['paid', 'Paid'],
+    ],
     label: 'Status',
   },
   {
     kind: 'select',
     name: 'skill',
     defaultText: 'Select a skill',
-    options: [['ielts', 'IELTS'][('English', 'English language')]],
+    options: [['IELTS', 'IELTS'], ['English', 'English language']],
     label: 'Skill',
   },
   {
@@ -63,10 +81,10 @@ const formData = [
     placeholder: '25000',
   },
   {
-    name: 'budget',
-    type: 'number',
-    label: 'Budget',
-    placeholder: '25000',
+    name: 'number',
+    type: 'text',
+    label: 'Phone number',
+    placeholder: '08100000000',
   },
   {
     name: 'is_group',
@@ -114,19 +132,22 @@ export const BookingForm = ({ onSubmit, initialValues, onCancel }) => {
         >
           <Flex flexDirection="column">
             <Flex pb={3}>
-              {fields.client}
+              {fields.first_name}
+              {fields.last_name}
+            </Flex>
+            <Flex pb={3}>
+              {fields.email}
               {fields.tutor}
             </Flex>
             <Flex pb={3}>
-              {fields.first_session}
-              {fields.last_session}
+              {fields.number}
+              {fields.budget}
             </Flex>
             <Flex pb={3}>
-              <Box width="100%" mr={2}>{fields.status}</Box>
+              <Box width="100%" mr={2}>
+                {fields.status}
+              </Box>
               <Box width="100%">{fields.skill}</Box>
-            </Flex>
-            <Flex pb={3} flexDirection="column">
-              {fields.budget}
             </Flex>
             <Flex pb={3}>
               <Flex flexDirection="column" mr={2}>

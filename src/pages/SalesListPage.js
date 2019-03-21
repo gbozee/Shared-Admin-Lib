@@ -3,7 +3,7 @@ import { css, jsx } from "@emotion/core";
 import { Flex } from "@rebass/emotion";
 import { DateFilter } from "../shared/DateFilter";
 import { Link } from "react-router-dom";
-import { FormDrawer, RequestForm } from "../shared/components";
+import { FormDrawer, RequestForm, BookingForm } from "../shared/components";
 import { SpinnerContainer } from "../shared/primitives/Spinner";
 import { SectionListPage, SummaryCardList, getDate } from "../shared/reusables";
 import { useState, useEffect, useContext } from "react";
@@ -130,7 +130,7 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
           {
             name: "Paid Requests",
             amount: filteredRequests(x => x.status === "payed", "budget"),
-            count: filteredRequests(x => x.status === "payed"),
+            count: filteredRequests(x => x.status === "paid"),
             count_text: "Request count"
           },
           {
@@ -150,7 +150,7 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
             setShowModal(false);
           }}
         >
-          <RequestForm initialValues={requestInfo} onSubmit={saveRequestInfo} />
+          <BookingForm initialValues={requestInfo} onSubmit={saveRequestInfo} />
         </FormDrawer>
       </Flex>
       <Flex flexDirection={"column"}>
