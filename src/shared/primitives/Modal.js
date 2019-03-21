@@ -20,7 +20,8 @@ export const ModalFooter = props => {
     is,
     showSpinner,
     buttonClass = "primary",
-    override
+    override,
+    disabled
   } = props;
   return (
     <div className="modal-footer" style={style}>
@@ -41,8 +42,12 @@ export const ModalFooter = props => {
                 type={buttonType || "submit"}
                 is={is}
                 showSpinner={showSpinner}
-                onClick={modalAction}
+                onClick={e => {
+                  e.preventDefault();
+                  modalAction();
+                }}
                 buttonClass={`btn  ${buttonClass} capitalize`}
+                disabled={disabled}
               >
                 {children}
               </Button>
@@ -70,7 +75,7 @@ export const ModalHeader = props => (
         <button
           className="modal-close"
           onClick={e => {
-            e.preventDefault()
+            e.preventDefault();
             props.onClose();
           }}
         >
@@ -238,7 +243,8 @@ export const Dialog = ({
   action,
   hideFooter,
   heading,
-  footerChildren
+  footerChildren,
+  ...rest
 }) => {
   return (
     <ImageModal
@@ -251,7 +257,7 @@ export const Dialog = ({
       action={action}
       heading={heading}
       hideFooter={hideFooter}
-      footerProps={{ override: footerChildren }}
+      footerProps={{ override: footerChildren, ...rest }}
     >
       {children}
     </ImageModal>
@@ -297,6 +303,7 @@ export const DialogButton = ({
   hideFooter,
   heading,
   footerChildren,
+  disabled,
   renderComponent = onClick => (
     <Button
       onClick={e => {
@@ -324,6 +331,7 @@ export const DialogButton = ({
         hideFooter={hideFooter}
         action={onConfirmAction}
         footerChildren={footerChildren}
+        disabled={disabled}
       >
         {dialogText}
       </Dialog>

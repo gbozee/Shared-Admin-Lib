@@ -699,3 +699,19 @@ export let requestsData = [
     }
   }
 ];
+export const remarks = [
+  {
+    slug: "ABCDESDDESS",
+    body: "Sent a message to the client to approve lessons",
+    updated: "2018-03-09 12:30PM"
+  }
+];
+export function generateSlug(slugLength = 12) {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+  for (var i = 0; i < slugLength; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}

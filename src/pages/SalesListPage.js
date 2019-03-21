@@ -28,8 +28,16 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
   let [workingData, workingDataActions] = useLoadData({
     fetchData: loadWorkingData
   });
+  let [groupLessons, groupLessonActions] = useLoadData({
+    fetchData: () =>
+      dispatch({
+        type: actions.LOAD_GROUP_LESSONS,
+        value: { status: "active" }
+      })
+  });
   let [remarkData, remarkActions] = useLoadData({ fetchData: loadRemarks });
   let [showModal, setShowModal] = useState(false);
+  let [requestInfo, setRequestInfo] = useState({});
   const onDateFilter = ({ from, to }) => {
     setDateFilter({ from, to });
   };
@@ -64,15 +72,57 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
     { label: "Paid Requests", value: "payed" }
   ];
   const moveToCold = data => {
-    dispatch({ type: actions.CHANGE_STATUS, value: "cold" }).then(response => {
+    dispatch({
+      type: actions.CHANGE_STATUS,
+      value: { status: "cold", instance: data }
+    }).then(response => {
       let newRequestData = requestData.data.filter(x => x.slug !== data.slug);
       console.log(newRequestData);
       requestActions.setData(newRequestData);
     });
   };
-  const addClientToGroupClass = () => {};
-  const markRequestAsPayed = () => {};
-  console.log(remarkData);
+  const addClientToGroupClass = (data, params) => {
+    dispatch({
+      type: actions.CREATE_BOOKING_FOR_CLIENT,
+      value: { ...params, instance: data }
+    }).then(() => {
+      let newRequest = requestData.data.map(x =>
+        x.slug === data.slug ? { ...x, booking: {} } : x
+      );
+      requestActions.setData(newRequest);
+    });
+  };
+  const markRequestAsPayed = data => {
+    dispatch({ type: actions.MADE_PAYMENT, value: { instance: data } });
+    let newRequestData = requestData.data.map(x =>
+      x.slug === data.slug ? { ...x, status: "payed" } : x
+    );
+    requestActions.setData(newRequestData);
+  };
+  const updateRemark = (remark, data) => {
+    let newRemarks = [...remarkData.data, remark];
+    dispatch({
+      type: actions.UPDATE_REMARK,
+      value: { remarks: newRemarks, remark, instance: data }
+    }).then(() => {
+      console.log("Save remarks");
+    });
+    remarkActions.setData(newRemarks);
+  };
+  const saveRequestInfo = newInfo => {
+    const isEdit = Boolean(newInfo.slug);
+    dispatch({
+      type: actions.SAVE_REQUEST_INFO,
+      value: { instance: newInfo, create: !isEdit }
+    }).then(data => {
+      let newRequestData = isEdit
+        ? requestData.data.map(x => (x.slug === data.slug ? data : x))
+        : [...newRequestData.data, data];
+      requestActions.setData(newRequestData);
+      setRequestInfo({});
+      showModal(false);
+    });
+  };
   return (
     <Flex flexDirection="column">
       <SummaryCardList
@@ -93,8 +143,14 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
       />
       <Flex justifyContent="flex-end">
         <Button onClick={() => setShowModal(true)}>New Request</Button>
-        <FormDrawer isOpen={showModal} onClose={() => setShowModal(false)}>
-          <RequestForm />
+        <FormDrawer
+          isOpen={showModal}
+          onClose={() => {
+            setRequestInfo({});
+            setShowModal(false);
+          }}
+        >
+          <RequestForm initialValues={requestInfo} onSubmit={saveRequestInfo} />
         </FormDrawer>
       </Flex>
       <Flex flexDirection={"column"}>
@@ -125,13 +181,24 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
         <Flex flexDirection="column">
           <SectionListPage
             data={filteredResult()}
+            keyIndex="slug"
             callback={request => ({
-              data: { ...request, to: detailPageUrl(request.slug), Link: Link },
+              data: {
+                ...request,
+                onClick: e => {
+                  e.preventDefault();
+                  setRequestInfo(request);
+                  setShowModal(true);
+                }
+                // Link: Link
+              },
               remark: remarkData.data.filter(x => x.slug === request.slug),
+              classList: groupLessons.data.map(x => [x.order, x.schedule]),
               actions: {
                 move_to_cold: moveToCold,
                 add_client_to_group_class: addClientToGroupClass, //part payment and full payment consideration
-                mark_request_as_payed: markRequestAsPayed
+                mark_request_as_payed: markRequestAsPayed,
+                update_remarks: updateRemark
               }
             })}
             LinkComponent={Link}

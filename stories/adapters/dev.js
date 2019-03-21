@@ -13,7 +13,9 @@ import {
   bookingData,
   skillData,
   searchAllBookings,
-  requestsData
+  requestsData,
+  remarks,
+  generateSlug
 } from "./test_data";
 import { saveFragment } from "../../src/shared/localStorage";
 import { filterHelper } from ".";
@@ -192,18 +194,99 @@ function getRequestForAgent(agent, { dateFilter, selection, searchParam }) {
   return new Promise(resolve => resolve(result));
 }
 function getRemarksByAgent(agent, data) {
-  let result = [
-    {
-      slug: "ABCDESDDESS",
-      body: "Sent a message to the client to approve lessons",
-      updated: "2018-03-09 12:30PM"
-    }
-  ];
-  return new Promise(resolve => resolve(result));
+  return new Promise(resolve => resolve(remarks));
 }
 //Todo: Implement
 function getRequestsWorkedOn(agent) {
   return new Promise(resolve => resolve([{ slug: "ABCDESDDESS" }]));
+}
+//Todo: implement
+function changeStatus(instance, status) {
+  return new Promise(resolve => resolve({ ...instance, status }));
+}
+function saveRemarks(agent, data) {
+  return new Promise(resolve => resolve(data));
+}
+function updateRequestRemark(instance, remark) {
+  return new Promise(resolve => resolve());
+}
+function madePayment(instance) {
+  return new Promise(resolve => resolve());
+}
+function loadGroupLessons(status) {
+  let data = [
+    {
+      skill: "IELTS",
+      no_of_students: 20,
+      amount: 200000,
+      status: "scheduled",
+      schedule: "January Standard Class Ikeja",
+      first_session: "2019-01-10",
+      last_session: "2019-01-31",
+      tutor: { first_name: "Chidiebere" },
+      order: "AADDESSDES",
+      created: "2019-01-10"
+    },
+    {
+      skill: "IELTS",
+      no_of_students: 20,
+      amount: 200000,
+      status: "completed",
+      schedule: "January Weekend Class Ikeja",
+      first_session: "2019-01-10",
+      last_session: "2019-01-31",
+      tutor: { first_name: "Chidiebere" },
+      order: generateSlug(),
+      created: "2019-01-10"
+    },
+    {
+      skill: "IELTS",
+      no_of_students: 20,
+      amount: 200000,
+      status: "initialized",
+      schedule: "January Standard Class Gbagada",
+      first_session: "2019-01-10",
+      last_session: "2019-01-31",
+      tutor: { first_name: "Chidiebere" },
+      order: generateSlug(),
+      created: "2019-01-10"
+    },
+    {
+      skill: "IELTS",
+      no_of_students: 20,
+      amount: 200000,
+      status: "scheduled",
+      schedule: "January Weekend Class Gbagada",
+      first_session: "2019-01-10",
+      last_session: "2019-01-31",
+      tutor: { first_name: "Chidiebere" },
+      order: generateSlug(),
+      created: "2019-01-01"
+    },
+    {
+      skill: "IELTS",
+      no_of_students: 20,
+      amount: 200000,
+      status: "scheduled",
+      schedule: "Febuary Standard Class Ikeja",
+      first_session: "2019-01-10",
+      last_session: "2019-01-31",
+      tutor: { first_name: "Chidiebere" },
+      order: generateSlug(),
+      created: "2019-02-10"
+    }
+  ];
+  let result = data;
+  if (status == "active") {
+    result = result.filter(x => x.status === "scheduled");
+  }
+  return new Promise(resolve => resolve(result));
+}
+function addClientToGroupClass(
+  instance,
+  { full_payment, amount, class_group }
+) {
+  return new Promise(resolve => resolve());
 }
 export default {
   login,
@@ -241,5 +324,11 @@ export default {
   // sales
   getRequestForAgent,
   getRemarksByAgent,
-  getRequestsWorkedOn
+  getRequestsWorkedOn,
+  changeStatus,
+  saveRemarks,
+  updateRequestRemark,
+  madePayment,
+  loadGroupLessons,
+  addClientToGroupClass
 };

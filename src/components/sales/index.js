@@ -11,8 +11,8 @@ import {
   Dropdown,
   EmptyButton
 } from "../../shared/primitives";
-import {Link} from 'react-router-dom'
-import { format } from "date-fns";
+import { Link } from "react-router-dom";
+import { format, parse } from "date-fns";
 import { Form } from "../../shared/components/FormComponent";
 import * as yup from "yup";
 import { Select } from "../../shared/components/form-elements";
@@ -64,21 +64,28 @@ const GroupItemDetail = ({
   actions,
   classList,
   createClass,
-  updateRemarks = () => {},
   ...rest
 }) => {
   let [currentStatus, setCurrentStatus] = React.useState(data.status);
-  let mostRecentRemark = remark.sort((a, b) => {
-    return new Date(b.updated) - new Date(a.updated);
-  })[0] || { slug: data.slug };
-  let [requestRemark, setRemark] = React.useState(mostRecentRemark);
+  let dateFormat = "YYYY-MM-DD h:mmA";
+  let mostRecentRemark = () =>
+    [...remark].sort((a, b) => {
+      return (
+        parse(b.updated, dateFormat).getTime() -
+        parse(a.updated, dateFormat).getTime()
+      );
+    })[0] || { slug: data.slug };
+  let [requestRemark, setRemark] = React.useState(mostRecentRemark());
   const updateRemark = record => {
     let newRecord = { ...record, slug: data.slug };
     setRemark(newRecord);
-    updateRemarks([...remark, newRecord]);
+    actions.update_remarks(newRecord, data);
   };
   React.useEffect(() => {
-    setRemark(mostRecentRemark);
+    let result = mostRecentRemark();
+
+    console.log(result);
+    setRemark(result);
   }, [remark.length, data.status]);
   const markAsCold = () => {
     actions.move_to_cold(data);
@@ -86,8 +93,12 @@ const GroupItemDetail = ({
   const onRequestPayed = () => {
     actions.mark_request_as_payed(data);
   };
-  const onCreateBooking = (full_payment, amount) => {
-    actions.add_client_to_group_class(data, { full_payment, amount });
+  const onCreateBooking = (full_payment, amount, class_group) => {
+    actions.add_client_to_group_class(data, {
+      full_payment,
+      amount,
+      class_group
+    });
   };
   return (
     <RequestListItem
@@ -95,6 +106,7 @@ const GroupItemDetail = ({
       {...data}
       {...rest}
       rightTop={" "}
+      wholeSection={false}
       rightBottom={
         <Flex>
           <Text mr={3}>Status: </Text>
@@ -236,16 +248,23 @@ export const AddToGroupClassModal = ({
           });
         }
       }}
+      disabled={Boolean(selectedClass) !== true}
       dialogText={
         <Flex flexDirection="column">
           <Box mb={10}>
-            <label htmlFor="part-payment">
+            <label
+              onClick={e => {
+                debugger;
+              }}
+              htmlFor="part-payment"
+            >
               <input
                 id="part-payment"
                 type="radio"
                 name="payment_kind"
                 checked={!radio}
                 onChange={e => {
+                  e.preventDefault();
                   if (e.target.checked) {
                     selectReadio(false);
                   }
@@ -253,13 +272,19 @@ export const AddToGroupClassModal = ({
               />
               Part Payment
             </label>
-            <label htmlFor="full-payment">
+            <label
+              onClick={e => {
+                debugger;
+              }}
+              htmlFor="full-payment"
+            >
               <input
                 id="full-payment"
                 type="radio"
                 name="payment_kind"
                 checked={radio}
                 onChange={e => {
+                  e.preventDefault();
                   if (e.target.checked) {
                     selectReadio(true);
                   }
@@ -283,7 +308,8 @@ export const AddToGroupClassModal = ({
                   display: inline;
                 `}
               >
-                <Text as={Link}
+                <Text
+                  as={Link}
                   css={css`
                     display: inline;
                     text-decoration: underline;
@@ -313,7 +339,10 @@ export const AddToGroupClassModal = ({
                 id="amount-to-be-paid"
                 type="number"
                 value={amountToBePaid}
-                onChange={e => changeAmount(e.target.value)}
+                onChange={e => {
+                  e.preventDefault();
+                  changeAmount(e.target.value);
+                }}
               />
             </Flex>
           )}

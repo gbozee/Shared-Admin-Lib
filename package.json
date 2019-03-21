@@ -17,8 +17,8 @@
 	},
 	"dependencies": {
 		"@babel/cli": "^7.2.0",
-		"@babel/core": "^7.2.2",
-		"@babel/plugin-proposal-class-properties": "^7.2.1",
+		"@babel/core": "^7.4.0",
+		"@babel/plugin-proposal-class-properties": "^7.4.0",
 		"@babel/plugin-syntax-dynamic-import": "^7.2.0",
 		"@babel/preset-react": "^7.0.0",
 		"@emotion/core": "10.0.9",
@@ -32,17 +32,16 @@
 		"react": "16.8.4",
 		"react-dom": "16.8.4",
 		"react-modal": "3.8.1",
-		"react-router": "^4.4.0",
-		"react-router-dom": "^4.4.0",
+		"react-router-dom": "^5.0.0",
 		"react-table": "^6.9.2",
 		"react-transition-group": "^2.6.1",
 		"yup": "^0.27.0"
 	},
 	"devDependencies": {
-		"@storybook/addon-actions": "5.0.2",
-		"@storybook/addon-links": "5.0.2",
-		"@storybook/addons": "5.0.2",
-		"@storybook/react": "5.0.2",
+		"@storybook/addon-actions": "5.0.3",
+		"@storybook/addon-links": "5.0.3",
+		"@storybook/addons": "5.0.3",
+		"@storybook/react": "5.0.3",
 		"babel-loader": "^8.0.4"
 	},
 	"bundledDependencies": [
