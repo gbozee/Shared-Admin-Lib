@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { jsx, css, Global } from "@emotion/core";
-let basePath = "/static/fonts/";
+import { jsx, css, Global } from '@emotion/core';
+let basePath = '/static/fonts/';
 
 // Inject the @font-face and reset text globally
 const GlobalStyle = ({
@@ -195,5 +195,22 @@ const GlobalStyle = ({
     />
   );
 };
+
+export const formStyle = `label {
+  padding-bottom: 4px;
+  font-size: 14px;
+}
+input[type='text'],
+input[type='email'],
+input[type='date'],
+input[type='number'],
+input[type='tel'] {
+  padding: 0 12px;
+  height: 30px;
+}
+select {
+  padding: 0 12px;
+  height: 35px;
+}`;
 
 export default GlobalStyle;

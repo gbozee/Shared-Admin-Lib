@@ -1,30 +1,31 @@
 /** @jsx jsx */
 
-import React from "react";
-import { css, jsx } from "@emotion/core";
-import { RequestListItem } from "../../shared/reusables";
-import { Flex, Text, Box } from "@rebass/emotion";
+import React from 'react';
+import { css, jsx } from '@emotion/core';
+import { RequestListItem } from '../../shared/reusables';
+import { Flex, Text, Box } from '@rebass/emotion';
 import {
   Button,
   DialogButton,
   CloseButton,
   Dropdown,
-  EmptyButton
-} from "../../shared/primitives";
-import { Link } from "react-router-dom";
-import { format, parse } from "date-fns";
-import { Form } from "../../shared/components/FormComponent";
-import * as yup from "yup";
-import { Select } from "../../shared/components/form-elements";
+  EmptyButton,
+} from '../../shared/primitives';
+import { Link } from 'react-router-dom';
+import { format, parse } from 'date-fns';
+import { Form } from '../../shared/components/FormComponent';
+import * as yup from 'yup';
+import { Select } from '../../shared/components/form-elements';
+import { formStyle } from '../../shared/design-system/global';
 const RemarkComponent = ({ text, remark, updateRemark, onCold }) => {
   const dispatch = ({ type, value }) => {
-    if (type == "update-remark") {
+    if (type == 'update-remark') {
       updateRemark({
         body: value,
-        updated: format(new Date(), "YYYY-MM-D h:mmA")
+        updated: format(new Date(), 'YYYY-MM-D h:mmA'),
       });
     }
-    if (type == "cold") {
+    if (type == 'cold') {
       onCold();
     }
   };
@@ -67,7 +68,7 @@ const GroupItemDetail = ({
   ...rest
 }) => {
   let [currentStatus, setCurrentStatus] = React.useState(data.status);
-  let dateFormat = "YYYY-MM-DD h:mmA";
+  let dateFormat = 'YYYY-MM-DD h:mmA';
   let mostRecentRemark = () =>
     [...remark].sort((a, b) => {
       return (
@@ -97,7 +98,7 @@ const GroupItemDetail = ({
     actions.add_client_to_group_class(data, {
       full_payment,
       amount,
-      class_group
+      class_group,
     });
   };
   return (
@@ -105,15 +106,15 @@ const GroupItemDetail = ({
       request_type="group"
       {...data}
       {...rest}
-      rightTop={" "}
+      rightTop={' '}
       wholeSection={false}
       rightBottom={
         <Flex>
           <Text mr={3}>Status: </Text>
           {data.booking ? (
-            "Booked"
-          ) : currentStatus === "payed" ? (
-            "Payed"
+            'Booked'
+          ) : currentStatus === 'payed' ? (
+            'Payed'
           ) : (
             <Dropdown
               value={currentStatus}
@@ -122,13 +123,13 @@ const GroupItemDetail = ({
                   `Are you sure you want to change the request status to ${value}`,
                   () => {
                     setCurrentStatus(value);
-                    if (value === "payed") {
+                    if (value === 'payed') {
                       onRequestPayed();
                     }
                   }
                 );
               }}
-              options={["pending", "payed"]}
+              options={['pending', 'payed']}
             />
           )}
         </Flex>
@@ -145,7 +146,7 @@ const GroupItemDetail = ({
             }
           `}
         >
-          {currentStatus === "pending" ? (
+          {currentStatus === 'pending' ? (
             <RemarkComponent
               remark={requestRemark}
               updateRemark={updateRemark}
@@ -187,19 +188,19 @@ export const RequestItemDetail = ({
         ...data,
         full_name: `${data.first_name} ${data.last_name}`,
         phone_no: data.number,
-        skill: (data.request_subjects || []).join(","),
+        skill: (data.request_subjects || []).join(','),
         summary: (
           <Text fontWeight="bold">
-            Class Group:{" "}
+            Class Group:{' '}
             {
               (
                 data.request_info || {
-                  request_details: { schedule: {} }
+                  request_details: { schedule: {} },
                 }
               ).request_details.schedule.summary
             }
           </Text>
-        )
+        ),
       }}
       {...rest}
     />
@@ -224,7 +225,7 @@ export const AddToGroupClassModal = ({
   amount = 40000,
   onSubmit = () => {},
   classList = [],
-  createClass = () => {}
+  createClass = () => {},
 }) => {
   let [radio, selectReadio] = React.useState(full_payment);
   let [amountToBePaid, changeAmount] = React.useState(amount);
@@ -237,13 +238,13 @@ export const AddToGroupClassModal = ({
             e.preventDefault();
             onChange();
           },
-          children: "Add to Class Group"
+          children: 'Add to Class Group',
         })
       }
       heading="Add Client to class group"
       confirmAction={() => {
         if (selectedClass) {
-          confirmPrompt("Are you sure?", () => {
+          confirmPrompt('Are you sure?', () => {
             onSubmit(radio, amountToBePaid, selectedClass);
           });
         }
@@ -289,7 +290,7 @@ export const AddToGroupClassModal = ({
                     selectReadio(true);
                   }
                 }}
-              />{" "}
+              />{' '}
               Full Payment
             </label>
           </Box>
@@ -301,7 +302,7 @@ export const AddToGroupClassModal = ({
           />
           <Box>
             <Text fontSize="15px">
-              if the selected class doesn't exist yet, click{" "}
+              if the selected class doesn't exist yet, click{' '}
               <EmptyButton
                 onClick={createClass}
                 css={css`
@@ -352,7 +353,7 @@ export const AddToGroupClassModal = ({
   );
 };
 
-export const RemarkModal = ({ text, dispatch, remark = "" }) => {
+export const RemarkModal = ({ text, dispatch, remark = '' }) => {
   let [remarkText, updateText] = React.useState(remark);
   return (
     <DialogButton
@@ -379,8 +380,8 @@ export const RemarkModal = ({ text, dispatch, remark = "" }) => {
             disabled={!Boolean(remarkText)}
             onClick={e => {
               e.preventDefault();
-              confirmPrompt("Update request remark?", () => {
-                dispatch({ type: "update-remark", value: remarkText });
+              confirmPrompt('Update request remark?', () => {
+                dispatch({ type: 'update-remark', value: remarkText });
                 onClose();
               });
             }}
@@ -393,8 +394,8 @@ export const RemarkModal = ({ text, dispatch, remark = "" }) => {
             `}
             onClick={e => {
               e.preventDefault();
-              confirmPrompt("Change request status to cold?", () => {
-                dispatch({ type: "cold" });
+              confirmPrompt('Change request status to cold?', () => {
+                dispatch({ type: 'cold' });
                 onClose();
               });
             }}
@@ -429,32 +430,32 @@ const GroupBookingSchema = yup.object().shape({
   last_session: yup.string().required(),
   skill: yup.string().required(),
   tutor: yup.string().required(),
-  display_name: yup.string().required()
+  display_name: yup.string().required(),
 });
 export const GroupBookingCreateForm = ({
   onSubmit,
   initialValues,
   skills = [],
-  tutors = []
+  tutors = [],
 }) => {
   let data = [
-    { name: "first_session", type: "date", label: "First session" },
-    { name: "last_session", type: "date", label: "Last session" },
+    { name: 'first_session', type: 'date', label: 'First session' },
+    { name: 'last_session', type: 'date', label: 'Last session' },
     {
-      name: "skill",
-      type: "select",
+      name: 'skill',
+      type: 'select',
       options: skills,
-      label: "Skill",
-      defaultText: "Select Skill"
+      label: 'Skill',
+      defaultText: 'Select Skill',
     },
     {
-      name: "tutor",
-      type: "select",
+      name: 'tutor',
+      type: 'select',
       options: tutors.map(x => [x.email, x.first_name]),
-      label: "Tutor",
-      defaultText: "Select Tutor"
+      label: 'Tutor',
+      defaultText: 'Select Tutor',
     },
-    { name: "display_name", label: "Booking Summary" }
+    { name: 'display_name', label: 'Booking Summary' },
   ];
   return (
     <Form
@@ -464,7 +465,11 @@ export const GroupBookingCreateForm = ({
       validationSchema={GroupBookingSchema}
       render={(fields, button) => {
         return (
-          <>
+          <div
+            css={css`
+              ${formStyle}
+            `}
+          >
             <Box mb={10}>{fields.display_name}</Box>
             <Flex mb={10} justifyContent="space-between">
               <Box width="100%" pr={3}>
@@ -477,7 +482,7 @@ export const GroupBookingCreateForm = ({
               {fields.last_session}
             </Flex>
             {button}
-          </>
+          </div>
         );
       }}
     />

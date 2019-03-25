@@ -55,7 +55,7 @@ class FromTo extends React.Component {
           onChange={this.onChange("to")}
         />
         <Button
-          py="4px"
+          py="0"
           mt="24px"
           onClick={() => {
             let today = currentMonth();
@@ -65,7 +65,7 @@ class FromTo extends React.Component {
             });
           }}
           css={css`
-            height: 36px;
+            height: 27px;
             align-self: center;
             margin-top: 26px;
             border-radius: 0;
@@ -104,6 +104,7 @@ export const DateFilter = ({
         flex: 1;
       `}
       justifyContent="space-between"
+      alignItems="center"
     >
       {onSearchChange ? (
         <Box

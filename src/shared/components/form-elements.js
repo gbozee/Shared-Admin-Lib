@@ -21,7 +21,7 @@ export const Input = ({
   ...rest
 }) => {
   return (
-    <Flex flexDirection="column" width="100%" mr={2}>
+    <Flex flexDirection="column" width="100%" mr={2} {...rest}>
       {label && <label htmlFor={name}>{label}</label>}
       <input
         id={name}
@@ -49,10 +49,11 @@ export const Select = ({
   name,
   label,
   defaultText = "Select",
-  onBlur
+  onBlur,
+  ...rest
 }) => {
   return (
-    <Flex pb={3} flexDirection="column" width="100%">
+    <Flex pb={rest.pb || 3} flexDirection="column" width="100%" {...rest}>
       {label && <label htmlFor={name}>{label}</label>}
       <Dropdown
         value={value}

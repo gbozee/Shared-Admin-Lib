@@ -2,8 +2,8 @@
 import { css, jsx } from "@emotion/core";
 import { useContext } from "react";
 import { Flex } from "@rebass/emotion";
+import { Link } from 'react-router-dom';
 import { DateFilter } from "../shared/DateFilter";
-import { Link } from "react-router-dom";
 import { FormDrawer } from "../shared/components";
 import { SpinnerContainer } from "../shared/primitives/Spinner";
 import { SectionListPage } from "../shared/reusables";
@@ -15,7 +15,7 @@ import { GroupBookingListItem } from "../components/sales/details";
 
 import { DataContext } from "../shared/DataContext";
 
-const RegularRequestListPage = ({ location, detailPageUrl = () => {} }) => {
+const RegularRequestListPage = ({ location, detailPageUrl = () => {}, goToList }) => {
   let {
     state,
     actions: {
@@ -65,6 +65,9 @@ const RegularRequestListPage = ({ location, detailPageUrl = () => {} }) => {
             setShowModal(false);
           }}
         >
+          <Button bg="transparent" color={"blue"} px={0} onClick={goToList} mb={3}>
+            Go to class list
+          </Button>
           <GroupBookingCreateForm
             skills={["IELTS"]}
             tutors={tutors}
@@ -79,6 +82,7 @@ const RegularRequestListPage = ({ location, detailPageUrl = () => {} }) => {
           onKeyDown={serverSearch}
           displayDate={false}
           selection={state.filter}
+          onChange={onDateFilter}
           onFilterChange={e => onFilterChange(e.target.value)}
           placeholder="Search by email"
           filterOptionsLabel={<label>By Status: </label>}
@@ -110,7 +114,7 @@ const RegularRequestListPage = ({ location, detailPageUrl = () => {} }) => {
             }
           ]}
         >
-          <Button mb={10} onClick={() => setShowModal(true)}>
+          <Button py="0" css={css`height: 32px;`} onClick={() => setShowModal(true)}>
             New Booking
           </Button>
         </DateFilter>

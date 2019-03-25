@@ -1,21 +1,22 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import { Flex } from "@rebass/emotion";
-import { DateFilter } from "../shared/DateFilter";
-import { Link } from "react-router-dom";
-import { FormDrawer, RequestForm, BookingForm } from "../shared/components";
-import { SpinnerContainer } from "../shared/primitives/Spinner";
-import { SectionListPage, SummaryCardList, getDate } from "../shared/reusables";
-import { useState, useEffect, useContext } from "react";
-import { Button } from "../shared/primitives";
-import { useSalesHook, useLoadData } from "./hooks";
-import { RequestItemDetail } from "../components/sales";
-import { DataContext } from "../shared/DataContext";
+import { css, jsx } from '@emotion/core';
+import { Flex } from '@rebass/emotion';
+import { DateFilter } from '../shared/DateFilter';
+import { Link } from 'react-router-dom';
+import { FormDrawer, RequestForm, BookingForm } from '../shared/components';
+import { SpinnerContainer } from '../shared/primitives/Spinner';
+import { SectionListPage, SummaryCardList, getDate } from '../shared/reusables';
+import { useState, useEffect, useContext } from 'react';
+import { Button } from '../shared/primitives';
+import { useSalesHook, useLoadData } from './hooks';
+import { RequestItemDetail } from '../components/sales';
+import { DataContext } from '../shared/DataContext';
+import GroupRequestForm from '../shared/components/GroupRequestForm';
 
 const RegularRequestListPage = ({ location, detailPageUrl }) => {
   let {
     state,
-    actions: { setSearchParam, setDateFilter, setSelection, serverSearch }
+    actions: { setSearchParam, setDateFilter, setSelection, serverSearch },
   } = useSalesHook(location);
   let { dispatch, actions } = useContext(DataContext);
   const loadData = () => dispatch({ type: actions.LOAD_DATA, value: state });
@@ -23,17 +24,18 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
     dispatch({ type: actions.LOAD_WORKING_RECORDS });
   const loadRemarks = () => dispatch({ type: actions.LOAD_REMARKS });
   let [requestData, requestActions] = useLoadData({
-    fetchData: loadData
+    fetchData: loadData,
   });
+  console.log(requestData.data);
   let [workingData, workingDataActions] = useLoadData({
-    fetchData: loadWorkingData
+    fetchData: loadWorkingData,
   });
   let [groupLessons, groupLessonActions] = useLoadData({
     fetchData: () =>
       dispatch({
         type: actions.LOAD_GROUP_LESSONS,
-        value: { status: "active" }
-      })
+        value: { status: 'active' },
+      }),
   });
   let [remarkData, remarkActions] = useLoadData({ fetchData: loadRemarks });
   let [showModal, setShowModal] = useState(false);
@@ -48,11 +50,11 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
     state.selection,
     state.dateFilter.from,
     state.dateFilter.to,
-    state.searchParam
+    state.searchParam,
   ]);
   const onSearch = () => {};
   const filteredResult = () => {
-    if (state.selection === "working") {
+    if (state.selection === 'working') {
       return requestData.data.filter(x =>
         workingData.data.map(y => y.slug).includes(x.slug)
       );
@@ -61,20 +63,20 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
   };
   const filteredRequests = (condition, value) => {
     let dd = filteredResult().filter(condition);
-    if (value === "budget") {
+    if (value === 'budget') {
       return dd.map(x => x[value]).reduce((a, b) => a + b, 0);
     }
     return dd.length;
   };
 
   const filtersFromServer = [
-    { label: "Pending Requests", value: "pending" },
-    { label: "Paid Requests", value: "payed" }
+    { label: 'Pending Requests', value: 'pending' },
+    { label: 'Paid Requests', value: 'payed' },
   ];
   const moveToCold = data => {
     dispatch({
       type: actions.CHANGE_STATUS,
-      value: { status: "cold", instance: data }
+      value: { status: 'cold', instance: data },
     }).then(response => {
       let newRequestData = requestData.data.filter(x => x.slug !== data.slug);
       console.log(newRequestData);
@@ -84,7 +86,7 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
   const addClientToGroupClass = (data, params) => {
     dispatch({
       type: actions.CREATE_BOOKING_FOR_CLIENT,
-      value: { ...params, instance: data }
+      value: { ...params, instance: data },
     }).then(() => {
       let newRequest = requestData.data.map(x =>
         x.slug === data.slug ? { ...x, booking: {} } : x
@@ -95,7 +97,7 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
   const markRequestAsPayed = data => {
     dispatch({ type: actions.MADE_PAYMENT, value: { instance: data } });
     let newRequestData = requestData.data.map(x =>
-      x.slug === data.slug ? { ...x, status: "payed" } : x
+      x.slug === data.slug ? { ...x, status: 'payed' } : x
     );
     requestActions.setData(newRequestData);
   };
@@ -103,9 +105,9 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
     let newRemarks = [...remarkData.data, remark];
     dispatch({
       type: actions.UPDATE_REMARK,
-      value: { remarks: newRemarks, remark, instance: data }
+      value: { remarks: newRemarks, remark, instance: data },
     }).then(() => {
-      console.log("Save remarks");
+      console.log('Save remarks');
     });
     remarkActions.setData(newRemarks);
   };
@@ -113,7 +115,7 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
     const isEdit = Boolean(newInfo.slug);
     dispatch({
       type: actions.SAVE_REQUEST_INFO,
-      value: { instance: newInfo, create: !isEdit }
+      value: { instance: newInfo, create: !isEdit },
     }).then(data => {
       let newRequestData = isEdit
         ? requestData.data.map(x => (x.slug === data.slug ? data : x))
@@ -123,22 +125,38 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
       showModal(false);
     });
   };
+  const transformGroupLessonData = requestInfo => {
+    let { request_subjects, phone_no, full_name, ...rest } = requestInfo;
+    let result = rest;
+    if (request_subjects && request_subjects.length === 1) {
+      result.skill = request_subjects[0];
+    }
+    if (phone_no) {
+      result.number = phone_no;
+    }
+    if (full_name) {
+      let splitFullName = full_name.split(' ');
+      result.first_name = splitFullName[0];
+      result.last_name = splitFullName[1];
+    }
+    return result;
+  };
   return (
     <Flex flexDirection="column">
       <SummaryCardList
         items={[
           {
-            name: "Paid Requests",
-            amount: filteredRequests(x => x.status === "payed", "budget"),
-            count: filteredRequests(x => x.status === "paid"),
-            count_text: "Request count"
+            name: 'Paid Requests',
+            amount: filteredRequests(x => x.status === 'payed', 'budget'),
+            count: filteredRequests(x => x.status === 'paid'),
+            count_text: 'Request count',
           },
           {
-            name: "Pending Requests",
-            amount: filteredRequests(x => x.status === "pending", "budget"),
-            count: filteredRequests(x => x.status === "pending"),
-            count_text: "Request count"
-          }
+            name: 'Pending Requests',
+            amount: filteredRequests(x => x.status === 'pending', 'budget'),
+            count: filteredRequests(x => x.status === 'pending'),
+            count_text: 'Request count',
+          },
         ]}
       />
       <Flex justifyContent="flex-end">
@@ -150,10 +168,13 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
             setShowModal(false);
           }}
         >
-          <BookingForm initialValues={requestInfo} onSubmit={saveRequestInfo} />
+          <GroupRequestForm
+            initialValues={transformGroupLessonData(requestInfo)}
+            onSubmit={saveRequestInfo}
+          />
         </FormDrawer>
       </Flex>
-      <Flex flexDirection={"column"}>
+      <Flex flexDirection={'column'}>
         <DateFilter
           onSearchChange={e => {
             setSearchParam(e.target.value);
@@ -169,11 +190,11 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
           placeholder="Search by email"
           searchButton={{
             display: true,
-            onClick: serverSearch
+            onClick: serverSearch,
           }}
           filterOptions={[
-            { value: "", label: "All Requests" },
-            { value: "working", label: "Working Sections" }
+            { value: '', label: 'All Requests' },
+            { value: 'working', label: 'Working Sections' },
           ].concat(filtersFromServer)}
         />
       </Flex>
@@ -189,7 +210,7 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
                   e.preventDefault();
                   setRequestInfo(request);
                   setShowModal(true);
-                }
+                },
                 // Link: Link
               },
               remark: remarkData.data.filter(x => x.slug === request.slug),
@@ -198,8 +219,8 @@ const RegularRequestListPage = ({ location, detailPageUrl }) => {
                 move_to_cold: moveToCold,
                 add_client_to_group_class: addClientToGroupClass, //part payment and full payment consideration
                 mark_request_as_payed: markRequestAsPayed,
-                update_remarks: updateRemark
-              }
+                update_remarks: updateRemark,
+              },
             })}
             LinkComponent={Link}
             Component={RequestItemDetail}

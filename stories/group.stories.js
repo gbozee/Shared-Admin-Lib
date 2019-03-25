@@ -5,6 +5,7 @@ import { MemoryRouter as Router } from "react-router-dom";
 import { css, jsx } from "@emotion/core";
 import { Box, Flex, Text } from "@rebass/emotion";
 import { storiesOf } from "@storybook/react";
+import { linkTo } from '@storybook/addon-links'
 import {
   RequestItemDetail,
   RemarkModal,
@@ -233,6 +234,7 @@ storiesOf("Group Lesson Components", module)
             <GroupBookingListPage
               detailPageUrl={slug => slug}
               location={{ search: "?status=initialized&displayModal=true" }}
+              goToList={linkTo('Group Lesson Components', 'Group Class Detail')}
             />
           </DataProvider>
         </Application>

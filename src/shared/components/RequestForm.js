@@ -45,6 +45,7 @@ const formData = [
     label: 'Number of children',
     options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     name: 'no_of_children',
+    mr: 2
   },
   {
     kind: 'select',
@@ -59,6 +60,7 @@ const formData = [
     defaultText: 'Select duration',
     options: [1, 2, 3, 4, 5, 6, 7],
     name: 'no_of_days',
+    mr: 2
   },
   {
     kind: 'select',
@@ -90,6 +92,7 @@ const formData = [
       [15, 'Others'],
     ],
     name: 'how_you_heard',
+    mr: 2
   },
   {
     kind: 'select',
@@ -107,6 +110,7 @@ const formData = [
     defaultText: 'Select a curriculum',
     options: [['nigeiran', 'Nigerian'], ['british', 'British']],
     name: 'curriculum',
+    mr: 2
   },
   {
     kind: 'select',
@@ -199,22 +203,30 @@ export const RequestForm = ({ onSubmit, initialValues, isLoading }) => {
             `}
           >
             <Flex flexDirection="column">
-              <Flex pb={4}>
+              <Flex pb={3}>
                 {fields.first_name}
                 {fields.last_name}
               </Flex>
-              <Flex pb={4}>
+              <Flex pb={3}>
                 {fields.email}
                 {fields.number}
               </Flex>
-              <Box pb={3}>{fields.no_of_children}</Box>
-              <Box pb={3}>{fields.status}</Box>
-              <Box pb={3}>{fields.no_of_days}</Box>
-              <Box pb={3}>{fields.gender}</Box>
-              <Box pb={3}>{fields.how_you_heard}</Box>
-              <Box pb={3}>{fields.request_type}</Box>
-              <Box pb={3}>{fields.curriculum}</Box>
-              <Box pb={3}>{fields.hours}</Box>
+              <Flex>
+                {fields.no_of_children}
+                {fields.status}
+              </Flex>
+              <Flex>
+                {fields.no_of_days}
+                {fields.gender}
+              </Flex>
+              <Flex>
+                {fields.how_you_heard}
+                {fields.request_type}
+              </Flex>
+              <Flex>
+                {fields.curriculum}
+                {fields.hours}
+              </Flex>
               <Box pb={3}>{fields.address}</Box>
               <Flex pb={3}>
                 {fields.state}
