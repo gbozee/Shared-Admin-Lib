@@ -433,6 +433,7 @@ const GroupBookingSchema = yup.object().shape({
 });
 export const GroupBookingCreateForm = ({
   onSubmit,
+  initialValues,
   skills = [],
   tutors = []
 }) => {
@@ -458,6 +459,7 @@ export const GroupBookingCreateForm = ({
   return (
     <Form
       fields={data}
+      initialValues={initialValues}
       onSubmit={onSubmit}
       validationSchema={GroupBookingSchema}
       render={(fields, button) => {

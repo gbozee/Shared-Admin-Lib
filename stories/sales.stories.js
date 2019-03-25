@@ -23,6 +23,7 @@ import appFirebase from "./adapters/backupFirebase";
 import auth from "./adapters/auth";
 import SalesListPage from "../src/pages/SalesListPage";
 import GroupBookingListPage from "../src/pages/GroupBookingListPage";
+import GroupBookingDetailPage from "../src/pages/GroupBookingDetailPage";
 
 const RouterWrapper = ({
   children,
@@ -80,13 +81,14 @@ storiesOf("Sales and Customer Success Application", module)
   .add("Requests List Page", () => (
     <RouterWrapper
       context={requestContext}
+      initialIndex={9}
       topLinks={
         <React.Fragment>
           <Link to="/requests/one-on-one?from=2018-01-01&to=2019-03-14">
             Regular Requests
           </Link>
-          <Link to="/bookings/group">Group Requests</Link>
-          <Link to="/requests/group/ADDESS">Group Request Detail</Link>
+          <Link to="/bookings/group">Group Bookings</Link>
+          <Link to="/bookings/group/ADDESS">Group Booking Detail</Link>
           <Link to="/request-working-section">Request Working Section</Link>
         </React.Fragment>
       }
@@ -130,13 +132,13 @@ storiesOf("Sales and Customer Success Application", module)
           return <GroupBookingListPage {...props} />;
         }}
       />
-      {/* <Route
-                path="/requests/group/:slug"
-                exact
-                render={props => {
-                    return <GLClientDetailPage {...props} />;
-                }}
-            /> */}
+      <Route
+        path="/bookings/group/:slug"
+        exact
+        render={props => {
+          return <GroupBookingDetailPage {...props} />;
+        }}
+      />
     </RouterWrapper>
   ))
   .add("Booking List Page", () => (

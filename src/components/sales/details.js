@@ -32,7 +32,7 @@ export const GroupBookingListItem = ({
     last_session,
     "MMM DD YYYY"
   )}`;
-  console.log(rest)
+  console.log(rest);
   return (
     <BaseListItem
       wholeSection={false}
@@ -75,7 +75,7 @@ const toText = x => x.replace(/_/g, " ");
 export const GroupBookingDetailClientTable = ({
   data,
   admin_actions = {},
-  booking_detail,
+  booking_detail = {},
   payTutor = () => {}
 }) => {
   const [current_action, setCurrentAction] = React.useState("");
@@ -126,28 +126,40 @@ export const GroupBookingDetailClientTable = ({
       <Table
         adminActions={
           <Flex mb="10px" justifyContent="space-between">
-            <Box>
-              <label>Action: </label>
-              <Dropdown
-                css={css`
-                  padding-top: 3px;
-                  padding-bottom: 3px;
-                `}
-                options={options}
-                value={current_action}
-                onChange={value => setCurrentAction(value)}
-              />
+            <Box
+              css={css`
+                align-self: center;
+              `}
+            >
+              <Flex>
+                <label
+                  css={css`
+                    padding-right: 15px;
+                  `}
+                >
+                  Action:{" "}
+                </label>
+                <Dropdown
+                  css={css`
+                    padding-top: 3px;
+                    padding-bottom: 3px;
+                  `}
+                  options={options}
+                  value={current_action}
+                  onChange={value => setCurrentAction(value)}
+                />
 
-              <button
-                onClick={onAdminActionChange}
-                css={css`
-                  margin-left: 10px;
-                  padding-top: 3px;
-                  padding-bottom: 3px;
-                `}
-              >
-                Go
-              </button>
+                <button
+                  onClick={onAdminActionChange}
+                  css={css`
+                    margin-left: 10px;
+                    padding-top: 3px;
+                    padding-bottom: 3px;
+                  `}
+                >
+                  Go
+                </button>
+              </Flex>
             </Box>
             <Text css={styling}>Total Amount: N{booking_detail.amount}</Text>
             <Text css={styling}>
@@ -157,7 +169,7 @@ export const GroupBookingDetailClientTable = ({
             {booking_detail.status === "completed" ? (
               "Tutor Paid"
             ) : (
-              <button onClick={payTutor}>Pay Tutor</button>
+              <Button onClick={payTutor}>Pay Tutor</Button>
             )}
           </Flex>
         }
