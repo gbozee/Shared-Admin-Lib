@@ -7,11 +7,14 @@ const actions = {
   UPDATE_REMARK: "UPDATE_REMARK",
   MADE_PAYMENT: "MADE_PAYMENT",
   LOAD_GROUP_LESSONS: "LOAD_GROUP_LESSONS",
-  CREATE_BOOKING_FOR_CLIENT: "CREATE_BOOKING_FOR_CLIENT"
+  CREATE_BOOKING_FOR_CLIENT: "CREATE_BOOKING_FOR_CLIENT",
+  SAVE_REQUEST_INFO: "SAVE_REQUEST_INFO",
+  GET_CLIENTS_FOR_GROUP_LESSON: "GET_CLIENTS_FOR_GROUP_LESSON",
+  GET_BOOKING_DETAIL: "GET_BOOKING_DETAIL"
 };
 function getAgentRequest(params, { getAdapter, state }) {
   let { agent } = state.context.state;
-  console.log("[loading]:...")
+  console.log("[loading]:...");
   return getAdapter().getRequestForAgent(agent, params);
 }
 function getRemarksByAgent(params, { getAdapter, state }) {
@@ -40,6 +43,15 @@ function loadGroupLessons({ status }, { getAdapter }) {
 function addClientToGroupClass({ instance, ...params }, { getAdapter }) {
   return getAdapter().addClientToGroupClass(instance, params);
 }
+function saveRequestInfo({ instance, create }, { getAdapter }) {
+  return getAdapter().saveRequestInfo(instance, create);
+}
+function getClientsForGroupLessons(){
+
+}
+function getBookingDetails(){
+
+}
 const dispatch = (action, existingOptions = {}, firebaseFunc) => {
   let options = {
     [actions.LOAD_DATA]: getAgentRequest,
@@ -50,6 +62,9 @@ const dispatch = (action, existingOptions = {}, firebaseFunc) => {
     [actions.MADE_PAYMENT]: onMadePayment,
     [actions.LOAD_GROUP_LESSONS]: loadGroupLessons,
     [actions.CREATE_BOOKING_FOR_CLIENT]: addClientToGroupClass,
+    [actions.SAVE_REQUEST_INFO]: saveRequestInfo,
+    [actions.GET_CLIENTS_FOR_GROUP_LESSON]: getClientsForGroupLessons,
+    [actions.GET_BOOKING_DETAIL]: getBookingDetails,
     ...existingOptions
   };
   return options;

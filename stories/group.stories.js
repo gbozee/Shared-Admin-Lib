@@ -101,7 +101,8 @@ function useContext() {
     ADD_TO_CLASS: "ADD_TO_CLASS",
     UPDATE_REMARK: "UPDATE_REMARK",
     LOAD_GROUP_DETAIL_CLIENTS: "LOAD_GROUP_DETAIL_CLIENTS",
-    BOOKING_DETAIL: "BOOKING_DETAIL"
+    BOOKING_DETAIL: "BOOKING_DETAIL",
+    SAVE_REQUEST_INFO: "SAVE_REQUEST_INFO"
   };
   const dispatchData = ({ type, value }) => {
     if (type === ACTIONS.LOAD_DATA) {

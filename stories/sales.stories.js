@@ -133,7 +133,7 @@ storiesOf("Sales and Customer Success Application", module)
         }}
       />
       <Route
-        path="/bookings/group/:slug"
+        path="/bookings/group/:order"
         exact
         render={props => {
           return <GroupBookingDetailPage {...props} />;

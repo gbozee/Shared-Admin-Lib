@@ -2,7 +2,7 @@
 import { css, jsx } from "@emotion/core";
 import { useContext } from "react";
 import { Flex } from "@rebass/emotion";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { DateFilter } from "../shared/DateFilter";
 import { FormDrawer } from "../shared/components";
 import { SpinnerContainer } from "../shared/primitives/Spinner";
@@ -15,7 +15,11 @@ import { GroupBookingListItem } from "../components/sales/details";
 
 import { DataContext } from "../shared/DataContext";
 
-const RegularRequestListPage = ({ location, detailPageUrl = () => {}, goToList }) => {
+const RegularRequestListPage = ({
+  location,
+  detailPageUrl = () => {},
+  goToList
+}) => {
   let {
     state,
     actions: {
@@ -65,9 +69,17 @@ const RegularRequestListPage = ({ location, detailPageUrl = () => {}, goToList }
             setShowModal(false);
           }}
         >
-          <Button bg="transparent" color={"blue"} px={0} onClick={goToList} mb={3}>
-            Go to class list
-          </Button>
+          <Link to={`/bookings/group/${bookingInfo.order}`}>
+            <Button
+              bg="transparent"
+              color={"blue"}
+              px={0}
+              onClick={goToList}
+              mb={3}
+            >
+              Go to class list
+            </Button>
+          </Link>
           <GroupBookingCreateForm
             skills={["IELTS"]}
             tutors={tutors}
@@ -114,7 +126,13 @@ const RegularRequestListPage = ({ location, detailPageUrl = () => {}, goToList }
             }
           ]}
         >
-          <Button py="0" css={css`height: 32px;`} onClick={() => setShowModal(true)}>
+          <Button
+            py="0"
+            css={css`
+              height: 32px;
+            `}
+            onClick={() => setShowModal(true)}
+          >
             New Booking
           </Button>
         </DateFilter>

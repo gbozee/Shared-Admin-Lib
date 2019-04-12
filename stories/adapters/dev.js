@@ -284,9 +284,26 @@ function loadGroupLessons(status) {
 }
 function addClientToGroupClass(
   instance,
-  { full_payment, amount, class_group }
+  { full_payment, amount, class_group, class_text }
 ) {
   return new Promise(resolve => resolve());
+}
+function saveRequestInfo(instance, create = false) {
+  let { schedule, skill, ...rest } = instance;
+  let result = Boolean(instance.slug)
+    ? instance
+    : {
+        ...rest,
+        slug: "CREATEDSLUG",
+        created: "2018-10-12 14:10:33",
+        request_type: 5,
+        full_name: `${instance.first_name} ${instance.last_name}`,
+        request_subjects: [skill],
+        request_info: {
+          request_details: { schedule: { summary: schedule } }
+        }
+      };
+  return new Promise(resolve => resolve(result));
 }
 export default {
   login,
@@ -330,5 +347,6 @@ export default {
   updateRequestRemark,
   madePayment,
   loadGroupLessons,
-  addClientToGroupClass
+  addClientToGroupClass,
+  saveRequestInfo
 };

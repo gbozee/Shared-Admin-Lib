@@ -7,7 +7,7 @@ export const Dropdown = ({ value, options = [], onChange, ...rest }) => {
       value={value}
       onChange={e => {
         e.preventDefault();
-        onChange(e.target.value);
+        onChange(e.target.value, e.target);
       }}
       css={css`
         width: 100%;

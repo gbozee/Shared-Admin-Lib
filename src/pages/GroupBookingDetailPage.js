@@ -12,15 +12,15 @@ const GroupBookingDetailPage = ({
   location,
   detailPageUrl = () => {},
   match: {
-    param: { order }
+    params: { order }
   }
 }) => {
   let { dispatch, actions } = useContext(DataContext);
 
   const loadData = () =>
-    dispatch({ type: actions.LOAD_GROUP_DETAIL_CLIENTS, value: { order } });
+    dispatch({ type: actions.GET_CLIENTS_FOR_GROUP_LESSON, value: { order } });
   const loadBookingDetail = () =>
-    dispatch({ type: actions.BOOKING_DETAIL, value: order });
+    dispatch({ type: actions.GET_BOOKING_DETAIL, value: order });
   let [studentList, setStudentList] = useLoadData({
     fetchData: loadData
   });
