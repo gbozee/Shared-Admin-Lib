@@ -5,7 +5,7 @@ import { MemoryRouter as Router } from "react-router-dom";
 import { css, jsx } from "@emotion/core";
 import { Box, Flex, Text } from "@rebass/emotion";
 import { storiesOf } from "@storybook/react";
-import { linkTo } from '@storybook/addon-links'
+import { linkTo } from "@storybook/addon-links";
 import {
   RequestItemDetail,
   RemarkModal,
@@ -33,6 +33,7 @@ import { DataContext } from "../src/shared/DataContext";
 import Application from "../src/shared/application";
 import { format } from "date-fns";
 import GroupBookingDetailPage from "../src/pages/GroupBookingDetailPage";
+import WebsocketPage from "../src/pages/WebSocketPage";
 function useContext() {
   function workingRecords() {
     return new Promise(resolve => resolve([{ slug: "ABCDESDDESS" }]));
@@ -235,7 +236,7 @@ storiesOf("Group Lesson Components", module)
             <GroupBookingListPage
               detailPageUrl={slug => slug}
               location={{ search: "?status=initialized&displayModal=true" }}
-              goToList={linkTo('Group Lesson Components', 'Group Class Detail')}
+              goToList={linkTo("Group Lesson Components", "Group Class Detail")}
             />
           </DataProvider>
         </Application>
@@ -253,4 +254,7 @@ storiesOf("Group Lesson Components", module)
         </DataProvider>
       </Router>
     );
+  })
+  .add("Websocket Page", () => {
+    return <WebsocketPage />;
   });
